@@ -1,0 +1,3308 @@
+// NPM CONSTANTS //
+
+const _ = require('lodash');
+const express = require('express');
+var app = express();
+// const bodyParser = require('body-parser');
+const mysql = require('mysql');
+const path = require('path');
+const fs = require('fs');
+const bcrypt = require('bcryptjs');
+
+// const jp = require('json-safe-parse');
+// app.use(jp);
+
+// body parser
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.json({
+  limit: '50mb'
+}));
+app.use(bodyParser.urlencoded({
+  limit: '50mb',
+  extended: false
+}));
+
+
+// app.use(cors());
+
+// NPM CONSTANTS //
+
+// FILE CONSTANTS //
+
+const publicPath = path.join(__dirname, '../public');
+
+const bomFileServer = path.join(__dirname, '/fileServer/bomFiles/');
+const packingFileServer = path.join(__dirname, '/fileServer/packingFiles/');
+const proposalFileServer = path.join(__dirname, '/fileServer/proposalFiles/');
+
+const mysqlCredentials = require(__dirname + '/mysqlDB/mysqlCredentials');
+var {
+  authenticate
+} = require('./middleware/authenticate');
+
+// FILE CONSTANTS //
+
+// EXPRESS and APP. PORT //
+app.use(express.static(publicPath));
+
+const min = 20000;
+const max = 30000;
+const port = Math.floor(Math.random() * (max - min)) + min;
+// const port = 25000;
+
+const jwtLogin = require('jwt-login');
+
+// EXPRESS and APP. PORT //
+
+// MONGO DB //
+
+var {
+  mongoose
+} = require('./mongoDB/mongoose');
+var {
+  User
+} = require('./models/user');
+var {
+  Draft
+} = require('./models/draft');
+var {
+  Proposal
+} = require('./models/proposal');
+const {
+  ObjectID
+} = require('mongodb');
+
+// MONGO DB //
+
+// pdfmake //
+
+const pdfmakePath = path.join(__dirname, '/pdfmake');
+// pdfmake For Server Save//
+var fonts = {
+  Roboto: {
+    normal: `${pdfmakePath}/tests/fonts/Roboto-Regular.ttf`,
+    bold: `${pdfmakePath}/tests/fonts/Roboto-Medium.ttf`,
+    italics: `${pdfmakePath}/tests/fonts/Roboto-Italic.ttf`,
+    bolditalics: `${pdfmakePath}/tests/fonts/Roboto-MediumItalic.ttf`
+  },
+  Fontello: {
+    normal: `${pdfmakePath}/tests/fonts/Fontello.ttf`,
+    bold: `${pdfmakePath}/tests/fonts/Fontello.ttf`,
+    italics: `${pdfmakePath}/tests/fonts/Fontello.ttf`,
+    bolditalics: `${pdfmakePath}/tests/fonts/Fontello.ttf`
+  }
+};
+
+const PdfPrinter = require(`${pdfmakePath}/src/printer`);
+const printer = new PdfPrinter(fonts);
+// pdfmake For Server Save//
+
+// pdfmake For Client Download//
+const pdfMake = require(`${pdfmakePath}/build/pdfmake`);
+const vfsFonts = require(`${pdfmakePath}/build/vfs_fonts`);
+pdfMake.vfs = vfsFonts.pdfMake.vfs;
+// pdfmake For Client Download//
+
+// local docDefination
+let docDefinition = require('./models/proposalPDFdefination');
+
+// pdfmake //
+
+var pdfFillForm = require('pdf-fill-form');
+const HummusRecipe = require('hummus-recipe');
+
+// CREATE COMMUNICATION WITH MYSQL DATABASE //
+
+// this eliminates the mysql connection error
+
+var connection;
+
+function handleDisconnect() {
+  connection = mysql.createConnection(mysqlCredentials.getConfig()); // Recreate the connection, since
+  // the old one cannot be reused.
+
+  connection.connect(function (err) { // The server is either down
+    if (err) { // or restarting (takes a while sometimes).
+      console.log('error@DB1 when connecting to db:', err);
+      setTimeout(handleDisconnect, 5000); // We introduce a delay before attempting to reconnect,
+    } else { // to avoid a hot loop, and to allow our node script to
+      console.log('Connected to mysql Server');
+    }
+
+  }); // process asynchronous requests in the meantime.
+  // If you're also serving http, display a 503 error.
+  connection.on('error', function (err) {
+    console.log('db error@DB2:', err);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+      handleDisconnect(); // lost due to either server restart, or a
+    } else { // connnection idle timeout (the wait_timeout
+      throw err; // server variable configures this)
+    }
+  });
+}
+
+handleDisconnect();
+
+// this eliminates the mysql connection error
+
+// CREATE COMMUNICATION WITH MYSQL DATABASE //
+
+// HTTPS //
+
+// var https = require('https');
+// var fs = require('fs');
+
+// // This line is from the Node.js HTTPS documentation.
+// var options = {
+//   cert: fs.readFileSync('/home/eslhive/Desktop/https/server.crt'),
+//   key: fs.readFileSync('/home/eslhive/Desktop/https/server.key'),
+//   ca: fs.readFileSync('/home/eslhive/Desktop/https/ca.crt'), 
+//   requestCert: true, rejectUnauthorized: false
+// };
+
+// // Create an HTTPS service identical to the HTTP service.
+// https.createServer(options, app).listen(port, function(){
+//   console.log("PORT:", port);
+// });
+
+// HTTPS //
+
+
+// ROUTES //
+
+// ************************************************ !!!! VALIDATOR !!!! ******************************************************* //
+// this route is created just to make static pages as dynamic
+app.post('/validate0', authenticate, (req, res) => {
+  if (req.user.role === 0) {
+    res.status(200).send(req.user);
+  } else {
+    res.status(401).send("Access Denied");
+  }
+});
+
+app.post('/validate1', authenticate, (req, res) => {
+  if (req.user.role === 0 || req.user.role === 1) {
+    res.status(200).send(req.user);
+  } else {
+    res.status(401).send("Access Denied");
+  }
+});
+
+app.post('/validate2', authenticate, (req, res) => {
+  res.status(200).send(req.user);
+});
+
+// ************************************************ !!!! VALIDATOR !!!! ******************************************************* //
+
+// ************************************************ User Access Routes ******************************************************* //
+
+//* // main page 
+app.get('/', (req, res) => {
+  res.status(200).sendFile(publicPath + '/index.html');
+});
+
+//* //login make this route similar to above route, send the page based on role rather than sending user object
+app.post("/login", function (req, res) {
+
+  var body = _.pick(req.body, ['user', 'password']);
+
+  User.findByCredentials(body.user, body.password).then((user) => {
+    return user.generateAuthToken().then((token) => {
+      if (user.role === 0 || user.role === 1) {
+        if (user.currentRole === 1) {
+          res.header('x-auth', token).status(200).send('/indexCalculator_admin.html$1');
+        } else {
+          res.header('x-auth', token).status(200).send('/indexCalculator_admin.html$2');
+        }
+      } else if (user.role === 2) {
+        res.header('x-auth', token).status(200).send('/indexCalculator.html');
+      } else {
+        console.log('error@login user:', user);
+      }
+
+    });
+  }).catch((e) => {
+    // console.log(e);
+    res.status(400).send(e);
+  });
+
+});
+
+//* // logout
+app.delete('/logout', authenticate, (req, res) => {
+  req.user.removeToken(req.token).then(() => {
+    res.status(200).send();
+  }, () => {
+    res.status(400).send();
+  });
+});
+
+// ************************************************ User Access Routes ******************************************************* //
+
+// ************************************************ User Management Routes - User end ******************************************************* //
+
+//* // REGISTER USER
+app.post('/users/register', (req, res) => {
+
+  User.find({
+    email: req.body.email
+  }).then((valid) => {
+    if (valid.length > 0) {
+      if (valid[0].password === null) {
+
+        bcrypt.compare(req.body.passPhrase, valid[0].passPhrase).then((resCrypt) => {
+          if (resCrypt) {
+            bcrypt.genSalt(10, (err, salt) => {
+              bcrypt.hash(req.body.password, salt, (err, hash) => {
+                req.body.password = hash;
+                const update = {
+                  password: hash
+                };
+
+                User.findByIdAndUpdate(valid[0]._id, {
+                  $set: update
+                }, {
+                    new: true
+                  }).then((user) => {
+                    if (!user) {
+                      return res.status(404).send();
+                    }
+                    res.send({
+                      user
+                    });
+                  }).catch((e) => {
+                    console.log(e);
+                    res.status(500).send(e);
+                  });
+              });
+            });
+          } else {
+            res.status(401).send("UNAUTHORIZED USER");
+          }
+        });
+
+      } else {
+        res.status(406).send("DUPLICATE");
+      }
+    } else {
+      res.status(401).send("UNAUTHORIZED");
+    }
+  }).catch((e) => {
+    console.log(e);
+  });
+});
+// REGISTER USER
+
+//* // RESET Password
+app.post('/users/reset', (req, res) => {
+
+  User.find({
+    email: req.body.email
+  }).then((valid) => {
+    if (valid.length > 0) {
+      if (valid[0].password !== null) {
+
+        bcrypt.compare(req.body.passPhrase, valid[0].passPhrase).then((resCrypt) => {
+          if (resCrypt) {
+            bcrypt.genSalt(10, (err, salt) => {
+              bcrypt.hash(req.body.password, salt, (err, hash) => {
+                req.body.password = hash;
+                const update = {
+                  password: hash
+                };
+
+                User.findByIdAndUpdate(valid[0]._id, {
+                  $set: update
+                }, {
+                    new: true
+                  }).then((user) => {
+                    if (!user) {
+                      return res.status(404).send();
+                    }
+                    res.status(200).send({
+                      user
+                    });
+                  }).catch((e) => {
+                    console.log(e);
+                    res.status(500).send(e);
+                  });
+              });
+            });
+          } else {
+            res.status(401).send("UNAUTHORIZED USER");
+          }
+        });
+      } else {
+        res.status(406).send("NEW USER");
+      }
+    } else {
+      res.status(401).send("UNAUTHORIZED");
+    }
+  }).catch((e) => {
+    console.log(e);
+  });
+});
+// RESET Password
+
+// ************************************************ User Management Routes - User end ******************************************************* //
+
+// ************************************************ User Management Routes - SupdeAdmin end ******************************************************* //
+
+// 0 // CREATE - Create user, only allowed to super admin to do so
+app.post('/users', (req, res) => {
+  // RBAC
+  // if (req.user.role !== 0) {
+  //   res.status(418).send();
+  //   return;
+  // }
+
+  var user = new User({
+    email: req.body.email,
+    fName: req.body.fName,
+    lName: req.body.lName,
+    desig: req.body.desig,
+    passPhrase: req.body.passPhrase,
+    role: req.body.role,
+    currentRole: req.body.role,
+  });
+
+  User.find({
+    email: user.email
+  }).then((dup) => {
+    if (dup.length > 0) {
+      res.status(409).send("Duplicate User");
+    } else {
+      user.save().then((doc) => {
+        res.send(doc);
+      }, (e) => {
+        res.status(400).send(e);
+      });
+    }
+  }).catch((e) => {
+    res.status(500).send(e);
+  });
+});
+// CREATE - Create user, only allowed to super admin to do so
+
+// 0 // READ - get stats, only allowed to super admin to do so
+app.get('/users', authenticate, (req, res) => {
+  // console.log("USER INFO:", req.user);
+  // RBAC
+  if (req.user.role !== 0) {
+    res.status(418).send();
+    return;
+  }
+
+  User.find().then((dup) => {
+    if (!dup) {
+      res.status(404).send("No User");
+    } else {
+      res.status(200).send(dup);
+    }
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+// READ - get stats,  only allowed to super admin to do so
+
+// 0 // DELETE - Delete user by email, only allowed to super admin to do so
+app.delete('/users/:id', authenticate, (req, res) => {
+  // RBAC
+  if (req.user.role !== 0) {
+    res.status(418).send();
+    return;
+  }
+
+  let id = req.params.id;
+  // console.log("ID:", id);
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  User.findByIdAndDelete(id).then((user) => {
+    if (!user) {
+      return res.status(404).send();
+    }
+
+    res.status(200).send();
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+// DELETE - Delete user by email, only allowed to super admin to do so
+
+// 0 // GET PROPOSAL - SuperAdmin - for getting all the proposals for generating packing list and BOM
+app.get('/ckp/save', authenticate, async (req, res) => {
+  // RBAC
+  if (req.user.role !== 0) {
+    res.status(418).send();
+    return;
+  }
+
+  Proposal.find().then((dup) => {
+    if (dup.length > 0) {
+      // let dupArray = [];
+      // dupArray.push(dup);
+      res.status(200).send(dup);
+    } else {
+      res.status(204).send();
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
+// 0 // GET BOM - SuperAdmin - for downloading BOM
+app.get('/ckpBOM/:id', authenticate, async (req, res) => {
+  // RBAC
+  if (req.user.role !== 0) {
+    res.status(418).send();
+    return;
+  }
+
+  let id = req.params.id;
+  // console.log("ID:", id);
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  let bomCSV;
+  Proposal.find({
+    _id: id
+  }).then((dup) => {
+    if (dup.length > 0) {
+
+      bomCSV = dup[0].bomCSV;
+      // console.log('packingCSV:', dup);
+
+      let bomfilePath = path.join(bomFileServer, `${bomCSV}`);
+      let bomstat = fs.statSync(bomfilePath);
+
+      res.writeHead(200, {
+        // "Content-Disposition": "attachment;filename=" + packingCSV + '_' + bomCSV,
+        "Content-Disposition": bomCSV,
+        'Content-Type': 'text/csv',
+        'Content-Length': bomstat.size
+      });
+
+      let bomreadStream = fs.createReadStream(bomfilePath);
+      // We replaced all the event handlers with a simple call to readStream.pipe()
+      bomreadStream.pipe(res);
+
+    } else {
+      res.status(204).send();
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
+// 0 // GET Packing List - SuperAdmin - for downloading Packing List
+app.get('/ckpPacking/:id', authenticate, async (req, res) => {
+  // RBAC
+  if (req.user.role !== 0) {
+    res.status(418).send();
+    return;
+  }
+
+  let id = req.params.id;
+  // console.log("ID:", id);
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  let packingCSV;
+  Proposal.find({
+    _id: id
+  }).then((dup) => {
+    if (dup.length > 0) {
+
+      packingCSV = dup[0].packingCSV;
+      // console.log('packingCSV:', dup);
+
+      let packingfilePath = path.join(packingFileServer, `${packingCSV}`);
+      let packingstat = fs.statSync(packingfilePath);
+
+      res.writeHead(200, {
+        // "Content-Disposition": "attachment;filename=" + packingCSV + '_' + bomCSV,
+        "Content-Disposition": packingCSV,
+        'Content-Type': 'text/csv',
+        'Content-Length': packingstat
+      });
+
+      let packingreadStream = fs.createReadStream(packingfilePath);
+      // We replaced all the event handlers with a simple call to readStream.pipe()
+      packingreadStream.pipe(res);
+
+    } else {
+      res.status(204).send();
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
+// ************************************************ User Management Routes - SupdeAdmin end ******************************************************* //
+
+// ************************************************ Custom Kit Pricing Usage ******************************************************* //
+
+async function ckpFunc(req) {
+
+  let rawItem = [];
+  let bomItem = [];
+  let rawItemFromBOM = [];
+  let bomItemFromBOM = []; // package inside package
+
+  let BOM = [];
+  let dependencyTree = [];
+  // let godArray = [];
+
+  function rawBomSeparator4rules(sqlResult) {
+    sqlResult.forEach(function (row) {
+      // console.log("BOM1:", row);
+      if (row.idName.startsWith("Equp") || row.idName.startsWith("Chem") || row.idName.startsWith("Ship")) {
+        rawItem.push(row);
+      } else {
+        bomItem.push(row);
+        // assembleyItemName.push(row);
+      }
+    });
+  }
+
+  function rawBomSeparator4BOM(bomResult) {
+    Object.keys(bomResult).forEach(function (key) {
+      let row = bomResult[key];
+      // console.log("BOM2:", row);
+      if (row.memItem.startsWith("Equp") || row.memItem.startsWith("equp") || row.memItem.startsWith("Chem") || row.memItem.startsWith("Ship")) {
+        rawItemFromBOM.push(row);
+      } else {
+        bomItemFromBOM.push(row);
+        // assembleyItemName.push(row);
+      }
+    });
+  }
+
+  const sqlQueryResultFetcher = (query) => {
+    // console.log('sqlQueryResultFetcher-QUERY:', query);
+    return new Promise((resolve, reject) => {
+      connection.query(query, function (err, result, fields) {
+        // if (err) throw err;
+
+        if (result) {
+          resolve(result);
+          // godArray.push(result);
+          // console.log('resolved:', result);
+        } else {
+          reject(`Unable to contact MYSQL DB ${err}`);
+          // console.log('rejected');
+        }
+      });
+
+    });
+  }
+
+  const queryGenerator4labsInitial = async (sub, id) => {
+
+    let queries = queryGenerate4subject(sub, id);
+
+    return await queries;
+
+  }
+
+  async function queryGenerate4subject(subject, labs) {
+
+    let queryAdd, queryDivide, queryMax;
+    let queries = [];
+    queryAdd = `SELECT idName, lab, qty, unit FROM z_netsuite.${subject} where BINARY operator = '+' and (lab = -1 or `; //${subject}
+
+    labs.forEach(lab => {
+      queryAdd += "lab = ";
+      queryAdd += lab;
+      queryAdd += " or ";
+    });
+
+    queryAdd = queryAdd.slice(0, -4);
+    queryAdd += await ");";
+    queries.push(queryAdd);
+
+    queryDivide = queryAdd.replace('+', '/');
+    queryDivide = queryDivide.replace('qty', 'avg(qty)');
+    queryDivide = await queryDivide.replace(';', ' group by idName;');
+    queries.push(queryDivide);
+
+    queryMax = queryAdd.replace('+', '*');
+    queryMax = queryMax.replace('qty', 'max(qty)');
+    queryMax = await queryMax.replace(';', ' group by idName;');
+    queries.push(queryMax);
+    // console.log('queryGenerate4subject:', queries);
+    return await queries;
+  }
+
+  const labsQueryGenerator4displayLabs = async (rules, sub) => {
+    let returnQuery = `SELECT idName, lab, operator FROM z_netsuite.${sub} where (BINARY idName ='`;
+    while (rules.length > 0) {
+      let temp = rules.pop();
+      returnQuery += temp;
+      returnQuery += "' or BINARY idName ='";
+    }
+
+    returnQuery = returnQuery.slice(0, -20);
+    returnQuery += await ");";
+    // console.log("Query:", returnQuery);
+    return returnQuery;
+  }
+
+  const queryGenerator4BOM1 = async (bom) => {
+    let returnQuery = "SELECT idName, memItem, memSource, memQuantity FROM netsuite.bom where (BINARY idName ='";
+    while (bom.length > 0) {
+      let temp = bom.pop();
+      returnQuery += temp.idName;
+      returnQuery += "' or BINARY idName ='";
+      // console.log("POP", temp.idName);
+    }
+
+    returnQuery = returnQuery.slice(0, -20);
+    returnQuery += await ");";
+
+    return returnQuery;
+  }
+
+  const queryGenerator4BOM2 = async (bom) => {
+    let returnQuery = "SELECT idName, memItem, memSource, memQuantity FROM netsuite.bom where (BINARY idName ='";
+    while (bom.length > 0) {
+      let temp = bom.pop();
+      returnQuery += temp.memItem;
+      returnQuery += "' or BINARY idName ='";
+      // console.log("POP", temp.idName);
+    }
+
+    returnQuery = returnQuery.slice(0, -20);
+    returnQuery += await ");";
+
+    return returnQuery;
+  }
+
+  const priceQueryGenerator = async (rawItems) => {
+    let returnQuery = "SELECT idName, displayName, averageCost FROM netsuite.allItems where (BINARY idName ='";
+    while (rawItems.length > 0) {
+      let temp = rawItems.pop();
+      returnQuery += temp.idName;
+      returnQuery += "' or BINARY idName ='";
+    }
+
+    returnQuery = returnQuery.slice(0, -20);
+    returnQuery += await ");";
+    // console.log("Query1:", returnQuery);
+    return returnQuery;
+  }
+
+  const assembleyItemNameQueryGenerator = async (assembleyItems) => {
+    let returnQuery = "SELECT idName, displayName FROM netsuite.allItems where (BINARY idName ='";
+    while (assembleyItems.length > 0) {
+      let temp = assembleyItems.pop();
+      returnQuery += temp;
+      returnQuery += "' or BINARY idName ='";
+    }
+
+    returnQuery = returnQuery.slice(0, -20);
+    returnQuery += await ");";
+    // console.log("Query2:", returnQuery);
+    return returnQuery;
+  }
+
+  function groupBy(collection, property) {
+    var i = 0,
+      val, index,
+      values = [],
+      result = [];
+    for (; i < collection.length; i++) {
+      val = collection[i][property];
+      index = values.indexOf(val);
+      if (index > -1)
+        result[index].push(collection[i]);
+      else {
+        values.push(val);
+        result.push([collection[i]]);
+      }
+    }
+    return result;
+  }
+
+  async function assemblyTOstock(bomItemPOP) {
+
+    while (bomItemPOP.length > 0 || bomItemFromBOM.length > 0) {
+
+      let queriesBOM;
+      if (bomItemPOP.length > 0) {
+        queriesBOM = await queryGenerator4BOM1(bomItemPOP);
+        // console.log(queriesBOM);
+      } else if (bomItemFromBOM.length > 0) {
+        queriesBOM = await queryGenerator4BOM2(bomItemFromBOM);
+        // console.log("\nbomItemFromBOM:", queriesBOM);
+      } else {
+        console.log("Something's Broken, please check!");
+      }
+
+      // sqlQueryResultFetcher();
+      let queryBOMresult = await sqlQueryResultFetcher(queriesBOM);
+      // console.log("queryBOMresult:", queryBOMresult);
+      queryBOMresult.forEach((item) => {
+        dependencyTree.push(item);
+      })
+
+      // rawBomSeparator();
+      rawBomSeparator4BOM(queryBOMresult);
+
+    }
+  }
+
+  function groupNaddRawItems() {
+
+    let totalRawItems = [];
+    let raw1 = groupBy(rawItem, "idName");
+
+    console.log("\nUnique-raw-from-rules:", raw1.length);
+
+    raw1.forEach(async function (item) {
+      // let temp = JSON.stringify(item);
+      let finalObj;
+
+      // console.log(`ITEM:${temp} has ${item.length}`);
+      for (let j = 0; j < item.length; j++) {
+        let tempItem = item[j];
+
+        if (j === 0) {
+          var firstKey = Object.keys(tempItem)[0];
+          var secondKey = Object.keys(tempItem)[2];
+          finalObj = {
+            idName: tempItem[firstKey],
+            qty: JSON.stringify(tempItem[secondKey])
+          };
+        } else {
+          var secondKey = Object.keys(tempItem)[2];
+          finalObj.qty = JSON.stringify(parseFloat(finalObj.qty) + parseFloat(tempItem[secondKey]));
+        }
+      }
+
+      totalRawItems.push(finalObj);
+    });
+
+    let raw2 = groupBy(rawItemFromBOM, "memItem");
+
+    console.log("Unique-raw-from-bom:", raw2.length);
+
+    raw2.forEach(async function (item) {
+      // let temp = JSON.stringify(item);
+      let finalObj;
+
+      // console.log(`ITEM:${temp} has ${item.length}`);
+      for (let j = 0; j < item.length; j++) {
+        let tempItem = item[j];
+
+        if (j === 0) {
+          // console.log(temp3.memItem);
+          finalObj = {
+            idName: tempItem.memItem,
+            qty: tempItem.memQuantity
+          };
+        } else {
+          finalObj.qty = JSON.stringify(parseFloat(finalObj.qty) + parseFloat(tempItem.memQuantity));
+        }
+      }
+      totalRawItems.push(finalObj);
+    });
+
+    console.log("Unique-total-before-grouping:", totalRawItems.length);
+
+    let totalRawItemsUnique = [];
+
+    let raw3 = groupBy(totalRawItems, "idName");
+
+    raw3.forEach(async function (item) {
+      // let temp = JSON.stringify(item);
+      let finalObj;
+
+      // console.log(`ITEM:${temp} has ${item.length}`);
+      for (let j = 0; j < item.length; j++) {
+        let tempItem = item[j];
+
+        if (j === 0) {
+          // console.log(temp3.memItem);
+          finalObj = {
+            idName: tempItem.idName,
+            qty: tempItem.qty
+          };
+        } else {
+          finalObj.qty = JSON.stringify(parseFloat(finalObj.qty) + parseFloat(tempItem.qty));
+        }
+      }
+      totalRawItemsUnique.push(finalObj);
+    });
+
+    totalRawItemsUnique.forEach(async function (item) {
+      if (item.idName.startsWith("Bag") || item.idName.startsWith("Modl") || item.idName.startsWith("Bttl")) {
+        console.log("ERROR@groupNaddItems:", item);
+      }
+    });
+
+    console.log("Unique-total-after-grouping:", totalRawItemsUnique.length);
+    // console.log(totalRawItemsUnique);
+
+    return totalRawItemsUnique;
+  }
+
+  async function priceCalculator(BOM, dependencyTree) {
+
+    // console.log("Checker1:", BOM);
+    // console.log("Checker2:", dependencyTree);
+
+    // // working code
+    // var kitCost = await _.map(totalRAW, function (item) {
+    //   return _.extend(item, _.find(priceQueryResults, { idName: item.idName }));
+    // });
+
+    // let sum = 0;
+
+    // kitCost.forEach(function (item) {
+    //   // console.log(`${item.idName} = ${item.qty} - ${item.averageCost} = ${item.qty * item.averageCost}`)
+    //   sum = sum + (parseFloat(item.qty) * parseFloat(item.averageCost));
+
+    // });
+    // // working code
+
+    let sum = 0;
+
+    for (let m = 0; m < BOM.length; m++) {
+      let parent = BOM[m];
+
+      if (parent.idName.startsWith("Equp") || parent.idName.startsWith("equp") || parent.idName.startsWith("Chem") || parent.idName.startsWith("Ship")) {
+
+        let moreDeatils = dependencyTree.filter(function (item2Add) {
+          return item2Add.idName == parent.idName;
+        });
+        // console.log(parent, moreDeatils);
+        sum = sum + parent.qty * moreDeatils[0].averageCost;
+      } else if (parent.idName.startsWith("Bag") || parent.idName.startsWith("Bttl") || parent.idName.startsWith("Modl")) {
+
+        let details1 = dependencyTree.filter(function (item2Add) {
+          return item2Add.idName == parent.idName;
+        });
+
+        if (details1.length > 0) {
+
+          for (let a = 0; a < details1.length; a++) {
+
+            let details2 = details1[a];
+
+            if (details2.memItem.startsWith("Bag") || details2.memItem.startsWith("Bttl") || details2.memItem.startsWith("Modl")) {
+
+              let details3 = dependencyTree.filter(function (item2Add) {
+                return item2Add.idName == details2.memItem;
+              });
+
+              if (details3.length > 0) {
+
+                for (let b = 0; b < details3.length; b++) {
+
+                  let details4 = details3[b];
+
+                  if (details4.memItem.startsWith("Bag") || details4.memItem.startsWith("Bttl") || details4.memItem.startsWith("Modl")) {
+
+                    let details5 = dependencyTree.filter(function (item2Add) {
+                      return item2Add.idName == details4.memItem;
+                    });
+
+                    if (details5.length > 0) {
+
+                      for (let a = 0; a < details5.length; a++) {
+
+                        let details6 = details5[a];
+
+                        if (details6.memItem.startsWith("Bag") || details6.memItem.startsWith("Bttl") || details6.memItem.startsWith("Modl")) {
+                          console.log("One More Level of Hirearchy found:", details6);
+                          let details7 = dependencyTree.filter(function (item2Add) {
+                            return item2Add.idName == details2.memItem;
+                          });
+
+
+
+                        } else if (details6.memItem.startsWith("Equp") || details6.memItem.startsWith("equp") || details6.memItem.startsWith("Chem") || details6.memItem.startsWith("Ship")) {
+                          sum = sum + details6.memQuantity * details6.averageCost;
+                        } else {
+                          console.log("Error@priceCalculator3:", details6);
+                        }
+                      }
+                    }
+
+                  } else if (details4.memItem.startsWith("Equp") || details4.memItem.startsWith("equp") || details4.memItem.startsWith("Chem") || details4.memItem.startsWith("Ship")) {
+                    sum = sum + details4.memQuantity * details4.averageCost;
+                  } else {
+                    console.log("Error@priceCalculator2:", details4);
+                  }
+                }
+              }
+
+            } else if (details2.memItem.startsWith("Equp") || details2.memItem.startsWith("equp") || details2.memItem.startsWith("Chem") || details2.memItem.startsWith("Ship")) {
+              sum = sum + details2.memQuantity * details2.averageCost;
+            } else {
+              console.log("Error@priceCalculator1:", details2);
+            }
+          }
+        }
+
+
+
+      } else {
+        console.log("Error@priceCalculator:", parent);
+      }
+
+
+
+
+    }
+
+
+    let packingAndOtherCost = 5;
+
+    return sum + packingAndOtherCost;
+  }
+
+  function gpAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function gcAdditions(id, itemsToAdd) {
+
+    // TEST TUBES CONDITION // - 101
+    if (id.includes("gc-25")) {
+      itemsToAdd.push({
+        idName: 'Bag1019',
+        lab: '5,12,23,25',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-5") || id.includes("gc-12") || id.includes("gc-23")) {
+      itemsToAdd.push({
+        idName: 'Bag1018',
+        lab: '5,12,23',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Pipette Condition
+    let pipetteCountGC = 0;
+
+    if (id.includes("gc-2")) {
+      pipetteCountGC += 2;
+    }
+    if (id.includes("gc-4")) {
+      pipetteCountGC += 10;
+    }
+    if (id.includes("gc-8")) {
+      pipetteCountGC += 2;
+    }
+    if (id.includes("gc-10")) {
+      pipetteCountGC += 1;
+    }
+    if (id.includes("gc-11")) {
+      pipetteCountGC += 1;
+    }
+    if (id.includes("gc-14")) {
+      pipetteCountGC += 1;
+    }
+    if (id.includes("gc-16")) {
+      pipetteCountGC += 7;
+    }
+    if (id.includes("gc-17")) {
+      pipetteCountGC += 9;
+    }
+    if (id.includes("gc-18")) {
+      pipetteCountGC += 4;
+    }
+    if (id.includes("gc-19")) {
+      pipetteCountGC += 2;
+    }
+
+    pipetteCountGC = Math.ceil((pipetteCountGC * 1.25) / 10) * 10;
+
+    let pipette2GC = Math.floor(pipetteCountGC / 20);
+    let pipette1GC = pipetteCountGC % 20;
+
+    if (pipette1GC > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1030',
+        lab: 100,
+        qty: pipette1GC / 10,
+        unit: 'each'
+      });
+    }
+    if (pipette2GC > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1028',
+        lab: 100,
+        qty: pipette2GC,
+        unit: 'each'
+      });
+    }
+
+    // THERMOMETER CONDITION // - 102
+
+    if (id.includes("gc-13")) {
+      itemsToAdd.push({
+        idName: 'Equp4029',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-8") || id.includes("gc-9") || id.includes("gc-12") || id.includes("gs-14")) {
+      itemsToAdd.push({
+        idName: 'Equp8029',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-21")) {
+      itemsToAdd.push({
+        idName: 'Equp8251',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // 0.5% Sodium Chloride Solution Condition - 103
+    if (id.includes("gc-22")) {
+      itemsToAdd.push({
+        idName: 'Bttl4106',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-4")) {
+      itemsToAdd.push({
+        idName: 'Bttl4301',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Lab 8 - Lab 16 // 3% Hydrogen Peroxide Condition // - 104
+    if (id.includes("gc-8") && id.includes("gc-16")) {
+      itemsToAdd.push({
+        idName: 'Bttl4243',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-16")) {
+      itemsToAdd.push({
+        idName: 'Bttl1752',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-8")) {
+      itemsToAdd.push({
+        idName: 'Bttl5027',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Lab 18, 13, (2, 5, 17), 21 // 4.5 % Actic Acid (vinegar) // - 105
+
+    // All four IN
+    if (id.includes("gc-18") && id.includes("gc-13") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      itemsToAdd.push({
+        idName: 'Bttl7104',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      // Combination 3 IN
+    } else if (id.includes("gc-18") && id.includes("gc-13") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-13") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl4012',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      itemsToAdd.push({
+        idName: 'Bttl4765',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-18") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-18") && id.includes("gc-13") && id.includes("gc-21")) {
+      itemsToAdd.push({
+        idName: 'Bttl4012',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      itemsToAdd.push({
+        idName: 'Bttl4014',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      // Combination 2 IN
+    } else if (id.includes("gc-18") && id.includes("gc-13")) {
+      itemsToAdd.push({
+        idName: 'Bttl4014',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-18") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl4100',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-18") && id.includes("gc-21")) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-13") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl4765',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-13") && id.includes("gc-21")) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      // Just 1 Lab IN
+    } else if (id.includes("gc-18")) {
+      itemsToAdd.push({
+        idName: 'Bttl3041',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-13")) {
+      itemsToAdd.push({
+        idName: 'Bttl4765',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-7")) {
+      itemsToAdd.push({
+        idName: 'Bttl7105',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-21")) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+
+    // Iodine-Potassium Iodide Solution condition - 106
+    if (id.includes("gc-16")) {
+      itemsToAdd.push({
+        idName: 'Bttl4232',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-25") && !(id.includes("gc-16"))) {
+      itemsToAdd.push({
+        idName: 'Bttl8804',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Turmeric indicator (Add 1/4 teaspoon (1.23ml) of turmeric to four tablespoons (60 ml) of rubbing alcohol condition - 107
+    if (id.includes("gc-17") && id.includes("gc-20")) {
+      itemsToAdd.push({
+        idName: 'Bttl4098',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-17") ? !(id.includes("gc-20")) : id.includes("gc-20")) {
+      itemsToAdd.push({
+        idName: 'Bttl4198',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    return itemsToAdd;
+  }
+
+  function ibAdditions(id, itemsToAdd) {
+
+    // Glass Test Tubes
+    if (id.includes('ib-5') || id.includes('ib-9')) {
+      itemsToAdd.push({
+        idName: 'Bag1019',
+        lab: 200,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('ib-7')) {
+      itemsToAdd.push({
+        idName: 'Bag1018',
+        lab: 200,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('ib-8') || id.includes('ib-20')) {
+      itemsToAdd.push({
+        idName: 'Bag1017',
+        lab: 200,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Pipette Condition
+    let pipetteCountIB = 0;
+
+    if (id.includes("ib-2")) {
+      pipetteCountIB += 2;
+    }
+    if (id.includes("ib-5")) {
+      pipetteCountIB += 10;
+    }
+    if (id.includes("ib-6")) {
+      pipetteCountIB += 2;
+    }
+    if (id.includes("ib-7")) {
+      pipetteCountIB += 1;
+    }
+    if (id.includes("ib-9")) {
+      pipetteCountIB += 1;
+    }
+    if (id.includes("ib-20")) {
+      pipetteCountIB += 1;
+    }
+
+    pipetteCountIB = Math.ceil((pipetteCountIB * 1.25) / 10) * 10;
+
+    let pipette2IB = Math.floor(pipetteCountIB / 20);
+    let pipette1IB = pipetteCountIB % 20;
+
+    if (pipette1IB > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1030',
+        lab: 200,
+        qty: pipette1IB / 10,
+        unit: 'each'
+      });
+    }
+    if (pipette2IB > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1028',
+        lab: 200,
+        qty: pipette2IB,
+        unit: 'each'
+      });
+    }
+
+    // 1% Glucose Solution, C6H12O6
+    if (id.includes('ib-9')) {
+      itemsToAdd.push({
+        idName: 'Bttl5069',
+        lab: 200,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('ib-6')) {
+      itemsToAdd.push({
+        idName: 'Bttl1081',
+        lab: 200,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('ib-5')) {
+      itemsToAdd.push({
+        idName: 'Bttl1081',
+        lab: 200,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+
+    return itemsToAdd;
+  }
+
+  function apAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function mbAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function icAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function asAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function gbAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function esAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function fsAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function ipAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function hbAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function hgAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function sgAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function bgAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function rmAdditions(id, itemsToAdd) {
+
+
+
+    return itemsToAdd;
+  }
+
+  function ptAdditions(id, itemsToAdd) {
+
+    if (id.includes('pt-1') && id.includes('pt-3') && id.includes('pt-5')) {
+      itemsToAdd.push({
+        idName: 'Bttl1515',
+        lab: '1,3,5',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('pt-3') && id.includes('pt-5')) {
+      itemsToAdd.push({
+        idName: 'Bttl1515',
+        lab: '3,5',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('pt-1') && id.includes('pt-5')) {
+      itemsToAdd.push({
+        idName: 'Bttl1515',
+        lab: '3,5',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('pt-1') && id.includes('pt-3')) {
+      itemsToAdd.push({
+        idName: 'Bttl1601',
+        lab: '1,3',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('pt-3') || id.includes('pt-5')) {
+      itemsToAdd.push({
+        idName: 'Bttl1601',
+        lab: '3/5',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('pt-1')) {
+      itemsToAdd.push({
+        idName: 'Bttl1603',
+        lab: 1,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+
+    return itemsToAdd;
+  }
+
+  async function performComplexAdditions(sub, id) {
+
+    // ****************************************************************//
+    // IMPLEMENT THE '1. 2.Get complex conditions from the code' HERE //
+    // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv //
+
+    // array to hold special items to be added to the calculation
+    let itemsToAdd = [];
+
+    // start getting the array of special items depending on the subject
+    switch (sub) {
+      case 'gp':
+        itemsToAdd = gpAdditions(id, itemsToAdd);
+        break;
+      case 'gc':
+        itemsToAdd = gcAdditions(id, itemsToAdd);
+        break;
+      case 'ib':
+        itemsToAdd = ibAdditions(id, itemsToAdd);
+        break;
+      case 'ap':
+        itemsToAdd = apAdditions(id, itemsToAdd);
+        break;
+      case 'mb':
+        itemsToAdd = mbAdditions(id, itemsToAdd);
+        break;
+      case 'ic':
+        itemsToAdd = icAdditions(id, itemsToAdd);
+        break;
+      case 'as':
+        itemsToAdd = asAdditions(id, itemsToAdd);
+        break;
+      case 'gb':
+        itemsToAdd = gbAdditions(id, itemsToAdd);
+        break;
+      case 'es':
+        itemsToAdd = esAdditions(id, itemsToAdd);
+        break;
+      case 'fs':
+        itemsToAdd = fsAdditions(id, itemsToAdd);
+        break;
+      case 'ip':
+        itemsToAdd = ipAdditions(id, itemsToAdd);
+        break;
+      case 'hb':
+        itemsToAdd = hbAdditions(id, itemsToAdd);
+        break;
+      case 'hg':
+        itemsToAdd = hgAdditions(id, itemsToAdd);
+        break;
+      case 'sg':
+        itemsToAdd = sgAdditions(id, itemsToAdd);
+        break;
+      case 'bg':
+        itemsToAdd = bgAdditions(id, itemsToAdd);
+        break;
+      case 'rm':
+        itemsToAdd = rmAdditions(id, itemsToAdd);
+        break;
+      case 'pt':
+        itemsToAdd = ptAdditions(id, itemsToAdd);
+        break;
+      default:
+        console.log('error @ performComplexAdditions');
+    }
+
+    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ //
+    // IMPLEMENT THE '1. 2.Get complex conditions from the code' HERE //
+    // ****************************************************************//
+
+    itemsToAdd.forEach(function (item) {
+
+      var firstKey = Object.keys(item)[0];
+      var secondKey = Object.keys(item)[2];
+
+      BOM.push({
+        'idName': item[firstKey],
+        'qty': item[secondKey]
+      });
+    });
+
+    console.log("\nSpecial Items Added:", itemsToAdd);
+    await rawBomSeparator4rules(itemsToAdd);
+
+  }
+
+  let adminPageMapping = async function (resAR, priceQueryResults, sub) {
+
+    // console.log("Admin Calculate");
+    let labsArray = [];
+
+    // resAR.push(rawItem);
+    rawItem.forEach(function (item) {
+      labsArray.push(item.idName);
+
+      var firstKey = Object.keys(item)[0];
+      var secondKey = Object.keys(item)[2];
+      var thirdKey = Object.keys(item)[3];
+
+      dependencyTree.push({
+        idName: item[firstKey],
+        qty: item[secondKey],
+        unit: item[thirdKey]
+      });
+    });
+
+    // resAR.push(rawItemFromBOM);
+
+    // Combines dependencyTree.memItem with priceQueryResults.idName to combine memItem display name
+    dependencyTree.forEach(async function (item) {
+      let addItem = priceQueryResults.filter(function (item2Add) {
+        return item2Add.idName == item.memItem;
+      });
+
+      if (addItem.length > 0) {
+        item["memDisplayName"] = addItem[0].displayName;
+        item["averageCost"] = addItem[0].averageCost;
+      }
+    });
+    // Combines dependencyTree.memItem with priceQueryResults.idName to combine memItem display name
+
+    // Combines dependencyTree.idName with priceQueryResults.idName to combine item display name
+    dependencyTree.forEach(async function (item) {
+      let addItem = priceQueryResults.filter(function (item2Add) {
+        return item2Add.idName == item.idName;
+      });
+
+      if (addItem.length > 0) {
+        item["displayName"] = addItem[0].displayName;
+        item["averageCost"] = addItem[0].averageCost;
+      }
+    });
+    // Combines dependencyTree.idName with priceQueryResults.idName to combine item display name
+
+    // resAR.push(dependencyTree);
+    // resAR.push(priceQueryResults);
+
+    // get the names of Assembly Items
+    let flags = [],
+      assembleyItemName = [],
+      l = rawItemFromBOM.length,
+      i;
+    for (i = 0; i < l; i++) {
+      if (flags[rawItemFromBOM[i].idName]) continue;
+      flags[rawItemFromBOM[i].idName] = true;
+      assembleyItemName.push(rawItemFromBOM[i].idName);
+      labsArray.push(rawItemFromBOM[i].idName);
+    }
+
+    let assembleyItemNameDetails = [];
+    if (assembleyItemName.length > 0) {
+      let assemblyNameQuery = await assembleyItemNameQueryGenerator(assembleyItemName);
+      // console.log("assemblyNameQuery:", assemblyNameQuery);
+      assembleyItemNameDetails = await sqlQueryResultFetcher(assemblyNameQuery);
+    }
+
+    // Combines dependencyTree.idName with assembleyItemNameDetails.idName to combine Module display name
+    dependencyTree.forEach(async function (item) {
+      let addItem = assembleyItemNameDetails.filter(function (item2Add) {
+        return item2Add.idName == item.idName;
+      });
+
+      if (addItem.length > 0) {
+        item["displayName"] = addItem[0].displayName;
+      }
+    });
+    // Combines dependencyTree.idName with assembleyItemNameDetails.idName to combine Module display name
+
+
+    // resAR.push(assembleyItemNameDetails);
+    // get the names of Assembly Items
+
+    // to get all corresponding lab nos. // run from labs, get items for each sub, run subsequent lab info queryand populate
+    let labsQuery = await labsQueryGenerator4displayLabs(labsArray, sub);
+    // console.log("labsQuery:",labsQuery);
+    let labsDetails = await sqlQueryResultFetcher(labsQuery);
+    const labsresult = labsDetails.filter(function (item) {
+      if (item.operator === '+' || item.operator === '/' || item.operator === '*') {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    // let labsDetailsScoped = [];
+    // labsDetails.forEach(function (rules){
+    //   if(id.includes(rules.lab)){
+    //     labsDetailsScoped.push(rules);
+    //   }
+    // });
+
+    let labsDetailsGrouped = await groupBy(labsresult, "idName");
+    // console.log("labs:", labsDetailsGrouped);
+
+    let labsDetailsScoped = [];
+    labsDetailsGrouped.forEach(async function (item) {
+      // let temp = JSON.stringify(item);
+      let finalObj;
+
+      // console.log(`ITEM:${temp} has ${item.length}`);
+      for (let j = 0; j < item.length; j++) {
+        let tempItem = item[j];
+
+        if (j === 0) {
+          var firstKey = Object.keys(tempItem)[0];
+          var secondKey = Object.keys(tempItem)[1];
+          finalObj = {
+            idName: tempItem[firstKey],
+            lab: JSON.stringify(tempItem[secondKey])
+          };
+        } else {
+          var secondKey = Object.keys(tempItem)[1];
+          finalObj.lab = finalObj.lab + "," + tempItem[secondKey];
+        }
+        // console.log("Final:", finalObj);
+      }
+
+      labsDetailsScoped.push(finalObj);
+    });
+
+    // Combines dependencyTree.idName with labsDetailsScoped.idName to combine lab
+    dependencyTree.forEach(async function (item) {
+      let addItem = labsDetailsScoped.filter(function (item2Add) {
+        return item2Add.idName == item.idName;
+      });
+
+      if (addItem.length > 0) {
+        item["lab"] = addItem[0].lab;
+      }
+    });
+    // Combines dependencyTree.idName with labsDetailsScoped.idName to combine lab
+
+    // resAR.push(labsDetailsScoped);
+    // to get all corresponding lab nos.
+
+    // Attempt to PUSH 4, 5 as complete
+    // let BOMmerged = [].concat.apply([], BOM);
+    resAR.push(BOM);
+    resAR.push(dependencyTree);
+
+    // Attempt to PUSH 4, 5 as complete 
+    return resAR;
+  }
+
+  async function looper4eachSubject(sub, id) {
+
+    rawItem = [];
+    bomItem = [];
+    rawItemFromBOM = [];
+    bomItemFromBOM = [];
+    BOM = [];
+    dependencyTree = [];
+
+
+    // let sub = 'gc';
+    // // receive the id params sent from the api request 
+    // const id = req.params.id;
+    // console.log('id:', id);
+    // generate the basic 3 queries for the database interatcion +,/,*
+    let queries2getRules = await queryGenerator4labsInitial(sub, id);
+    // console.log('queries2getRules:', queries2getRules);
+
+    // sql mode query to set the database to be grouped by single field
+    let sqlMode = await sqlQueryResultFetcher("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+    // console.log(sqlMode);
+
+    // query the self built database GC to or RULES to get level 1 items ****************** LOOP THIS PROCESS ************************
+
+    while (queries2getRules.length > 0) {
+      let query = queries2getRules.pop();
+      let rules = await sqlQueryResultFetcher(query);
+
+      rules.forEach(function (item) {
+
+        var firstKey = Object.keys(item)[0];
+        var secondKey = Object.keys(item)[2];
+
+        BOM.push({
+          'idName': item[firstKey],
+          'qty': item[secondKey]
+        });
+      });
+
+      await rawBomSeparator4rules(rules);
+    }
+
+    // ****************************************************************//
+    // IMPLEMENT THE '1. 2.Get complex conditions from the code' HERE //
+    // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv //
+
+    let idASstring = '';
+    id.forEach((i) => {
+      idASstring += sub + '-' + i + ' ';
+    });
+    await performComplexAdditions(sub, await idASstring);////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ //
+    // IMPLEMENT THE '1. 2.Get complex conditions from the code' HERE //
+    // ****************************************************************//
+
+    // check if the items list in raw and bom empty, if yes -> return
+    if (BOM.length === 0) {
+      return 'INVALID REQUEST';
+    }
+
+    // Copy bomItem to bomItemPOP. Where bomItemPOP is the array which will be poped
+    // let bomItemPOP = await JSON.parse(JSON.stringify(bomItem));
+    let bomItemPOP = await bomItem.slice();
+    // Still need to figure out a way to inject more than 1 packaged item into each individual line item **********************************************
+
+    // start quering the database to get down all the elements down to inventory level
+    await assemblyTOstock(bomItemPOP);
+
+    // UNIQUE STOCK WITH SUMMED QUANTITY //
+    let totalRawItemsUnique = await groupNaddRawItems();
+    let totalRAW = totalRawItemsUnique.slice();
+
+    // Get full details of the all the UNIQUE STOCK items
+    let priceQuery = await priceQueryGenerator(totalRawItemsUnique);
+    // console.log('priceQuery:', priceQuery);
+    let priceQueryResults = await sqlQueryResultFetcher(priceQuery);
+    console.log("\nSQL Result Size:", priceQueryResults.length);
+    // console.log(priceQueryResults);
+
+    priceQueryResults.forEach(async function (item) {
+      if (item.averageCost === -1) {
+        console.log("ERROR@priceQueryResults:", item);
+        item.averageCost = 0;
+      }
+    });
+
+
+    // this is done coz there was a disturbacy in th price
+    let resAR = [];
+    let response = await adminPageMapping(resAR, priceQueryResults, sub);
+    // console.log('response:', response);
+    let kitCost = await priceCalculator(BOM, dependencyTree);
+
+    let lowerPrice = kitCost / 0.35;
+    let upperPrice = kitCost / 0.31;
+
+    console.log("ESTIMATED KIT COST:", kitCost);
+
+    response.push(kitCost);
+    response.push(lowerPrice);
+    response.push(upperPrice);
+
+    // console.log("BOM:", BOM); //BOM is ready
+
+    let serverResponse = [];
+    // This is done only for admin's page
+    // if (id.includes("x")) {
+
+    serverResponse.push(response[3]);
+    serverResponse.push(response[4]);
+    serverResponse.push(response[2]);
+    serverResponse.push(response[0]);
+    serverResponse.push(response[1]);
+
+    return serverResponse;
+
+  }
+
+  async function combineTHEsubjects(serverResponse, serverResponseOther) {
+
+    let interscetionItems = [];
+
+    serverResponse[3].forEach((present) => {
+      serverResponseOther[3].forEach((current) => {
+
+        if (present.idName === current.idName && current.idName.toUpperCase().startsWith('EQUP') && current.qty > present.qty) {
+          // console.log('\nSTART\nserverResponse:', serverResponse[3]);
+          // console.log('serverResponseOther:', serverResponseOther[3]);
+          // console.log('\nserverResponse:', serverResponse[2]);
+          // console.log('serverResponseOther:', serverResponseOther[2]);
+          // this part will add the difference item to the final array
+          let oldQty = present.qty;
+          present.qty = current.qty;
+          // let posBOM = serverResponse[3].map(function (e) { return e.idName; }).indexOf(present.idName);
+          let pos = serverResponse[4].map(function (e) { return e.idName; }).indexOf(present.idName);
+          let pricePerUnit = serverResponse[4][pos].averageCost;
+          let differenceAmount = (current.qty - oldQty) * pricePerUnit;
+          serverResponse[0] += differenceAmount / 0.35;
+          serverResponse[1] += differenceAmount / 0.31;
+          serverResponse[2] += differenceAmount;
+          // this part will add the difference item to the final array
+
+          // this part will remove the added item from the current array
+          serverResponseOther[0] -= pricePerUnit * current.qty / 0.35;
+          serverResponseOther[1] -= pricePerUnit * current.qty / 0.31;
+          serverResponseOther[2] -= pricePerUnit * current.qty;
+          interscetionItems.push(current);
+          // console.log('\ndifferenceAmount 1:', differenceAmount);
+          // console.log('\nEND\nserverResponse:', serverResponse[3]);
+          // console.log('serverResponseOther:', serverResponseOther[3]);
+          // console.log('\nserverResponse:', serverResponse[2]);
+          // console.log('serverResponseOther:', serverResponseOther[2]);
+          // this part will remove the added item from the current array
+        } else if ((present.idName === current.idName && current.idName.toUpperCase().startsWith('EQUP') && present.qty > current.qty)) {
+          // console.log('serverResponseOther:', serverResponseOther);
+          let pos = serverResponse[4].map(function (e) { return e.idName; }).indexOf(present.idName);
+          let pricePerUnit = serverResponse[4][pos].averageCost;
+          let differenceAmount = (current.qty - present.qty) * pricePerUnit;
+          serverResponseOther[0] -= pricePerUnit * current.qty / 0.35;
+          serverResponseOther[1] -= pricePerUnit * current.qty / 0.31;
+          serverResponseOther[2] -= pricePerUnit * current.qty;
+          interscetionItems.push(current);
+          // console.log('\ndifferenceAmount 2:', differenceAmount);
+        } else if ((present.idName === current.idName && current.idName.toUpperCase().startsWith('EQUP') && current.qty === present.qty)) {
+          // console.log('serverResponseOther:', serverResponseOther);
+          let pos = serverResponse[4].map(function (e) { return e.idName; }).indexOf(present.idName);
+          let differenceAmount = present.qty * serverResponse[4][pos].averageCost;
+          serverResponseOther[0] -= differenceAmount / 0.35;
+          serverResponseOther[1] -= differenceAmount / 0.31;
+          serverResponseOther[2] -= differenceAmount;
+          interscetionItems.push(current);
+          // console.log('\ndifferenceAmount 3:', differenceAmount);
+        }
+      });
+    });
+
+    // this will remove intersected items from the serverResponseOther
+    if (interscetionItems.length > 0) {
+      interscetionItems.forEach((del) => {
+        let posBOM = serverResponseOther[3].map(function (e) { return e.idName; }).indexOf(del.idName);
+        let pos = serverResponseOther[4].map(function (e) { return e.idName; }).indexOf(del.idName);
+        serverResponseOther[3].splice(posBOM, 1);
+        serverResponseOther[4].splice(pos, 1);
+      });
+    }
+
+    // this will add the remaining items from the serverResponseOther to serverResponse and adjust the pricing
+    if (serverResponseOther[3].length > 0) {
+
+      serverResponse[0] += serverResponseOther[0] - 5 / 0.35;
+      serverResponse[1] += serverResponseOther[1] - 5 / 0.31;
+      serverResponse[2] += serverResponseOther[2] - 5;
+
+      serverResponseOther[3].forEach((bomItem) => {
+        serverResponse[3].push(bomItem);
+      });
+
+      serverResponseOther[4].forEach((bomItem) => {
+        serverResponse[4].push(bomItem);
+      });
+
+    } else {
+      serverResponse[0] += serverResponseOther[0] - 5 / 0.35;
+      serverResponse[1] += serverResponseOther[1] - 5 / 0.31;
+      serverResponse[2] += serverResponseOther[2] - 5;
+    }
+
+    // this will remove duplicates from the dependency tree or the items under the modules, bags, bottles will duplicated at the UI level
+    serverResponse[4] = serverResponse[4].filter((tree, index, self) =>
+      index === self.findIndex((t) => (
+        t.idName === tree.idName && t.memItem === tree.memItem
+      ))
+    );
+
+    return await serverResponse;
+
+  }
+
+  const ckpProcessor = async () => {
+
+    const id = req;
+
+    let ids;
+    let gp, gc, ib, ap, mb, ic, as, gb, es, fs, ip, hb, hg, sg, bg, rm, pt;
+
+    gp = [];
+    gc = [];
+    ib = [];
+    ap = [];
+    mb = [];
+    ic = [];
+    as = [];
+    gb = [];
+    es = [];
+    fs = [];
+    ip = [];
+    hb = [];
+    hg = [];
+    sg = [];
+    bg = [];
+    rm = [];
+    pt = [];
+
+    ids = await id.split(" ");
+
+    // separate each subject labs
+    for (let i = 0; i < ids.length; i++) {
+      let subject = await ids[i].split("-");
+
+      switch (subject[0]) {
+        case 'gp':
+          gp.push(subject[1]);
+          break;
+        case 'gc':
+          gc.push(subject[1]);
+          break;
+        case 'ib':
+          ib.push(subject[1]);
+          break;
+        case 'ap':
+          ap.push(subject[1]);
+          break;
+        case 'mb':
+          mb.push(subject[1]);
+          break;
+        case 'ic':
+          ic.push(subject[1]);
+          break;
+        case 'as':
+          as.push(subject[1]);
+          break;
+        case 'gb':
+          gb.push(subject[1]);
+          break;
+        case 'es':
+          es.push(subject[1]);
+          break;
+        case 'fs':
+          fs.push(subject[1]);
+          break;
+        case 'ip':
+          ip.push(subject[1]);
+          break;
+        case 'hb':
+          hb.push(subject[1]);
+          break;
+        case 'hg':
+          hg.push(subject[1]);
+          break;
+        case 'sg':
+          sg.push(subject[1]);
+          break;
+        case 'bg':
+          bg.push(subject[1]);
+          break;
+        case 'rm':
+          rm.push(subject[1]);
+          break;
+        case 'pt':
+          pt.push(subject[1]);
+          break;
+        default:
+          console.log("ERROR@ckpProcessor2:", ids[i]);
+          break;
+      }
+    }
+
+    let serverResponse, serverResponseAP, serverResponseGC, serverResponseGP, serverResponseIB, serverResponseIC, serverResponseMB, serverResponseAS, serverResponseGB;
+    let serverResponseES, serverResponseFS, serverResponseIP, serverResponseHB, serverResponseHG, serverResponseSG, serverResponseBG, serverResponseRM, serverResponsePT;
+    serverResponse = [];
+    serverResponseAP = [];
+    serverResponseGC = [];
+    serverResponseGP = [];
+    serverResponseIB = [];
+    serverResponseIC = [];
+    serverResponseMB = [];
+    serverResponseAS = [];
+    serverResponseGB = [];
+    serverResponseES = [];
+    serverResponseFS = [];
+    serverResponseIP = [];
+    serverResponseHB = [];
+    serverResponseHG = [];
+    serverResponseSG = [];
+    serverResponseBG = [];
+    serverResponseRM = [];
+    serverResponsePT = [];
+
+    // get items for labs of each subject
+    if (gp.length > 0)
+      serverResponseGP = await looper4eachSubject('gp', gp);
+    if (gc.length > 0)
+      serverResponseGC = await looper4eachSubject('gc', gc);
+    if (ib.length > 0)
+      serverResponseIB = await looper4eachSubject('ib', ib);
+    if (ap.length > 0)
+      serverResponseAP = await looper4eachSubject('ap', ap);
+    if (mb.length > 0)
+      serverResponseMB = await looper4eachSubject('mb', mb);
+    if (ic.length > 0)
+      serverResponseIC = await looper4eachSubject('ic', ic);
+    if (as.length > 0)
+      serverResponseAS = await looper4eachSubject('as', as);
+    if (gb.length > 0)
+      serverResponseGB = await looper4eachSubject('gb', gb);
+    if (es.length > 0)
+      serverResponseES = await looper4eachSubject('es', es);
+    if (fs.length > 0)
+      serverResponseFS = await looper4eachSubject('fs', fs);
+    if (ip.length > 0)
+      serverResponseIP = await looper4eachSubject('ip', ip);
+    if (hb.length > 0)
+      serverResponseHB = await looper4eachSubject('hb', hb);
+    if (hg.length > 0)
+      serverResponseHG = await looper4eachSubject('hg', hg);
+    if (sg.length > 0)
+      serverResponseSG = await looper4eachSubject('sg', sg);
+    if (bg.length > 0)
+      serverResponseBG = await looper4eachSubject('bg', bg);
+    if (rm.length > 0)
+      serverResponseRM = await looper4eachSubject('rm', rm);
+    if (pt.length > 0)
+      serverResponsePT = await looper4eachSubject('pt', pt);
+
+    // start combining the items of all subjects
+    if (serverResponseGP.length > 0 && serverResponseGP !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseGP.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseGP);
+
+      }
+    }
+
+    if (serverResponseGC.length > 0 && serverResponseGC !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseGC.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseGC);
+
+      }
+    }
+
+    if (serverResponseIB.length > 0 && serverResponseIB !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseIB.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseIB);
+
+      }
+    }
+
+    if (serverResponseAP.length > 0 && serverResponseAP !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseAP.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseAP);
+
+      }
+    }
+
+    if (serverResponseMB.length > 0 && serverResponseMB !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseMB.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseMB);
+
+      }
+    }
+
+    if (serverResponseIC.length > 0 && serverResponseIC !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseIC.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseIC);
+
+      }
+    }
+
+    if (serverResponseAS.length > 0 && serverResponseAS !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseAS.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseAS);
+
+      }
+    }
+
+    if (serverResponseGB.length > 0 && serverResponseGB !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseGB.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseGB);
+
+      }
+    }
+
+    if (serverResponseES.length > 0 && serverResponseES !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseES.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseES);
+
+      }
+    }
+
+    if (serverResponseFS.length > 0 && serverResponseFS !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseFS.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseFS);
+
+      }
+    }
+
+    if (serverResponseIP.length > 0 && serverResponseIP !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseIP.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseIP);
+
+      }
+    }
+
+    if (serverResponseHB.length > 0 && serverResponseHB !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseHB.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseHB);
+
+      }
+    }
+
+    if (serverResponseHG.length > 0 && serverResponseHG !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseHG.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseHG);
+
+      }
+    }
+
+    if (serverResponseSG.length > 0 && serverResponseSG !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseSG.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseSG);
+
+      }
+    }
+
+    if (serverResponseBG.length > 0 && serverResponseBG !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseBG.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseBG);
+
+      }
+    }
+
+    if (serverResponseRM.length > 0 && serverResponseRM !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseRM.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseRM);
+
+      }
+    }
+
+    if (serverResponsePT.length > 0 && serverResponsePT !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponsePT.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponsePT);
+
+      }
+    }
+
+    await serverResponse;
+
+    if (serverResponse.length === 0) {
+      return 'INVALID REQUEST';
+    } else {
+      return serverResponse;
+    }
+
+  };
+
+  return ckpProcessor().then((message) => {
+    console.log("\n#### response sent to client ####\n");
+    return message;
+  }, (e) => {
+    console.log("ERROR@ckpProcessor:", e);
+    return e;
+  });
+}
+
+// 0,1 // route 1 - Admin - For Calculating the cost
+app.get('/ckp1/:id', authenticate, async (req, res) => {
+
+  // RBAC
+  if (req.user.role === 2) {
+    res.status(418).send();
+    return;
+  }
+
+  ckpFunc(req.params.id).then((ckpAns) => {
+    if (ckpAns === 'INVALID REQUEST') {
+      res.status(406).send(ckpAns);
+    } else {
+      res.status(200).send(ckpAns);
+    }
+  }, (e) => {
+    console.log("ERROR@ckp1:", e);
+    res.status(500).send(e);
+  });
+
+});
+
+// 2 // route 2 - Sales - For Calculating the cost
+app.get('/ckp2/:id', authenticate, async (req, res) => {
+
+  ckpFunc(req.params.id).then((ckpAns) => {
+    if (ckpAns === 'INVALID REQUEST') {
+      res.status(406).send(ckpAns);
+    } else {
+      let ckpAnsLess = [];
+      ckpAnsLess.push(Math.round((ckpAns[0] + ckpAns[1]) / 2));
+      res.status(200).send(ckpAnsLess);
+    }
+  }, (e) => {
+    console.log("ERROR@ckp1:", e);
+    res.status(500).send(e);
+  });
+
+});
+
+// 0,1 // route 3 - Admin - for saving the proposal ---------------------------------- PART 1
+app.post('/ckp1/save', authenticate, async (req, res) => {
+
+  // RBAC
+  if (req.user.role === 2) {
+    res.status(418).send();
+    return;
+  }
+
+  let cdata = req.body;
+
+  // console.log("body:", cdata);
+
+  let data = '';
+  await Object.keys(cdata).forEach(key => {
+    // console.log("\nKey:", key);
+    data += key;
+  });
+
+  await Object.values(cdata).forEach(value => {
+    // console.log("\nValue:", value);
+    data += value;
+  });
+
+  // console.log("\n\n\nData:", data);
+
+  let pageArray = JSON.parse(data.split('???')[0]);
+  let bomArray = JSON.parse(data.split('???')[1]);
+  let packingListArray = JSON.parse(data.split('???')[2]);
+
+  let timestamp = new Date().toLocaleString();
+  timestamp = timestamp.split('/').join('-');
+  timestamp = timestamp.split(' ').join('');
+  timestamp = timestamp.split(',').join('-');
+
+  let sDocName;
+  let cDocName = pageArray[0];
+  let cDocNameSplit = cDocName.split('@');
+  if (cDocNameSplit.length > 1) {
+    let version = cDocNameSplit[1].split('#');
+    sDocName = `${cDocNameSplit[0]}@${timestamp}#${version[1]}`;
+  } else {
+    sDocName = `${pageArray[0]}---${req.user.fName}@${timestamp}`;
+  }
+
+  let proposal = new Proposal({
+    userID: req.user._id,
+    name: sDocName,
+    type: 'PROPOSAL',
+    bActual: pageArray[1],
+    bLower: pageArray[2],
+    bUpper: pageArray[3],
+    fActual: pageArray[4],
+    fLower: pageArray[5],
+    fUpper: pageArray[6],
+    searchBox: pageArray[7],
+    institution: pageArray[8],
+    instructor: pageArray[9],
+    pNumber: pageArray[10],
+    pDescription: pageArray[11],
+    estimate: pageArray[12],
+    uPrice: pageArray[13],
+    uShip: pageArray[14],
+    txt: pageArray[15],
+    notes: pageArray[16],
+    proposalDOC: `proposal_${sDocName}.pdf`,
+    bomCSV: `bom_${sDocName}.csv`,
+    packingCSV: `packingList_${sDocName}.csv`
+  });
+
+  // console.log("\n\npageArray:", pageArray);
+  // console.log("\n\nbomArray:", bomArray);
+  // console.log("\n\npackingListArray:", packingListArray);
+
+  proposal.save().then((doc) => {
+    // console.log("Proposal details were saved successfully");
+
+    // BOM FILE
+    // let fileBOM = fs.createWriteStream(`bom_${pageArray[0]}---${req.user.fName}@${timestamp}.csv`);
+    let fileBOM = fs.createWriteStream(bomFileServer + `bom_${sDocName}.csv`);
+
+    fileBOM.on('error', function (err) {
+      /* error handling */
+      console.log("error@fileIOBOM4admin");
+    });
+    bomArray.forEach(function (v) {
+      fileBOM.write(v + '\n');
+    });
+    fileBOM.end();
+    // BOM FILE
+
+    // PackingList FILE
+    // let filePackingList = fs.createWriteStream(`packingList_${pageArray[0]}---${req.user.fName}@${timestamp}.csv`);
+    let filePackingList = fs.createWriteStream(packingFileServer + `packingList_${sDocName}.csv`);
+
+    filePackingList.on('error', function (err) {
+      /* error handling */
+      console.log("error@fileIOpackingListArray");
+    });
+    packingListArray.forEach(function (v) {
+      filePackingList.write(v + '\n');
+    });
+    filePackingList.end();
+    // PackingList FILE
+
+    res.status(200).send(doc._id); // this encourages the client the send the cost and removed list to another endpoint
+
+  }, (e) => {
+    res.status(500).send(e);
+    console.log('error@Proposal:', e);
+  });
+
+});
+
+// for savePartial. This sleep function is used to wait for one second after both temp1, temp2 have been saved. this ensure the files are properly written to disk
+function sleep(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms)
+  })
+}
+
+// 0,1 // route 4 - Admin - for saving the proposal ---------------------------------- PART 2
+app.post('/ckp1/savePartial', authenticate, async (req, res) => {
+
+  // RBAC
+  if (req.user.role === 2) {
+    res.status(418).send();
+    return;
+  }
+
+  let cdata = req.body;
+
+  // console.log("body:", cdata);
+
+  const update = {
+    costContents: JSON.parse(cdata.pCost),
+    removedContents: JSON.parse(cdata.prCost)
+  };
+
+  Proposal.findByIdAndUpdate(mongoose.Types.ObjectId(JSON.parse(cdata._id)), {
+    $set: update
+  }, {
+      new: true
+    }).then(async (prop) => {
+      // res.send(prop._id);
+
+      let pdfDocDynamic = printer.createPdfKitDocument(docDefinition.generateDocDef(req, prop));
+      pdfDocDynamic.pipe(fs.createWriteStream(`temp2-${prop.proposalDOC}`));
+      pdfDocDynamic.end();
+
+      let timestamp = new Date();
+      // "":"",
+      let pdfFillable = pdfFillForm.writeSync('proposal_template.pdf',
+        {
+          "proposalBy": "eScience Labs Proposal by:",
+          "proposer": `${req.user.fName} ${req.user.lName}, ${req.user.desig}`,
+          "proposerContact": `888-ESL KITS | ${req.user.email}`,
+          "proposalDate": `${timestamp.getMonth() + 1}/${timestamp.getDate()}/${timestamp.getFullYear()}`,
+          "proposalInstitution": `${prop.institution}`,
+          "proposalInstructor": `${prop.instructor}`,
+          "productNumber": `${prop.pNumber}`,
+          "productDescription": `${prop.pDescription}`,
+          "productEnrollment": `${prop.estimate}`,
+          "unitPrice": `${prop.uPrice}`,
+          "shippingPrice": `${prop.uShip}`,
+        }, { "save": "pdf" });
+      fs.writeFileSync(`temp1-${prop.proposalDOC}`, pdfFillable);
+
+      await sleep(1000);
+
+      const pdfDocFinal = new HummusRecipe(`temp1-${prop.proposalDOC}`, `${proposalFileServer}${prop.proposalDOC}`);
+      // let pd = `temp2-${prop.proposalDOC}`;
+      const pdfStatic = `temp2-${prop.proposalDOC}`; //`temp2-${prop.proposalDOC}`
+      pdfDocFinal.appendPage(pdfStatic).endPDF();
+
+      let ProposalDOCStream = fs.readFileSync(`${proposalFileServer}${prop.proposalDOC}`, {
+        encoding: 'base64'
+      });
+      // let download = new Buffer(ProposalDOCStream).toString('base64');
+      // We replaced all the event handlers with a simple call to readStream.pipe()
+      // ProposalDOCStream.pipe(res);      
+
+      const download = Buffer.from(ProposalDOCStream.toString('utf-8'), 'base64');
+
+      res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `${prop.proposalDOC}`
+      });
+
+      res.end(JSON.stringify(download));
+
+      fs.unlinkSync(`temp1-${prop.proposalDOC}`);
+      fs.unlinkSync(`temp2-${prop.proposalDOC}`);
+
+    }).catch((e) => {
+      console.log(e);
+      res.status(500).send(e);
+    });
+
+});
+
+// 2 // route 5 - Sales - for saving the proposal --- COMPLETE & TESTING!!! ------------------------------------------------------------------------------------------
+app.post('/ckp2/save', authenticate, async (req, res) => {
+
+  // call the ckpFunc() from this endpoint, get the results. Process the results to generate the proposal pdf, bom, packing list and save it in mongoDB.
+  // After saving send the pdf in base64 format
+
+  let cdata = req.body;
+
+  let pageArray = JSON.parse(cdata.sSOP);
+  // console.log("\nsop:", pageArray);
+
+  let timestamp = new Date().toLocaleString();
+  timestamp = timestamp.split('/').join('-');
+  timestamp = timestamp.split(' ').join('');
+  timestamp = timestamp.split(',').join('-');
+
+  let sDocName;
+  let cDocName = pageArray[1];
+  let cDocNameSplit = cDocName.split('@');
+  if (cDocNameSplit.length > 1) {
+    let version = cDocNameSplit[1].split('#');
+    sDocName = `${cDocNameSplit[0]}@${timestamp}#${version[1]}`;
+  } else {
+    sDocName = `${pageArray[1]}---${req.user.fName}@${timestamp}`;
+  }
+
+  let proposal = new Proposal({
+    userID: req.user._id,
+    name: sDocName,
+    type: 'PROPOSAL',
+    bActual: pageArray[2],
+    institution: pageArray[3],
+    instructor: pageArray[4],
+    pNumber: pageArray[5],
+    pDescription: pageArray[6],
+    estimate: pageArray[7],
+    uPrice: pageArray[8],
+    uShip: pageArray[9],
+    txt: pageArray[10],
+    notes: pageArray[11],
+    proposalDOC: `proposal_${sDocName}.pdf`,
+    bomCSV: `bom_${sDocName}.csv`,
+    packingCSV: `packingList_${sDocName}.csv`
+  });
+
+  proposal.save().then(async (prop) => {
+
+    let isFresh = pageArray[0];
+    // console.log('isFresh:', isFresh);
+    if (isFresh.split('!')[0] === '0') {
+      let refProposal = isFresh.split('!')[1];
+
+      Proposal.find({
+        name: refProposal
+      }).then((valid) => {
+        const update = {
+          bomCSV: valid[0].bomCSV,
+          packingCSV: valid[0].packingCSV
+        };
+
+        Proposal.findByIdAndUpdate(prop._id, {
+          $set: update
+        }, {
+            new: true
+          }).catch((e) => {
+            console.log(e);
+            res.status(500).send(e);
+          });
+      }).catch((e) => {
+        console.log(e);
+      });
+
+    } else {
+
+      let ckpAns;
+      await ckpFunc(prop.txt).then((funcAns) => {
+        if (funcAns === 'INVALID REQUEST') {
+          res.status(406).send(ckpAns);
+        } else {
+          ckpAns = funcAns;
+        }
+      }, (e) => {
+        console.log("ERROR@ckp2SAVE:", e);
+        res.status(500).send(e);
+      });
+
+      // console.log('ckpAns:', ckpAns[4]);
+      // let dependencyTree = ckpAns[4].filter(function (item){
+      //   return (item.idName.startsWith("Equp") || item.idName.startsWith("equp") || item.idName.startsWith("Chem") || item.idName.startsWith("Ship"));
+      // });
+      // console.log('ckpAns:', dependencyTree);
+
+      let dependencyTree = ckpAns[4];
+
+      let bomArrayEqup = ckpAns[3].filter(function (equpItem) {
+        return (equpItem.idName.startsWith("Equp") || equpItem.idName.startsWith("equp") || equpItem.idName.startsWith("Chem") || equpItem.idName.startsWith("Ship"));
+      });
+
+      let bomArrayModl = ckpAns[3].filter(function (modlItem) {
+        return !(modlItem.idName.startsWith("Equp") || modlItem.idName.startsWith("equp") || modlItem.idName.startsWith("Chem") || modlItem.idName.startsWith("Ship"));
+      });
+
+      // BOM FILE
+      // let fileBOM = fs.createWriteStream(`bom_${pageArray[0]}---${req.user.fName}@${timestamp}.csv`);
+      let fileBOM = fs.createWriteStream(bomFileServer + `bom_${sDocName}.csv`);
+
+      fileBOM.on('error', function (err) {
+        /* error handling */
+        console.log("error@fileIOBOM4sales");
+      });
+      await bomArrayEqup.forEach(function (v) {
+        fileBOM.write(`${v.idName};${v.qty}` + '\n');
+      });
+      await bomArrayModl.forEach(function (v) {
+        fileBOM.write(`${v.idName};${v.qty}` + '\n');
+      });
+      fileBOM.end();
+      // BOM FILE
+
+      // PackingList FILE
+      let filePackingList = fs.createWriteStream(packingFileServer + `packingList_${sDocName}.csv`);
+
+      filePackingList.on('error', function (err) {
+        /* error handling */
+        console.log("error@fileIOpackingListArray4sales");
+      });
+      filePackingList.write('Item;Name;Lab;Quantity;Price' + '\n');
+
+      let pCounter = 1;
+      await bomArrayEqup.forEach(function (v) {
+        let dependency = dependencyTree.filter(function (item) {
+          return v.idName === item.idName;
+        });
+        filePackingList.write(`${pCounter++}-${v.idName};${dependency[0].displayName};${dependency[0].lab === undefined ? 'undefined' : dependency[0].lab};${dependency[0].qty};${dependency[0].averageCost}` + '\n');
+      });
+
+      async function modlPack(bomArrayModl, dependencyTree, id) {
+        if (Object.keys(bomArrayModl[0]).length === 1) {
+          await bomArrayModl.forEach(function (v) {
+            let dependency = dependencyTree.filter(function (item) {
+              return v.idName === item.idName;
+            });
+
+            let insidePcounter = 1
+            filePackingList.write(`${pCounter}.${id}-${v.idName};${dependency[0].displayName};${dependency[0].lab === undefined ? 'undefined' : dependency[0].lab};1;NULL` + '\n');
+
+            dependency.forEach(async (item) => {
+              if (item.memItem.startsWith('Bag') || item.memItem.startsWith('Bttl') || item.memItem.startsWith('Modl')) {
+                let arrayItem = [];
+                arrayItem.push({ 'idName': item.memItem });
+                modlPack(arrayItem, dependencyTree, insidePcounter++);
+              } else {
+                filePackingList.write(`${pCounter}.${id}.${insidePcounter++}-${item.memItem};${item.memDisplayName};NULL;${item.memQuantity};${item.averageCost}` + '\n');
+              }
+            });
+          });
+        } else {
+          await bomArrayModl.forEach(function (v) {
+            let dependency = dependencyTree.filter(function (item) {
+              return v.idName === item.idName;
+            });
+
+            filePackingList.write(`${pCounter}-${v.idName};${dependency[0].displayName};${dependency[0].lab === undefined ? 'undefined' : dependency[0].lab};1;NULL` + '\n');
+            let insidePcounter = 1
+            dependency.forEach(async (item) => {
+              if (item.memItem.startsWith('Bag') || item.memItem.startsWith('Bttl') || item.memItem.startsWith('Modl')) {
+                let arrayItem = [];
+                arrayItem.push({ 'idName': item.memItem });
+                modlPack(arrayItem, dependencyTree, insidePcounter++);
+              } else {
+                filePackingList.write(`${pCounter}.${insidePcounter++}-${item.memItem};${item.memDisplayName};NULL;${item.memQuantity};${item.averageCost}` + '\n');
+              }
+            });
+            pCounter++;
+          });
+        }
+      }
+
+      modlPack(bomArrayModl, dependencyTree, 0);
+
+      filePackingList.end();
+      // PackingList FILE
+
+    }
+
+    // PROPOSAL PDF
+    let pdfDocDynamic = printer.createPdfKitDocument(docDefinition.generateDocDef(req, prop));
+    pdfDocDynamic.pipe(fs.createWriteStream(`temp2-${prop.proposalDOC}`));
+    pdfDocDynamic.end();
+
+    let timestamp2 = new Date();
+    // "":"",
+    let pdfFillable = pdfFillForm.writeSync('proposal_template.pdf',
+      {
+        "proposalBy": "eScience Labs Proposal by:",
+        "proposer": `${req.user.fName} ${req.user.lName}, ${req.user.desig}`,
+        "proposerContact": `888-ESL KITS | ${req.user.email}`,
+        "proposalDate": `${timestamp2.getMonth() + 1}/${timestamp2.getDate()}/${timestamp2.getFullYear()}`,
+        "proposalInstitution": `${prop.institution}`,
+        "proposalInstructor": `${prop.instructor}`,
+        "productNumber": `${prop.pNumber}`,
+        "productDescription": `${prop.pDescription}`,
+        "productEnrollment": `${prop.estimate}`,
+        "unitPrice": `${prop.uPrice}`,
+        "shippingPrice": `${prop.uShip}`,
+      }, { "save": "pdf" });
+    fs.writeFileSync(`temp1-${prop.proposalDOC}`, pdfFillable);
+
+    await sleep(1000);
+
+    const pdfDocFinal = new HummusRecipe(`temp1-${prop.proposalDOC}`, `${proposalFileServer}${prop.proposalDOC}`);
+    // let pd = `temp2-${prop.proposalDOC}`;
+    const pdfStatic = `temp2-${prop.proposalDOC}`; //`temp2-${prop.proposalDOC}`
+    pdfDocFinal.appendPage(pdfStatic).endPDF();
+
+    let ProposalDOCStream = fs.readFileSync(`${proposalFileServer}${prop.proposalDOC}`, {
+      encoding: 'base64'
+    });
+
+    const download = Buffer.from(ProposalDOCStream.toString('utf-8'), 'base64');
+
+    res.writeHead(200, {
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `${prop.proposalDOC}`
+    });
+
+    res.end(JSON.stringify(download));
+
+    fs.unlinkSync(`temp1-${prop.proposalDOC}`);
+    fs.unlinkSync(`temp2-${prop.proposalDOC}`);
+
+  }, (e) => {
+    res.status(500).send(e);
+    console.log('error@ProposalSaveSales:', e);
+  });
+
+});
+
+// 0,1 // route 6 - Admin - for saving the draft
+app.post('/ckp1/draft', authenticate, async (req, res) => {
+
+  // RBAC
+  if (req.user.role === 2) {
+    res.status(418).send();
+    return;
+  }
+
+  let cdata = req.body;
+
+  // console.log("\nbody:", cdata);
+
+  // console.log("\nsop:", cdata.dSOP);
+  // console.log("\ncost:", cdata.dCost);
+  // console.log("\nremoved:", cdata.drCost);
+
+  let sop = JSON.parse(cdata.dSOP);
+  let cost = JSON.parse(cdata.dCost);
+  let removed = JSON.parse(cdata.drCost);
+
+  let timestamp = new Date().toLocaleString();
+  timestamp = timestamp.split('/').join('-');
+  timestamp = timestamp.split(' ').join('');
+  timestamp = timestamp.split(',').join('-');
+
+  let sDocName;
+  let cDocName = sop[0];
+  let cDocNameSplit = cDocName.split('@');
+  if (cDocNameSplit.length > 1) {
+    let version = cDocNameSplit[1].split('#');
+    sDocName = `${cDocNameSplit[0]}@${timestamp}#${version[1]}`;
+  } else {
+    sDocName = `${sop[0]}---${req.user.fName}@${timestamp}`;
+  }
+
+  let draft = new Draft({
+    userID: req.user._id,
+    name: sDocName,
+    type: 'DRAFT',
+    bActual: sop[1],
+    bLower: sop[2],
+    bUpper: sop[3],
+    fActual: sop[4],
+    fLower: sop[5],
+    fUpper: sop[6],
+    searchBox: sop[7],
+    institution: sop[8],
+    instructor: sop[9],
+    pNumber: sop[10],
+    pDescription: sop[11],
+    estimate: sop[12],
+    uPrice: sop[13],
+    uShip: sop[14],
+    txt: sop[15],
+    notes: sop[16],
+    costContents: cost,
+    removedContents: removed
+  });
+
+  // draft.removeDraftByID(req.user_id).then(() => {
+  //   draft.save().then((doc) => {
+  //     res.status(200).send("The details were saved successfully");
+  //   }, (e) => {
+  //     res.status(400).send(e);
+  //   });
+  // }, () => {
+  //   res.status(400).send();
+  // });
+
+  // delete and save new one - SINGLE DRAFT ONE USER
+  // let dstatus = Draft.findOneAndDelete({ userID: req.user._id }).then((dup) => {
+  //   draft.save().then((doc) => {
+  //     res.status(200).send("The details were saved successfully");
+  //   }, (e) => {
+  //     res.status(400).send(e);
+  //   });
+  // }).catch((e) => {
+  //   res.status(500).send(e);
+  // });
+
+  // save the draft - MULTIPLE DRAFT ONE USER
+  draft.save().then((doc) => {
+    res.status(200).send("The details were saved successfully");
+  }, (e) => {
+    res.status(400).send(e);
+  });
+
+
+  // draft.save().then((doc) => {
+  //   res.status(200).send("The details were saved successfully");
+  // }, (e) => {
+  //   res.status(400).send(e);
+  // });
+
+});
+
+// 2 // route 7 - Sales - for saving the draft --- COMPLETE & TESTING!!! ---------------------------------------------------------------------------------------------
+app.post('/ckp2/draft', authenticate, async (req, res) => {
+
+  let cdata = req.body;
+
+  // console.log("\nbody:", cdata);
+
+  // console.log("\nsop:", cdata.dSOP);
+  // console.log("\ncost:", cdata.dCost);
+  // console.log("\nremoved:", cdata.drCost);
+
+  let sop = JSON.parse(cdata.dSOP);
+
+  let timestamp = new Date().toLocaleString();
+  timestamp = timestamp.split('/').join('-');
+  timestamp = timestamp.split(' ').join('');
+  timestamp = timestamp.split(',').join('-');
+
+  let sDocName;
+  let cDocName = sop[0];
+  let cDocNameSplit = cDocName.split('@');
+  if (cDocNameSplit.length > 1) {
+    let version = cDocNameSplit[1].split('#');
+    sDocName = `${cDocNameSplit[0]}@${timestamp}#${version[1]}`;
+  } else {
+    sDocName = `${sop[0]}---${req.user.fName}@${timestamp}`;
+  }
+
+  let draft = new Draft({
+    userID: req.user._id,
+    name: sDocName,
+    type: 'DRAFT',
+    bActual: sop[1],
+    institution: sop[2],
+    instructor: sop[3],
+    pNumber: sop[4],
+    pDescription: sop[5],
+    estimate: sop[6],
+    uPrice: sop[7],
+    uShip: sop[8],
+    txt: sop[9],
+    notes: sop[10],
+  });
+
+  // save the draft - MULTIPLE DRAFT ONE USER
+  draft.save().then((doc) => {
+    res.status(200).send("The details were saved successfully");
+  }, (e) => {
+    res.status(400).send(e);
+  });
+
+});
+
+// 0,1,2 // route 8 - Admin & Sales - for getting the proposals - SELF Route
+app.get('/ckp/selfSave', authenticate, async (req, res) => {
+
+  Proposal.find({
+    userID: req.user._id
+  }).then((dup) => {
+    if (dup.length > 0) {
+      // let dupArray = [];
+      // dupArray.push(dup);
+      res.status(200).send(dup);
+    } else {
+      res.status(204).send();
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
+// 0,1,2 // route 9 - Admin & Sales - for getting the draft - SELF Route
+app.get('/ckp/selfDraft', authenticate, async (req, res) => {
+
+  Draft.find({
+    userID: req.user._id
+  }).then((dup) => {
+    if (dup.length > 0) {
+      // let dupArray = [];
+      // dupArray.push(dup);
+      res.status(200).send(dup);
+    } else {
+      res.status(204).send();
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
+// 0,1,2 // route 10 - Admin & Sales - for getting the proposals - OTHERS Route
+app.get('/ckp/otherSave', authenticate, async (req, res) => {
+
+  Proposal.find({
+    userID: {
+      $ne: req.user._id
+    }
+  }).then((dup) => {
+    if (dup.length > 0) {
+      // let dupArray = [];
+      // dupArray.push(dup);
+      res.status(200).send(dup);
+    } else {
+      res.status(204).send();
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
+// 0,1,2 // route 11 - Admin & Sales - for getting the draft - OTHERS Route
+app.get('/ckp/otherDraft', authenticate, async (req, res) => {
+
+  Draft.find({
+    userID: {
+      $ne: req.user._id
+    }
+  }).then((dup) => {
+    if (dup.length > 0) {
+      // let dupArray = [];
+      // dupArray.push(dup);
+      res.status(200).send(dup);
+    } else {
+      res.status(204).send();
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
+// 0,1 // route 12 - SuperAdmin & Admin - for Searching the inventory database
+app.post('/ckpSearch', authenticate, async (req, res) => {
+
+  // RBAC
+  if (req.user.role === 2) {
+    res.status(418).send();
+    return;
+  }
+
+  let searchQuery = `SELECT idName, displayName, averageCost FROM netsuite.allItems Where displayName LIKE '%${req.body.search}%' and idName LIKE 'e%';`;
+  connection.query(searchQuery, function (err, result, fields) {
+    // if (err) throw err;
+    if (result) {
+      res.status(200).send(result);
+    } else {
+      console.log("error@ckpSearch");
+      res.status(500);
+    }
+  });
+
+});
+
+// 0,1 // route 13 - SuperAdmin & Admin - for SQL QUERY RUNNER used to update the cost
+app.post('/ckpSQL', authenticate, async (req, res) => {
+
+  // RBAC
+  if (req.user.role === 2) {
+    res.status(418).send();
+    return;
+  }
+
+  connection.query(req.body.query, function (err, result, fields) {
+    // if (err) throw err;
+
+    if (result) {
+      res.status(200).send(result);
+    } else {
+      console.log("error@ckpSQL");
+      res.status(404).send();
+    }
+  });
+
+});
+
+// * // route 14 - All Users - for Getting the Proposal PDF Document
+app.get('/ckpPDF/:id', authenticate, async (req, res) => {
+
+  let id = req.params.id;
+  // console.log("ID:", id);
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  let ProposalDOC;
+  Proposal.find({
+    _id: id
+  }).then((dup) => {
+    if (dup.length > 0) {
+
+      ProposalDOC = dup[0].proposalDOC;
+      // console.log('ProposalDOC:', dup);
+
+      let ProposalDOCPath = path.join(proposalFileServer, `${ProposalDOC}`);
+
+      let ProposalDOCStream = fs.readFileSync(ProposalDOCPath, {
+        encoding: 'base64'
+      });
+      // let download = new Buffer(ProposalDOCStream).toString('base64');
+      // We replaced all the event handlers with a simple call to readStream.pipe()
+      // ProposalDOCStream.pipe(res);      
+
+      const download = Buffer.from(ProposalDOCStream.toString('utf-8'), 'base64');
+
+      res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': ProposalDOC
+      });
+
+      // console.log('downloadType:', typeof(download));
+      // console.log('downloadSize:', download.length);
+      // console.log('download:', download);
+
+      res.end(JSON.stringify(download));
+
+    } else {
+      res.status(204).send();
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
+// 0,1,2 // route 15 - Admin & Sales - for verifying the legitimacy of the proposal name
+app.get('/ckp/verifyProposal/:name', authenticate, async (req, res) => {
+
+  let name = req.params.name;
+
+  Proposal.find().then((dup) => {
+    let present = 0;
+    let version = 0;
+    if (dup.length > 0) {
+
+      dup.forEach((prop) => {
+        // new
+        if (prop.name.split('---')[0] === name) {
+          present = -1;
+          version = -1;
+          // old
+        } else if (prop.name.split('---')[0] === name.split('---')[0]) {
+          present = 1;
+          let vString = prop.name.split('#');
+          if (vString.length > 1) {
+            if (version < parseInt(vString[vString.length - 1].substr(1))) {
+              version = vString[vString.length - 1].substr(1);
+            }
+          }
+        }
+      });
+
+      // console.log('response:', `${present}/${version}`);
+      res.status(200).send(JSON.stringify(`${present}/${version}/${req.user._id}`));
+    } else {
+      res.status(200).send(JSON.stringify(`${present}/${version}/${req.user._id}`));
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
+// 0,1,2 // route 16 - Admin & Sales - for verifying the legitimacy of the draft name
+app.get('/ckp/verifyDraft/:name', authenticate, async (req, res) => {
+
+  let name = req.params.name;
+
+  Draft.find().then((dup) => {
+    let present = 0;
+    let version = 0;
+    if (dup.length > 0) {
+
+      dup.forEach((prop) => {
+        // new
+        if (prop.name.split('---')[0] === name) {
+          present = -1;
+          version = -1;
+          // old
+        } else if (prop.name.split('---')[0] === name.split('---')[0]) {
+          present = 1;
+          let vString = prop.name.split('#');
+          if (vString.length > 1) {
+            if (version < parseInt(vString[vString.length - 1].substr(1))) {
+              version = vString[vString.length - 1].substr(1);
+            }
+          }
+        }
+      });
+
+      // console.log('response:', `${present}/${version}`);
+      res.status(200).send(JSON.stringify(`${present}/${version}/${req.user._id}`));
+    } else {
+      res.status(200).send(JSON.stringify(`${present}/${version}/${req.user._id}`));
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
+// 0,1,2 // route 16 - Admin & Sales - for verifying the legitimacy of the draft name
+app.get('/switch', authenticate, async (req, res) => {
+
+  // RBAC
+  if (req.user.role === 2) {
+    res.status(418).send();
+    return;
+  }
+
+  let update;
+  if (req.user.currentRole === 1) {
+    update = {
+      currentRole: 2
+    };
+  } else {
+    update = {
+      currentRole: 1
+    };
+  }
+
+  User.findByIdAndUpdate(req.user._id, {
+    $set: update
+  }, {
+      new: true
+    }).then((user) => {
+      if (!user) {
+        return res.status(404).send();
+      }
+      res.status(200).send({
+        user
+      });
+    }).catch((e) => {
+      console.log(e);
+      res.status(500).send(e);
+    });
+
+});
+
+// ************************************************ Custom Kit Pricing Usage ******************************************************* //
+
+// ROUTES //
+
+// STARTING APP ON SPECIFIED PORT //
+
+app.listen(port, () => {
+  console.log(`CKP Server Running on port ${port}`);
+});
+
+// STARTING APP ON SPECIFIED PORT //
+
+// DATABASE CONNECTION CLOSE() //
+
+// connection.end(function(err) {
+//   if (err) {
+//     return console.log('error:' + err.message);
+//   }
+//   console.log('Close the database connection.');
+// });
+
+module.exports = {
+  app
+};

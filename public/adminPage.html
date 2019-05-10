@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600" rel="stylesheet" type="text/css">
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+    <link type="text/css" rel="stylesheet" href="css/styleAdminPage.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <title>Admin Page</title>
+</head>
+
+<body>
+
+    <h2><div id="time"></div></h2>
+    <button type="button" onclick="logout()" class="logout">Logout</button>
+    <label id="username"></label>
+    <button type="button" onclick="window.location='indexCalculator_admin.html';" class="ckp">CKP</button>
+    <button type="button" onclick="window.location='managePD.html';" class="managepd">Proposal/Draft</button>
+
+    <div class="imgcontainer">
+        <img src="images/avatar.png" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="title">
+        Welcome To Administrator Page<span class="title"></span>
+    </div>
+    <div class="title">
+        eScience Labs LLC<span class="title"></span>
+    </div>
+
+    <div class="container" style="background-color:#f1f1f1">
+        <br><a href="addUser.html">--- Add New User</a></br>
+        <br><a href="manageUser.html">--- Manage Users</a></br>
+        <br><a href="packingBOM.html">--- Generate BOM and Packing List</a></br>
+
+
+    </div>
+
+
+
+
+    <!-- <footer>&copy; Copyright 2018 HTML.am</footer> -->
+
+    <script src="js/adminPage.js"></script>
+
+</body>
+
+</html>

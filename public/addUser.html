@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600" rel="stylesheet" type="text/css">
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+    <link type="text/css" rel="stylesheet" href="css/styleAddUser.css">
+    <title>Add New User</title>
+</head>
+
+<body>
+
+    <h2><div id="time"></div></h2>
+    <button type="button" onclick="logout()" class="logout">Logout</button>
+    <label id="username"></label> 
+    <button type="button" onclick="window.location='indexCalculator_admin.html';" class="ckp">CKP</button>
+    <button type="button" onclick="window.location='adminPage.html';" class="admin">Admin</button>
+    <button type="button" onclick="window.location='managePD.html';" class="managepd">Proposal/Draft</button>
+
+    <div class="imgcontainer">
+        <img src="images/avatar.png" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="title">
+        Add New User<span class="title"></span>
+    </div>
+
+    <div class="title">
+        eScience Labs LLC<span class="title"></span>
+    </div>
+
+    <div class="container">
+        <label for="email"><b>Email</b></label>
+        <input type="text" placeholder="Enter Email" name="email" id="email">
+
+        <label for="fName"><b>Enter First Name</b></label>
+        <input type="text" placeholder="Enter First Name" name="fName" id="fName">
+
+        <label for="lName"><b>Enter Last Name</b></label>
+        <input type="text" placeholder="Enter Last Name" name="lName" id="lName">
+
+        <label for="desig"><b>Enter Employee Designation in Company</b></label>
+        <input type="text" placeholder="Designation" name="desig" id="desig">
+
+        <label for="passPhrase"><b>Pass Phrase (Pass Pharse is needed for User Registration. Better to use
+                Phone Number.)</b></label>
+        <input type="password" placeholder="Enter Pass Phrase" name="passPhrase" id="passPhrase">
+
+        <select id="role">
+            <option value="null">- Select Role -</option>
+            <option value="1">Admin</option>
+            <option value="2">Sales</option>
+        </select>
+
+
+
+        <button type="submit" class="add" onclick="addUser()">Add User</button>
+        <button type="button" class="clear">Clear</button>
+
+    </div>
+
+    <script src="js/addUser.js"></script>
+
+</body>
+
+</html>

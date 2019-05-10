@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600" rel="stylesheet" type="text/css">
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+    <link type="text/css" rel="stylesheet" href="css/styleManagePD.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <title>Proposal & Draft</title>
+</head>
+
+<body>
+
+    <h2><div id="time"></div></h2>
+    <button type="button" onclick="logout()" class="logout">Logout</button>
+    <label id="username"></label> 
+    <button type="button" onclick="ckpTab()" class="ckp">CKP</button>
+    <button type="button" onclick="window.location='adminPage.html';" class="admin">Admin</button>
+
+    <div class="title">
+        Previously Created Proposals<span class="title"></span>
+    </div>
+    <div class="title">
+        eScience Labs LLC<span class="title"></span>
+    </div>
+
+    <div class="list">
+
+        <div class="container clearfix">
+
+            <div class="self">
+
+                <div class="self_list">
+                    <h6 class="self_title">Created Documents</h6>
+                    <div id="wrap">
+
+                        <div class="sleft_col">
+                            <h3 class="self_proposal">Proposals</h3>
+                            <!-- <h3 class="self_proposal">Proposals</h3> -->
+
+                            <!-- <a id="sp1" href="#" onclick="displayRequired(this);">link text1</a><br/>
+                            <a id="sp2" href="#" onclick="displayRequired(this);">link text2</a><br/>
+                            <a id="sp3" href="#" onclick="displayRequired(this);">link text3</a><br/>
+                            <a id="sp4" href="#" onclick="displayRequired(this);">link text4</a><br/> -->
+                        </div>
+
+                        <div class="sright_col">
+                            <h3 class="self_drafts">Drafts</h3>
+                            <!-- <a id="sd1" href="#" onclick="displayRequired(this);">link text1</a><br/>
+                            <a id="sd2" href="#" onclick="displayRequired(this);">link text2</a><br/>
+                            <a id="sd3" href="#" onclick="displayRequired(this);">link text3</a><br/>
+                            <a id="sd4" href="#" onclick="displayRequired(this);">link text4</a><br/> -->
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="others">
+
+                <div class="others_list">
+                    <h6 class="others_title">Drafts and Proposals Created by Others</h6>
+                    <div id="wrap">
+
+                        <div class="oleft_col">
+                            <h3 class="others_proposal">Proposals</h3>
+                            <!-- <a id="op1" href="#" onclick="displayRequired(this);">link text1</a><br/>
+                            <a id="op2" href="#" onclick="displayRequired(this);">link text2</a><br/>
+                            <a id="op3" href="#" onclick="displayRequired(this);">link text3</a><br/>
+                            <a id="op4" href="#" onclick="displayRequired(this);">link text4</a><br/> -->
+                        </div>
+
+                        <div class="oright_col">
+                            <h3 class="others_drafts">Drafts</h3>
+                            <!-- <a id="od1" href="#" onclick="displayRequired(this);">link text1</a><br/>
+                            <a id="od2" href="#" onclick="displayRequired(this);">link text2</a><br/>
+                            <a id="od3" href="#" onclick="displayRequired(this);">link text3</a><br/>
+                            <a id="od4" href="#" onclick="displayRequired(this);">link text4</a><br/> -->
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- <footer>&copy; Copyright 2018 HTML.am</footer> -->
+
+    <script src="js/managePD.js"></script>
+
+</body>
+
+</html>
