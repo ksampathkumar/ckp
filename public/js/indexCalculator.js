@@ -164,7 +164,8 @@ function calcUp() {
       if (request.status >= 200 && request.status < 400) {
         var data = JSON.parse(this.response);
         console.log("Server Data:", data);
-        document.querySelector(".price_projected--value").textContent = data[0];
+        document.querySelector(".price_projected_1--value").textContent = data[0];
+        document.querySelector(".price_projected_2--value").textContent = data[1];
       } else if (request.status === 406) {
         alert(this.response);
       } else {
@@ -490,6 +491,18 @@ function clearCheckBoxes() {
   subs.forEach((sub) => {
     let checkbox = document.getElementsByName(sub);
     checkbox.forEach((element) => element.checked = false);
+  });
+}
+
+function checkAllBoxes() {
+
+  // clearing the checkboxes //
+
+  let subs = [];
+  subs.push('kitVersion', 'ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'gs', 'gb', 'rm', 'pt');
+  subs.forEach((sub) => {
+    let checkbox = document.getElementsByName(sub);
+    checkbox.forEach((element) => element.checked = true);
   });
 }
 
