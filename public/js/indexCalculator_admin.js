@@ -231,6 +231,18 @@ function clearCheckBoxes() {
   });
 }
 
+function checkAllBoxes() {
+
+  // clearing the checkboxes //
+
+  let subs = [];
+  subs.push('kitVersion', 'ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'gs', 'gb', 'rm', 'pt');
+  subs.forEach((sub) => {
+    let checkbox = document.getElementsByName(sub);
+    checkbox.forEach((element) => element.checked = true);
+  });
+}
+
 document.querySelector('.updateCost').addEventListener('click', () => {
 
   if (document.getElementsByClassName('cost_list')[0].childNodes.length === 0) {
@@ -334,9 +346,15 @@ function dispPrice(BOM, dependencyTree) {
         return item2Add.idName == parent.idName;
       });
 
-      html = html.replace('%displayName%', moreDeatils[0].displayName);
-      html = html.replace('%lab%', moreDeatils[0].lab);
-      html = html.replace('%averageCost%', moreDeatils[0].averageCost);
+      if (moreDeatils[0] !== undefined) {
+        html = html.replace('%displayName%', moreDeatils[0].displayName);
+        html = html.replace('%lab%', moreDeatils[0].lab);
+        html = html.replace('%averageCost%', moreDeatils[0].averageCost);
+      } else{
+        console.log('undefined:', parent.idName);
+        console.log('filter array:', dependencyTree);
+      }
+      
 
 
 

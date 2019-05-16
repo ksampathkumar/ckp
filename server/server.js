@@ -978,7 +978,25 @@ async function ckpFunc(req) {
 
   function gpAdditions(id, itemsToAdd) {
 
+    // Aluminum Tube Condition
+    if (id.includes("gp-7") && !(id.includes("gp-18")) || id.includes("gp-7") && !(id.includes("gp-20"))) {
+      itemsToAdd.push({
+        idName: 'Equp2132',
+        lab: '7',
+        qty: 1,
+        unit: 'each'
+      });
+    }
 
+    // Carbon Resistor Condition
+    if (id.includes("gp-22") && !(id.includes("gp-21")) || id.includes("gp-22") && !(id.includes("gp-23"))) {
+      itemsToAdd.push({
+        idName: 'Equp2433',
+        lab: '22',
+        qty: 1,
+        unit: 'each'
+      });
+    }
 
     return itemsToAdd;
   }
@@ -1428,6 +1446,75 @@ async function ckpFunc(req) {
 
   function esAdditions(id, itemsToAdd) {
 
+    // Pipette Condition
+    let pipetteCountES = 0;
+
+    if (id.includes("es-4")) {
+      pipetteCountES += 4;
+    }
+    if (id.includes("gc-7")) {
+      pipetteCountES += 1;
+    }
+    if (id.includes("gc-8")) {
+      pipetteCountES += 4;
+    }
+    if (id.includes("gc-9")) {
+      pipetteCountES += 2;
+    }
+    if (id.includes("gc-10")) {
+      pipetteCountES += 1;
+    }
+    if (id.includes("gc-12")) {
+      pipetteCountES += 1;
+    }
+
+    pipetteCountES = Math.ceil((pipetteCountES * 1.25) / 10) * 10;
+
+    let pipette2ES = Math.floor(pipetteCountES / 20);
+    let pipette1ES = pipetteCountES % 20;
+
+    if (pipette1ES > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1030',
+        lab: 100,
+        qty: pipette1ES / 10,
+        unit: 'each'
+      });
+    }
+    if (pipette2ES > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1028',
+        lab: 100,
+        qty: pipette2ES,
+        unit: 'each'
+      });
+    }
+    // Potting Soil Condition
+    if (id.includes("es-3") || id.includes("es-5")) {
+      itemsToAdd.push({
+        idName: 'Bag1221',
+        lab: '3,5',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-6")) {
+      itemsToAdd.push({
+        idName: 'Bag1228',
+        lab: '6',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+    // Seed Mixture Packet (zinnia, marigold, morning glory, cosmos and ryegrass_
+    if (id.includes("es-6") && !(id.includes("es-5"))) {
+      itemsToAdd.push({
+        idName: 'Bag3045',
+        lab: '6',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
 
 
     return itemsToAdd;
@@ -1442,6 +1529,69 @@ async function ckpFunc(req) {
 
   function ipAdditions(id, itemsToAdd) {
 
+    // AA Battery holder Condition
+    if ((id.includes("ip-20") || id.includes("ip-22")) && !(id.includes("ip-21"))) {
+      itemsToAdd.push({
+        idName: 'Equp2054',
+        lab: '20,22',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // AA battery Condition
+    if (id.includes("ip-22")) {
+      itemsToAdd.push({
+        idName: 'Bag8071',
+        lab: '22',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ip-20")) {
+      itemsToAdd.push({
+        idName: 'Bag8070',
+        lab: '20',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Alligator Clips Condition
+    if (id.includes("ip-22")) {
+      itemsToAdd.push({
+        idName: 'Bag2141',
+        lab: '22',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ip-20")) {
+      itemsToAdd.push({
+        idName: 'Bag2429',
+        lab: '20',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Aluminum Tube Condition
+    if (id.includes("ip-8") && !(id.includes("ip-19"))) {
+      itemsToAdd.push({
+        idName: 'Equp2132',
+        lab: '8',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Carbon Resistor Condition
+    if (id.includes("ip-22") && !(id.includes("ip-21"))) {
+      itemsToAdd.push({
+        idName: 'Equp2433',
+        lab: '22',
+        qty: 1,
+        unit: 'each'
+      });
+    }
 
 
     return itemsToAdd;
@@ -1895,73 +2045,122 @@ async function ckpFunc(req) {
 
   }
 
+  // This was the most complicated section. Please take most care while editing this function.
+  // combineTHEsubjects function combines the result computed for each subject with other.
+  // Equipment and ship items like beaker, thermometer, sleeve for thermometer etc. are combined meaning the max is put in the Kit.
+  // Euipment that are one time consumable like Styrofoam Cup, Catch Pan are added.
+  // All other Modules, Bags, Bottles are untouched.
   async function combineTHEsubjects(serverResponse, serverResponseOther) {
 
     let interscetionItems = [];
 
+    // this part will check for both arrays(serverResponse, serverResponseOther) and do the required comparision of equipments only
     serverResponse[3].forEach((present) => {
       serverResponseOther[3].forEach((current) => {
 
-        if (present.idName === current.idName && current.idName.toUpperCase().startsWith('EQUP') && current.qty > present.qty) {
-          // console.log('\nSTART\nserverResponse:', serverResponse[3]);
-          // console.log('serverResponseOther:', serverResponseOther[3]);
-          // console.log('\nserverResponse:', serverResponse[2]);
-          // console.log('serverResponseOther:', serverResponseOther[2]);
-          // this part will add the difference item to the final array
-          let oldQty = present.qty;
-          present.qty = current.qty;
-          // let posBOM = serverResponse[3].map(function (e) { return e.idName; }).indexOf(present.idName);
-          let pos = serverResponse[4].map(function (e) { return e.idName; }).indexOf(present.idName);
-          let pricePerUnit = serverResponse[4][pos].averageCost;
-          let differenceAmount = (current.qty - oldQty) * pricePerUnit;
-          serverResponse[0] += differenceAmount / 0.35;
-          serverResponse[1] += differenceAmount / 0.31;
-          serverResponse[2] += differenceAmount;
-          // this part will add the difference item to the final array
+        // Criteria applied only to Equp and Ship
+        if (current.idName.toUpperCase().startsWith('EQUP') || current.idName.toUpperCase().startsWith('SHIP')) {
 
-          // this part will remove the added item from the current array
-          serverResponseOther[0] -= pricePerUnit * current.qty / 0.35;
-          serverResponseOther[1] -= pricePerUnit * current.qty / 0.31;
-          serverResponseOther[2] -= pricePerUnit * current.qty;
-          interscetionItems.push(current);
-          // console.log('\ndifferenceAmount 1:', differenceAmount);
-          // console.log('\nEND\nserverResponse:', serverResponse[3]);
-          // console.log('serverResponseOther:', serverResponseOther[3]);
-          // console.log('\nserverResponse:', serverResponse[2]);
-          // console.log('serverResponseOther:', serverResponseOther[2]);
-          // this part will remove the added item from the current array
-        } else if ((present.idName === current.idName && current.idName.toUpperCase().startsWith('EQUP') && present.qty > current.qty)) {
-          // console.log('serverResponseOther:', serverResponseOther);
-          let pos = serverResponse[4].map(function (e) { return e.idName; }).indexOf(present.idName);
-          let pricePerUnit = serverResponse[4][pos].averageCost;
-          let differenceAmount = (current.qty - present.qty) * pricePerUnit;
-          serverResponseOther[0] -= pricePerUnit * current.qty / 0.35;
-          serverResponseOther[1] -= pricePerUnit * current.qty / 0.31;
-          serverResponseOther[2] -= pricePerUnit * current.qty;
-          interscetionItems.push(current);
-          // console.log('\ndifferenceAmount 2:', differenceAmount);
-        } else if ((present.idName === current.idName && current.idName.toUpperCase().startsWith('EQUP') && current.qty === present.qty)) {
-          // console.log('serverResponseOther:', serverResponseOther);
-          let pos = serverResponse[4].map(function (e) { return e.idName; }).indexOf(present.idName);
-          let differenceAmount = present.qty * serverResponse[4][pos].averageCost;
-          serverResponseOther[0] -= differenceAmount / 0.35;
-          serverResponseOther[1] -= differenceAmount / 0.31;
-          serverResponseOther[2] -= differenceAmount;
-          interscetionItems.push(current);
-          // console.log('\ndifferenceAmount 3:', differenceAmount);
+          // Neglecting one time consumable items 
+          if (current.idName !== 'Equp2029' && current.idName !== 'Equp7030') {
+
+            // if the serverResponseOther's equp quantity is greater that the serverResponse's equp quantity
+            if (present.idName === current.idName && current.qty > present.qty) {
+              // console.log('in current greater:', current.idName);
+              // console.log('\nSTART\nserverResponse:', serverResponse[3]);
+              // console.log('serverResponseOther:', serverResponseOther[3]);
+              // console.log('\nserverResponse:', serverResponse[2]);
+              // console.log('serverResponseOther:', serverResponseOther[2]);
+
+              // this part will add the difference item to the final array
+
+              let oldQty = present.qty;
+              present.qty = current.qty;
+              // let posBOM = serverResponse[3].map(function (e) { return e.idName; }).indexOf(present.idName);
+              let pos = serverResponseOther[4].map(function (e) { return e.idName; }).indexOf(present.idName);
+              let pricePerUnit = serverResponseOther[4][pos].averageCost;
+              let differenceAmount = (current.qty - oldQty) * pricePerUnit;
+              serverResponse[0] += differenceAmount / 0.35;
+              serverResponse[1] += differenceAmount / 0.31;
+              serverResponse[2] += differenceAmount;
+
+              // this part will add the difference item to the final array
+
+              // this part will remove the added item from the current array
+
+              serverResponseOther[0] -= pricePerUnit * current.qty / 0.35;
+              serverResponseOther[1] -= pricePerUnit * current.qty / 0.31;
+              serverResponseOther[2] -= pricePerUnit * current.qty;
+              interscetionItems.push(current);
+              // console.log('\ndifferenceAmount 1:', differenceAmount);
+              // console.log('\nEND\nserverResponse:', serverResponse[3]);
+              // console.log('serverResponseOther:', serverResponseOther[3]);
+              // console.log('\nserverResponse:', serverResponse[2]);
+              // console.log('serverResponseOther:', serverResponseOther[2]);
+
+              // this part will remove the added item from the current array
+
+              // if the serverResponse's equp quantity is greater that the serverResponseOther's equp quantity
+            } else if (present.idName === current.idName && present.qty > current.qty) {
+              // console.log('in current lesser');
+              // console.log('serverResponseOther:', serverResponseOther);
+              let pos = serverResponseOther[4].map(function (e) { return e.idName; }).indexOf(present.idName);
+              let pricePerUnit = serverResponseOther[4][pos].averageCost;
+              let differenceAmount = (current.qty - present.qty) * pricePerUnit;
+              serverResponseOther[0] -= pricePerUnit * current.qty / 0.35;
+              serverResponseOther[1] -= pricePerUnit * current.qty / 0.31;
+              serverResponseOther[2] -= pricePerUnit * current.qty;
+              interscetionItems.push(current);
+              // console.log('\ndifferenceAmount 2:', differenceAmount);
+
+              // if the serverResponse's equp quantity is equal to the serverResponseOther's equp quantity
+            } else if (present.idName === current.idName && current.qty === present.qty) {
+              // console.log('in equal:', current.idName);
+              // console.log('serverResponseOther:', serverResponseOther);
+              let pos = serverResponseOther[4].map(function (e) { return e.idName; }).indexOf(present.idName);
+              // console.log('serverResponseOther:', pos);
+              // if(serverResponse[4][pos] === undefined){
+              //   console.log('present:', present);
+              //   console.log('buggy:', serverResponse[4]);
+              // }
+              let differenceAmount = present.qty * serverResponseOther[4][pos].averageCost;
+              serverResponseOther[0] -= differenceAmount / 0.35;
+              serverResponseOther[1] -= differenceAmount / 0.31;
+              serverResponseOther[2] -= differenceAmount;
+              interscetionItems.push(current);
+              // console.log(differenceAmount);
+            } else {
+              // Use this section for console.log, if any debugging is needed
+            }
+
+          } else {
+            // Use this section for console.log, if any debugging is needed
+          }
+
+        } else {
+          // Use this section for console.log, if any debugging is needed
         }
+
       });
     });
 
+    console.log(interscetionItems);
+    // console.log(serverResponseOther[3]);
     // this will remove intersected items from the serverResponseOther
     if (interscetionItems.length > 0) {
-      interscetionItems.forEach((del) => {
+      await interscetionItems.forEach(async (del) => {
         let posBOM = serverResponseOther[3].map(function (e) { return e.idName; }).indexOf(del.idName);
-        let pos = serverResponseOther[4].map(function (e) { return e.idName; }).indexOf(del.idName);
-        serverResponseOther[3].splice(posBOM, 1);
-        serverResponseOther[4].splice(pos, 1);
+        // let pos = serverResponseOther[4].map(function (e) { return e.idName; }).indexOf(del.idName);
+        console.log(`posBOM:${posBOM}`);
+        console.log(serverResponseOther[3]);
+        await serverResponseOther[3].splice(posBOM, 1);
+        // await serverResponseOther[4].splice(pos, 1);
       });
     }
+
+    // this delay is to remove the necessary elements from serverResponseOther and later add remaining to serverResponse.
+    // Not required now, add later, if needed
+    // await sleep(100);
 
     // this will add the remaining items from the serverResponseOther to serverResponse and adjust the pricing
     if (serverResponseOther[3].length > 0) {
@@ -1972,10 +2171,11 @@ async function ckpFunc(req) {
 
       serverResponseOther[3].forEach((bomItem) => {
         serverResponse[3].push(bomItem);
+        console.log('bom:', bomItem.idName);
       });
 
-      serverResponseOther[4].forEach((bomItem) => {
-        serverResponse[4].push(bomItem);
+      serverResponseOther[4].forEach((dependancy) => {
+        serverResponse[4].push(dependancy);
       });
 
     } else {
@@ -2008,7 +2208,7 @@ async function ckpFunc(req) {
     ap = [];
     mb = [];
     ic = [];
-    as = [];
+    ast = [];
     gb = [];
     es = [];
     fs = [];
@@ -2046,7 +2246,7 @@ async function ckpFunc(req) {
           ic.push(subject[1]);
           break;
         case 'as':
-          as.push(subject[1]);
+          ast.push(subject[1]);
           break;
         case 'gb':
           gb.push(subject[1]);
@@ -2118,8 +2318,8 @@ async function ckpFunc(req) {
       serverResponseMB = await looper4eachSubject('mb', mb);
     if (ic.length > 0)
       serverResponseIC = await looper4eachSubject('ic', ic);
-    if (as.length > 0)
-      serverResponseAS = await looper4eachSubject('as', as);
+    if (ast.length > 0)
+      serverResponseAS = await looper4eachSubject('as', ast);
     if (gb.length > 0)
       serverResponseGB = await looper4eachSubject('gb', gb);
     if (es.length > 0)
@@ -2148,7 +2348,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 1');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseGP);
 
       }
@@ -2160,7 +2360,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 2');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseGC);
 
       }
@@ -2172,7 +2372,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 3');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseIB);
 
       }
@@ -2184,7 +2384,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 4');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseAP);
 
       }
@@ -2196,7 +2396,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 5');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseMB);
 
       }
@@ -2208,7 +2408,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 6');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseIC);
 
       }
@@ -2220,7 +2420,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 7');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseAS);
 
       }
@@ -2232,7 +2432,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 8');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseGB);
 
       }
@@ -2244,7 +2444,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 9');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseES);
 
       }
@@ -2256,7 +2456,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 10');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseFS);
 
       }
@@ -2268,7 +2468,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 11');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseIP);
 
       }
@@ -2280,7 +2480,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 12');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseHB);
 
       }
@@ -2292,7 +2492,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 13');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseHG);
 
       }
@@ -2304,7 +2504,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 14');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseSG);
 
       }
@@ -2316,7 +2516,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 15');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseBG);
 
       }
@@ -2328,7 +2528,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 16');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponseRM);
 
       }
@@ -2340,7 +2540,7 @@ async function ckpFunc(req) {
           serverResponse.push(item);
         });
       } else {
-
+        console.log('in 17');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponsePT);
 
       }
@@ -2377,8 +2577,10 @@ app.get('/ckp1/:id', authenticate, async (req, res) => {
   ckpFunc(req.params.id).then((ckpAns) => {
     if (ckpAns === 'INVALID REQUEST') {
       res.status(406).send(ckpAns);
-    } else {
+    } else if (Array.isArray(ckpAns)) {
       res.status(200).send(ckpAns);
+    } else {
+      res.status(500).send(ckpAns);
     }
   }, (e) => {
     console.log("ERROR@ckp1:", e);
@@ -2393,10 +2595,12 @@ app.get('/ckp2/:id', authenticate, async (req, res) => {
   ckpFunc(req.params.id).then((ckpAns) => {
     if (ckpAns === 'INVALID REQUEST') {
       res.status(406).send(ckpAns);
-    } else {
+    } else if (Array.isArray(ckpAns)) {
       let ckpAnsLess = [];
       ckpAnsLess.push(Math.round((ckpAns[0] + ckpAns[1]) / 2));
       res.status(200).send(ckpAnsLess);
+    } else {
+      res.status(500).send(ckpAns);
     }
   }, (e) => {
     console.log("ERROR@ckp1:", e);
