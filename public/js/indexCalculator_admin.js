@@ -350,11 +350,11 @@ function dispPrice(BOM, dependencyTree) {
         html = html.replace('%displayName%', moreDeatils[0].displayName);
         html = html.replace('%lab%', moreDeatils[0].lab);
         html = html.replace('%averageCost%', moreDeatils[0].averageCost);
-      } else{
+      } else {
         console.log('undefined:', parent.idName);
         console.log('filter array:', dependencyTree);
       }
-      
+
 
 
 
@@ -1111,7 +1111,9 @@ function showPD(data) {
       for (i = 0; i < txt.length; i++) {
 
         document.querySelectorAll(`input[type='checkbox'][value='${txt[i]}']`)[0].checked = true;
-
+        let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
+        content.previousElementSibling.classList.toggle("active");
+        content.style.display = "block";
       }
     }
   }
@@ -1402,6 +1404,7 @@ function sop() {
                   } else {
 
                     let costContents = document.getElementsByClassName('cost_list');
+                    let removedContents = document.getElementsByClassName('removed_list');
                     // console.log("Checker:", costContents[0].childNodes);
 
                     // Below are for Partial Route
@@ -1411,7 +1414,8 @@ function sop() {
                     // console.log('costContents:', b);
                     let removedContentsPR = document.querySelector('.removed_list').innerHTML;
 
-                    let someText = [];
+                    // Cost Array generation for BOM, pList
+                    let costText = [];
                     let abc = costContents[0].childNodes;
                     abc.forEach((item) => {
                       // console.log(`${item.id} - ${item.IidName} - ${item.IdisplayName} - ${item.Ilab} - ${item.Iqty} - ${item.item_value}`);
@@ -1420,7 +1424,22 @@ function sop() {
                       def.forEach((innerItem) => {
                         let splitArray = innerItem.innerText.trim().split("\n");
                         splitArray.forEach((each) => {
-                          someText.push(each);
+                          costText.push(each);
+                        })
+                      })
+                    });
+
+                    // Removed Array generation for adding loose items to BOM, pList
+                    let removedText = [];
+                    let xyz = removedContents[0].childNodes;
+                    xyz.forEach((item) => {
+                      // console.log(`${item.id} - ${item.IidName} - ${item.IdisplayName} - ${item.Ilab} - ${item.Iqty} - ${item.item_value}`);
+                      // console.log(item.childNodes);
+                      let def = item.childNodes;
+                      def.forEach((innerItem) => {
+                        let splitArray = innerItem.innerText.trim().split("\n");
+                        splitArray.forEach((each) => {
+                          removedText.push(each);
                         })
                       })
                     });
@@ -1434,7 +1453,7 @@ function sop() {
                     // console.log("Contents:", costContents[0].innerText);
                     // console.log("Contents:", extractContent(costContents[0].innerHTML));
 
-                    // let someText = costArray.split("\n");
+                    // let costText = costArray.split("\n");
                     // console.log("Checker:", costArray);
 
                     let line = '';
@@ -1446,54 +1465,54 @@ function sop() {
                     let cntRawAssembly = 0;
                     let jumper = 0;
 
-                    // console.log("Checker1:", someText);
+                    // console.log("Checker1:", costText);
 
-                    for (let r = 0; r < someText.length; r++) {
+                    for (let r = 0; r < costText.length; r++) {
                       cntRawAssembly++;
-                      if (someText[r].split('-')[1] !== undefined) {
-                        if (someText[r].split('-')[1].startsWith("Bag") || someText[r].split('-')[1].startsWith("bag") || someText[r].split('-')[1].startsWith("Bttl") || someText[r].split('-')[1].startsWith("bttl") || someText[r].split('-')[1].startsWith("Modl") || someText[r].split('-')[1].startsWith("modl") || someText[r].split('-')[1].startsWith("Equp") || someText[r].split('-')[1].startsWith("equp") || someText[r].split('-')[1].startsWith("Chem") || someText[r].split('-')[1].startsWith("chem") || someText[r].split('-')[1].startsWith("Ship") || someText[r].split('-')[1].startsWith("ship")) {
+                      if (costText[r].split('-')[1] !== undefined) {
+                        if (costText[r].split('-')[1].startsWith("Bag") || costText[r].split('-')[1].startsWith("bag") || costText[r].split('-')[1].startsWith("Bttl") || costText[r].split('-')[1].startsWith("bttl") || costText[r].split('-')[1].startsWith("Modl") || costText[r].split('-')[1].startsWith("modl") || costText[r].split('-')[1].startsWith("Equp") || costText[r].split('-')[1].startsWith("equp") || costText[r].split('-')[1].startsWith("Chem") || costText[r].split('-')[1].startsWith("chem") || costText[r].split('-')[1].startsWith("Ship") || costText[r].split('-')[1].startsWith("ship")) {
 
-                          if (someText[r].split('-')[0].split('.').length > 1) {
+                          if (costText[r].split('-')[0].split('.').length > 1) {
                             jumper = 0;
                           }
 
 
-                          // console.log(someText[r].split('-')[0]);
-                          // console.log(someText[r].split('-')[0].split('.').length);
+                          // console.log(costText[r].split('-')[0]);
+                          // console.log(costText[r].split('-')[0].split('.').length);
 
-                          // for(let o = 0; o < someText[r].split('-')[0].split('.').length - 1; o++){
+                          // for(let o = 0; o < costText[r].split('-')[0].split('.').length - 1; o++){
                           //   line = '\t' + line;
                           // }
 
                           // BOM
                           // BOM @Raw&Assembly Items
-                          if (someText[r].split('-')[0].split('.').length === 1) {
+                          if (costText[r].split('-')[0].split('.').length === 1) {
                             cntRawAssembly = 0;
-                            bomLine = someText[r].split('-')[1];
+                            bomLine = costText[r].split('-')[1];
                           }
                           // BOM
 
                           if (packingListArray.length === 1) {
                             if (cnt === 1) {
                               packingListArray.push(line);
-                              line = someText[r];
+                              line = costText[r];
                             }
                             cnt = 1;
-                            line = someText[r];
+                            line = costText[r];
 
                           } else {
                             packingListArray.push(line);
-                            line = someText[r];
+                            line = costText[r];
                           }
                         } else {
-                          line = line + ";" + someText[r];
+                          line = line + ";" + costText[r];
                           jumper++;
                           if (jumper === 1 && r !== 1) {
                             line = line + ";NULL";
                           }
                         }
                       } else {
-                        line = line + ";" + someText[r];
+                        line = line + ";" + costText[r];
                         jumper++;
 
                         if (jumper === 1 && r !== 1) {
@@ -1501,19 +1520,77 @@ function sop() {
                         }
                       }
 
-                      if (someText.length === r + 1) {
+                      if (costText.length === r + 1) {
                         packingListArray.push(line);
                       }
 
                       // BOM
                       if (cntRawAssembly === 3) {
-                        bomLine = bomLine + ';' + someText[r];
+                        bomLine = bomLine + ';' + costText[r];
                         bomArray.push(bomLine);
                       }
                       // BOM
 
                     }
 
+                    let removedNumbers = [];
+                    if (removedText.length > 0) {
+                      // alert('removed is present 1');
+
+                      // get all the prefix numbers of the removed components
+
+                      for (let t = 0; t < removedText.length; t++) {
+                        // console.log('second:', removedText[t].split('-')[1]);
+                        if (removedText[t].split('-')[1] !== undefined && !isNaN(parseInt(removedText[t].split('-')[0].split('.')[0]))) {
+                          // console.log('num2:', parseInt(removedText[t].split('-')[0].split('.')[0]));
+                          let num = removedText[t].split('-')[0].split('.')[0];
+                          if (removedNumbers.includes(num)) {
+                            // do not ad the number again
+                          } else {
+                            removedNumbers.push(num);
+                          }
+                        }
+
+                      }
+
+                      // console.log('removedNumbers:', removedNumbers);
+
+                      let numIgnore = [];
+                      for (let q = 0; q < costText.length; q++) {
+                        if (costText[q].split('-')[1] !== undefined) {
+                          let costNum = costText[q].split('-')[0].split('.')[0];
+                          if (removedNumbers.includes(costNum)) {
+                            if (!numIgnore.includes(costText[q].split('-')[0])) {
+                              if (costText[q].split('-')[1].startsWith('Bag') || costText[q].split('-')[1].startsWith('Modl') || costText[q].split('-')[1].startsWith('Bttl')) {
+                                numIgnore.push(costText[q].split('-')[0]);
+                                bomArray.push(`${costText[q].split('-')[1]};1`);
+                              } else {
+                                let costArraySplit = costText[q].split('-')[0].split('.');
+                                let childNumReduced = '';
+
+                                for (let y = 0; y < costArraySplit.length - 1; y++) {
+                                  // console.log('costNum[y]:', costArraySplit[y]);
+                                  if (childNumReduced.length === 0) {
+                                    childNumReduced = costArraySplit[y];
+                                  } else {
+                                    childNumReduced = `${childNumReduced}.${costArraySplit[y]}`;
+                                  }
+                                }
+                                // console.log('childNumReduced:',childNumReduced);
+                                if (numIgnore.includes(childNumReduced)) {
+                                  //  this is a child of module, so do not add this.
+                                } else {
+                                  bomArray.push(`${costText[q].split('-')[1]};1`);
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+
+                      // console.log('numIgnore:', numIgnore);
+
+                    }
                     let pageArray = [];
                     let saveArray = [];
 
@@ -1622,6 +1699,7 @@ function sop() {
             } else {
 
               let costContents = document.getElementsByClassName('cost_list');
+              let removedContents = document.getElementsByClassName('removed_list');
               // console.log("Checker:", costContents[0].childNodes);
 
               // Below are for Partial Route
@@ -1631,7 +1709,8 @@ function sop() {
               // console.log('costContents:', b);
               let removedContentsPR = document.querySelector('.removed_list').innerHTML;
 
-              let someText = [];
+              // Cost Array generation for BOM, pList
+              let costText = [];
               let abc = costContents[0].childNodes;
               abc.forEach((item) => {
                 // console.log(`${item.id} - ${item.IidName} - ${item.IdisplayName} - ${item.Ilab} - ${item.Iqty} - ${item.item_value}`);
@@ -1640,7 +1719,22 @@ function sop() {
                 def.forEach((innerItem) => {
                   let splitArray = innerItem.innerText.trim().split("\n");
                   splitArray.forEach((each) => {
-                    someText.push(each);
+                    costText.push(each);
+                  })
+                })
+              });
+
+              // Removed Array generation for adding loose items to BOM, pList
+              let removedText = [];
+              let xyz = removedContents[0].childNodes;
+              xyz.forEach((item) => {
+                // console.log(`${item.id} - ${item.IidName} - ${item.IdisplayName} - ${item.Ilab} - ${item.Iqty} - ${item.item_value}`);
+                // console.log(item.childNodes);
+                let def = item.childNodes;
+                def.forEach((innerItem) => {
+                  let splitArray = innerItem.innerText.trim().split("\n");
+                  splitArray.forEach((each) => {
+                    removedText.push(each);
                   })
                 })
               });
@@ -1654,7 +1748,7 @@ function sop() {
               // console.log("Contents:", costContents[0].innerText);
               // console.log("Contents:", extractContent(costContents[0].innerHTML));
 
-              // let someText = costArray.split("\n");
+              // let costText = costArray.split("\n");
               // console.log("Checker:", costArray);
 
               let line = '';
@@ -1666,54 +1760,54 @@ function sop() {
               let cntRawAssembly = 0;
               let jumper = 0;
 
-              // console.log("Checker1:", someText);
+              // console.log("Checker1:", costText);
 
-              for (let r = 0; r < someText.length; r++) {
+              for (let r = 0; r < costText.length; r++) {
                 cntRawAssembly++;
-                if (someText[r].split('-')[1] !== undefined) {
-                  if (someText[r].split('-')[1].startsWith("Bag") || someText[r].split('-')[1].startsWith("bag") || someText[r].split('-')[1].startsWith("Bttl") || someText[r].split('-')[1].startsWith("bttl") || someText[r].split('-')[1].startsWith("Modl") || someText[r].split('-')[1].startsWith("modl") || someText[r].split('-')[1].startsWith("Equp") || someText[r].split('-')[1].startsWith("equp") || someText[r].split('-')[1].startsWith("Chem") || someText[r].split('-')[1].startsWith("chem") || someText[r].split('-')[1].startsWith("Ship") || someText[r].split('-')[1].startsWith("ship")) {
+                if (costText[r].split('-')[1] !== undefined) {
+                  if (costText[r].split('-')[1].startsWith("Bag") || costText[r].split('-')[1].startsWith("bag") || costText[r].split('-')[1].startsWith("Bttl") || costText[r].split('-')[1].startsWith("bttl") || costText[r].split('-')[1].startsWith("Modl") || costText[r].split('-')[1].startsWith("modl") || costText[r].split('-')[1].startsWith("Equp") || costText[r].split('-')[1].startsWith("equp") || costText[r].split('-')[1].startsWith("Chem") || costText[r].split('-')[1].startsWith("chem") || costText[r].split('-')[1].startsWith("Ship") || costText[r].split('-')[1].startsWith("ship")) {
 
-                    if (someText[r].split('-')[0].split('.').length > 1) {
+                    if (costText[r].split('-')[0].split('.').length > 1) {
                       jumper = 0;
                     }
 
 
-                    // console.log(someText[r].split('-')[0]);
-                    // console.log(someText[r].split('-')[0].split('.').length);
+                    // console.log(costText[r].split('-')[0]);
+                    // console.log(costText[r].split('-')[0].split('.').length);
 
-                    // for(let o = 0; o < someText[r].split('-')[0].split('.').length - 1; o++){
+                    // for(let o = 0; o < costText[r].split('-')[0].split('.').length - 1; o++){
                     //   line = '\t' + line;
                     // }
 
                     // BOM
                     // BOM @Raw&Assembly Items
-                    if (someText[r].split('-')[0].split('.').length === 1) {
+                    if (costText[r].split('-')[0].split('.').length === 1) {
                       cntRawAssembly = 0;
-                      bomLine = someText[r].split('-')[1];
+                      bomLine = costText[r].split('-')[1];
                     }
                     // BOM
 
                     if (packingListArray.length === 1) {
                       if (cnt === 1) {
                         packingListArray.push(line);
-                        line = someText[r];
+                        line = costText[r];
                       }
                       cnt = 1;
-                      line = someText[r];
+                      line = costText[r];
 
                     } else {
                       packingListArray.push(line);
-                      line = someText[r];
+                      line = costText[r];
                     }
                   } else {
-                    line = line + ";" + someText[r];
+                    line = line + ";" + costText[r];
                     jumper++;
                     if (jumper === 1 && r !== 1) {
                       line = line + ";NULL";
                     }
                   }
                 } else {
-                  line = line + ";" + someText[r];
+                  line = line + ";" + costText[r];
                   jumper++;
 
                   if (jumper === 1 && r !== 1) {
@@ -1721,16 +1815,75 @@ function sop() {
                   }
                 }
 
-                if (someText.length === r + 1) {
+                if (costText.length === r + 1) {
                   packingListArray.push(line);
                 }
 
                 // BOM
                 if (cntRawAssembly === 3) {
-                  bomLine = bomLine + ';' + someText[r];
+                  bomLine = bomLine + ';' + costText[r];
                   bomArray.push(bomLine);
                 }
                 // BOM
+
+              }
+
+              let removedNumbers = [];
+              if (removedText.length > 0) {
+                // alert('removed is present 2');
+
+                // get all the prefix numbers of the removed components
+
+                for (let t = 0; t < removedText.length; t++) {
+                  // console.log('second:', removedText[t].split('-')[1]);
+                  if (removedText[t].split('-')[1] !== undefined && !isNaN(parseInt(removedText[t].split('-')[0].split('.')[0]))) {
+                    // console.log('num2:', parseInt(removedText[t].split('-')[0].split('.')[0]));
+                    let num = removedText[t].split('-')[0].split('.')[0];
+                    if (removedNumbers.includes(num)) {
+                      // do not ad the number again
+                    } else {
+                      removedNumbers.push(num);
+                    }
+                  }
+
+                }
+
+                // console.log('removedNumbers:', removedNumbers);
+
+                let numIgnore = [];
+                for (let q = 0; q < costText.length; q++) {
+                  if (costText[q].split('-')[1] !== undefined) {
+                    let costNum = costText[q].split('-')[0].split('.')[0];
+                    if (removedNumbers.includes(costNum)) {
+                      if (!numIgnore.includes(costText[q].split('-')[0])) {
+                        if (costText[q].split('-')[1].startsWith('Bag') || costText[q].split('-')[1].startsWith('Modl') || costText[q].split('-')[1].startsWith('Bttl')) {
+                          numIgnore.push(costText[q].split('-')[0]);
+                          bomArray.push(`${costText[q].split('-')[1]};1`);
+                        } else {
+                          let costArraySplit = costText[q].split('-')[0].split('.');
+                          let childNumReduced = '';
+
+                          for (let y = 0; y < costArraySplit.length - 1; y++) {
+                            // console.log('costNum[y]:', costArraySplit[y]);
+                            if (childNumReduced.length === 0) {
+                              childNumReduced = costArraySplit[y];
+                            } else {
+                              childNumReduced = `${childNumReduced}.${costArraySplit[y]}`;
+                            }
+                          }
+                          // console.log('childNumReduced:',childNumReduced);
+                          if (numIgnore.includes(childNumReduced)) {
+                            //  this is a child of module, so do not add this.
+                          } else {
+                            bomArray.push(`${costText[q].split('-')[1]};1`);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+
+                // console.log('numIgnore:', numIgnore);
 
               }
 
@@ -1838,6 +1991,7 @@ function sop() {
             }
           } else {
             let costContents = document.getElementsByClassName('cost_list');
+            let removedContents = document.getElementsByClassName('removed_list');
             // console.log("Checker:", costContents[0].childNodes);
 
             // Below are for Partial Route
@@ -1847,7 +2001,8 @@ function sop() {
             // console.log('costContents:', b);
             let removedContentsPR = document.querySelector('.removed_list').innerHTML;
 
-            let someText = [];
+            // Cost Array generation for BOM, pList
+            let costText = [];
             let abc = costContents[0].childNodes;
             abc.forEach((item) => {
               // console.log(`${item.id} - ${item.IidName} - ${item.IdisplayName} - ${item.Ilab} - ${item.Iqty} - ${item.item_value}`);
@@ -1856,7 +2011,22 @@ function sop() {
               def.forEach((innerItem) => {
                 let splitArray = innerItem.innerText.trim().split("\n");
                 splitArray.forEach((each) => {
-                  someText.push(each);
+                  costText.push(each);
+                })
+              })
+            });
+
+            // Removed Array generation for adding loose items to BOM, pList
+            let removedText = [];
+            let xyz = removedContents[0].childNodes;
+            xyz.forEach((item) => {
+              // console.log(`${item.id} - ${item.IidName} - ${item.IdisplayName} - ${item.Ilab} - ${item.Iqty} - ${item.item_value}`);
+              // console.log(item.childNodes);
+              let def = item.childNodes;
+              def.forEach((innerItem) => {
+                let splitArray = innerItem.innerText.trim().split("\n");
+                splitArray.forEach((each) => {
+                  removedText.push(each);
                 })
               })
             });
@@ -1870,7 +2040,7 @@ function sop() {
             // console.log("Contents:", costContents[0].innerText);
             // console.log("Contents:", extractContent(costContents[0].innerHTML));
 
-            // let someText = costArray.split("\n");
+            // let costText = costArray.split("\n");
             // console.log("Checker:", costArray);
 
             let line = '';
@@ -1882,54 +2052,54 @@ function sop() {
             let cntRawAssembly = 0;
             let jumper = 0;
 
-            // console.log("Checker1:", someText);
+            // console.log("Checker1:", costText);
 
-            for (let r = 0; r < someText.length; r++) {
+            for (let r = 0; r < costText.length; r++) {
               cntRawAssembly++;
-              if (someText[r].split('-')[1] !== undefined) {
-                if (someText[r].split('-')[1].startsWith("Bag") || someText[r].split('-')[1].startsWith("bag") || someText[r].split('-')[1].startsWith("Bttl") || someText[r].split('-')[1].startsWith("bttl") || someText[r].split('-')[1].startsWith("Modl") || someText[r].split('-')[1].startsWith("modl") || someText[r].split('-')[1].startsWith("Equp") || someText[r].split('-')[1].startsWith("equp") || someText[r].split('-')[1].startsWith("Chem") || someText[r].split('-')[1].startsWith("chem") || someText[r].split('-')[1].startsWith("Ship") || someText[r].split('-')[1].startsWith("ship")) {
+              if (costText[r].split('-')[1] !== undefined) {
+                if (costText[r].split('-')[1].startsWith("Bag") || costText[r].split('-')[1].startsWith("bag") || costText[r].split('-')[1].startsWith("Bttl") || costText[r].split('-')[1].startsWith("bttl") || costText[r].split('-')[1].startsWith("Modl") || costText[r].split('-')[1].startsWith("modl") || costText[r].split('-')[1].startsWith("Equp") || costText[r].split('-')[1].startsWith("equp") || costText[r].split('-')[1].startsWith("Chem") || costText[r].split('-')[1].startsWith("chem") || costText[r].split('-')[1].startsWith("Ship") || costText[r].split('-')[1].startsWith("ship")) {
 
-                  if (someText[r].split('-')[0].split('.').length > 1) {
+                  if (costText[r].split('-')[0].split('.').length > 1) {
                     jumper = 0;
                   }
 
 
-                  // console.log(someText[r].split('-')[0]);
-                  // console.log(someText[r].split('-')[0].split('.').length);
+                  // console.log(costText[r].split('-')[0]);
+                  // console.log(costText[r].split('-')[0].split('.').length);
 
-                  // for(let o = 0; o < someText[r].split('-')[0].split('.').length - 1; o++){
+                  // for(let o = 0; o < costText[r].split('-')[0].split('.').length - 1; o++){
                   //   line = '\t' + line;
                   // }
 
                   // BOM
                   // BOM @Raw&Assembly Items
-                  if (someText[r].split('-')[0].split('.').length === 1) {
+                  if (costText[r].split('-')[0].split('.').length === 1) {
                     cntRawAssembly = 0;
-                    bomLine = someText[r].split('-')[1];
+                    bomLine = costText[r].split('-')[1];
                   }
                   // BOM
 
                   if (packingListArray.length === 1) {
                     if (cnt === 1) {
                       packingListArray.push(line);
-                      line = someText[r];
+                      line = costText[r];
                     }
                     cnt = 1;
-                    line = someText[r];
+                    line = costText[r];
 
                   } else {
                     packingListArray.push(line);
-                    line = someText[r];
+                    line = costText[r];
                   }
                 } else {
-                  line = line + ";" + someText[r];
+                  line = line + ";" + costText[r];
                   jumper++;
                   if (jumper === 1 && r !== 1) {
                     line = line + ";NULL";
                   }
                 }
               } else {
-                line = line + ";" + someText[r];
+                line = line + ";" + costText[r];
                 jumper++;
 
                 if (jumper === 1 && r !== 1) {
@@ -1937,16 +2107,75 @@ function sop() {
                 }
               }
 
-              if (someText.length === r + 1) {
+              if (costText.length === r + 1) {
                 packingListArray.push(line);
               }
 
               // BOM
               if (cntRawAssembly === 3) {
-                bomLine = bomLine + ';' + someText[r];
+                bomLine = bomLine + ';' + costText[r];
                 bomArray.push(bomLine);
               }
               // BOM
+
+            }
+
+            let removedNumbers = [];
+            if (removedText.length > 0) {
+              // alert('removed is present 3');
+
+              // get all the prefix numbers of the removed components
+
+              for (let t = 0; t < removedText.length; t++) {
+                // console.log('second:', removedText[t].split('-')[1]);
+                if (removedText[t].split('-')[1] !== undefined && !isNaN(parseInt(removedText[t].split('-')[0].split('.')[0]))) {
+                  // console.log('num2:', parseInt(removedText[t].split('-')[0].split('.')[0]));
+                  let num = removedText[t].split('-')[0].split('.')[0];
+                  if (removedNumbers.includes(num)) {
+                    // do not ad the number again
+                  } else {
+                    removedNumbers.push(num);
+                  }
+                }
+
+              }
+
+              // console.log('removedNumbers:', removedNumbers);
+
+              let numIgnore = [];
+              for (let q = 0; q < costText.length; q++) {
+                if (costText[q].split('-')[1] !== undefined) {
+                  let costNum = costText[q].split('-')[0].split('.')[0];
+                  if (removedNumbers.includes(costNum)) {
+                    if (!numIgnore.includes(costText[q].split('-')[0])) {
+                      if (costText[q].split('-')[1].startsWith('Bag') || costText[q].split('-')[1].startsWith('Modl') || costText[q].split('-')[1].startsWith('Bttl')) {
+                        numIgnore.push(costText[q].split('-')[0]);
+                        bomArray.push(`${costText[q].split('-')[1]};1`);
+                      } else {
+                        let costArraySplit = costText[q].split('-')[0].split('.');
+                        let childNumReduced = '';
+
+                        for (let y = 0; y < costArraySplit.length - 1; y++) {
+                          // console.log('costNum[y]:', costArraySplit[y]);
+                          if (childNumReduced.length === 0) {
+                            childNumReduced = costArraySplit[y];
+                          } else {
+                            childNumReduced = `${childNumReduced}.${costArraySplit[y]}`;
+                          }
+                        }
+                        // console.log('childNumReduced:',childNumReduced);
+                        if (numIgnore.includes(childNumReduced)) {
+                          //  this is a child of module, so do not add this.
+                        } else {
+                          bomArray.push(`${costText[q].split('-')[1]};1`);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
+              // console.log('numIgnore:', numIgnore);
 
             }
 
