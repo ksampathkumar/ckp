@@ -140,7 +140,137 @@ function generateLabString() {
 
   });
 
-  // let txt = gctxt + gptxt + ictxt + ibtxt + aptxt + mbtxt;
+  // Note: All the dissection items needed will have -ve sin for labs.
+  // Suppose lab 5 requires pig, you need to send ap--5
+
+  // A&P Dissection Condition.
+
+  let apd1 = document.getElementsByName('ap-d1');
+  // console.log('txt:', txt);
+  // Dissection is not removed
+  if (!(apd1[0].checked)) {
+
+    if (txt.includes('ap-5')) {
+      txt = txt + 'ap--5' + " ";
+    }
+    if (txt.includes('ap-6')) {
+      txt = txt + 'ap--6' + " ";
+    }
+    if (txt.includes('ap-7')) {
+      txt = txt + 'ap--7' + " ";
+    }
+    if (txt.includes('ap-8')) {
+      txt = txt + 'ap--8' + " ";
+    }
+    if (txt.includes('ap-9')) {
+      txt = txt + 'ap--9' + " ";
+    }
+    if (txt.includes('ap-10')) {
+      txt = txt + 'ap--10' + " ";
+    }
+    if (txt.includes('ap-11')) {
+      txt = txt + 'ap--11' + " ";
+    }
+    if (txt.includes('ap-12')) {
+      txt = txt + 'ap--12' + " ";
+    }
+    if (txt.includes('ap-13')) {
+      txt = txt + 'ap--13' + " ";
+    }
+    if (txt.includes('ap-14')) {
+      txt = txt + 'ap--14' + " ";
+    }
+    if (txt.includes('ap16')) {
+      txt = txt + 'ap--16' + " ";
+    }
+    if (txt.includes('ap-18')) {
+      txt = txt + 'ap--18' + " ";
+    }
+
+  } else if (apd1[0].checked) {
+    // replace the standard modules with customized modules
+    // First remove
+    let is8 = 0;
+    let is10 = 0;
+    if (txt.includes('ap-8')) {
+      txt = txt.replace('ap-8', '');
+      is8 = 1;
+    }
+
+    if (txt.includes('ap-10')) {
+      txt = txt.replace('ap-10', '');
+      is10 = 1
+    }
+
+    // Second Add
+    if (is8) {
+      txt = txt + 'ap-108' + " ";
+    }
+
+    if (is10) {
+      txt = txt + 'ap-110' + " ";
+    }
+  }
+
+  // console.log('txt:', txt);
+
+  let apd2 = document.getElementsByName('ap-d2');
+  // Pig not removed
+  if (!(apd2[0].checked) && !(apd1[0].checked)) {
+    if (txt.includes('ap-5')) {
+      txt = txt + 'ap--1005' + " ";
+    }
+    if (txt.includes('ap-6')) {
+      txt = txt + 'ap--1006' + " ";
+    }
+    if (txt.includes('ap-7')) {
+      txt = txt + 'ap--1007' + " ";
+    }
+    if (txt.includes('ap-8')) {
+      txt = txt + 'ap--1008' + " ";
+    }
+    if (txt.includes('ap-9')) {
+      txt = txt + 'ap--1009' + " ";
+    }
+    if (txt.includes('ap-11')) {
+      txt = txt + 'ap--1010' + " ";
+    }
+    if (txt.includes('ap-12')) {
+      txt = txt + 'ap--1012' + " ";
+    }
+    if (txt.includes('ap-13')) {
+      txt = txt + 'ap--1013' + " ";
+    }
+    if (txt.includes('ap-14')) {
+      txt = txt + 'ap--1014' + " ";
+    }
+    if (txt.includes('ap16')) {
+      txt = txt + 'ap--1016' + " ";
+    }
+    if (txt.includes('ap-18')) {
+      txt = txt + 'ap--1018' + " ";
+    }
+  }
+
+  let apd3 = document.getElementsByName('ap-d3');
+  // Add Kidney
+  if (apd3[0].checked) {
+    txt = txt + 'ap-1001' + " ";
+  }
+
+  let apd4 = document.getElementsByName('ap-d4');
+  // Add Rat
+  if (apd4[0].checked) {
+    txt = txt + 'ap-1002' + " ";
+  }
+
+  let apd5 = document.getElementsByName('ap-d5');
+  // Add Rabbit
+  if (apd5[0].checked) {
+    txt = txt + 'ap-1003' + " ";
+  }
+
+
   txt = txt.slice(0, -1);
   // Getting Selected Labs
 
@@ -335,7 +465,7 @@ function dispPrice(BOM, dependencyTree) {
 
     htmlPlainParentProto = '<div class="item clearfix" id="cost-%itemCount%"><div class="IidName">%idName%</div><div class="IdisplayName">%displayName%</div><div class="Ilab">%lab%</div><div class="Iqty">%qty%</div><div class="right clearfix"><div class="item_value">%averageCost%</div><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
 
-    if (parent.idName.startsWith("Equp") || parent.idName.startsWith("equp") || parent.idName.startsWith("Chem") || parent.idName.startsWith("Ship")) {
+    if (parent.idName.toUpperCase().startsWith("EQUP") || parent.idName.toUpperCase().startsWith("CHEM") || parent.idName.toUpperCase().startsWith("SHIP")) {
       // Replace the placeholder text with some actual data
       html = htmlPlainParentProto.replace('%itemCount%', itemCount);
       html = html.replace('%idName%', `${itemCount}-${parent.idName}`);
@@ -376,7 +506,7 @@ function dispPrice(BOM, dependencyTree) {
     htmlParentProto2 = '<h2 <button class="collapsible3"><div class="item clearfix" id="cost-%bagCount%"><div class="idName">%memBag%</div><div class="displayName">%memBagDisplayName%</div><div class="qty">%qty%</div><div class="right clearfix"><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div></h2>';
 
 
-    if (parent.idName.startsWith("Bag") || parent.idName.startsWith("Bttl") || parent.idName.startsWith("Modl")) {
+    if (parent.idName.toUpperCase().startsWith("BAG") || parent.idName.toUpperCase().startsWith("BTTL") || parent.idName.toUpperCase().startsWith("MODL")) {
 
       // Replace the placeholder text with some actual data
       html = htmlParentProto.replace('%itemCount%', itemCount);
@@ -398,7 +528,7 @@ function dispPrice(BOM, dependencyTree) {
         for (let n = 0; n < moreDeatils.length; n++) {
           let details = moreDeatils[n];
 
-          if (details.memItem.startsWith("Bag") || details.memItem.startsWith("Bttl") || details.memItem.startsWith("Modl")) {
+          if (details.memItem.toUpperCase().startsWith("BAG") || details.memItem.toUpperCase().startsWith("BTTL") || details.memItem.toUpperCase().startsWith("MODL")) {
 
             let bagInsideBag = dependencyTree.filter(function (item2Add) {
               return item2Add.idName == details.memItem;
@@ -416,7 +546,7 @@ function dispPrice(BOM, dependencyTree) {
 
                 let bagElements = bagInsideBag[t];
 
-                if (bagElements.memItem.startsWith("Bag") || bagElements.memItem.startsWith("Bttl") || bagElements.memItem.startsWith("Modl")) {
+                if (bagElements.memItem.toUpperCase().startsWith("BAG") || bagElements.memItem.toUpperCase().startsWith("BTTL") || bagElements.memItem.toUpperCase().startsWith("MODL")) {
                   // console.log("CHECKER1:", bagElements);
                   let deeperBag = dependencyTree.filter(function (item2Add) {
                     return item2Add.idName == bagElements.memItem;
@@ -817,7 +947,7 @@ function itemDelete(element) {
   // console.log('1:', el.innerText);
   // console.log('2:',el.childNodes);
 
-  if (el.childNodes[0].innerHTML.split('-')[1].startsWith("Bag") || el.childNodes[0].innerHTML.split('-')[1].startsWith("Bttl") || el.childNodes[0].innerHTML.split('-')[1].startsWith("Modl")) {
+  if (el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BAG") || el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BTTL") || el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("MODL")) {
 
     el.parentNode.removeChild(el);
     document.querySelector('.removed_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el.id) + el.innerHTML.replace('itemDelete', 'itemAdd') + '</div>');
@@ -829,7 +959,7 @@ function itemDelete(element) {
       } else {
         // console.log(item + `.${i}`);
 
-        if (el1.childNodes[0].innerHTML.split('-')[1].startsWith("Bag") || el1.childNodes[0].innerHTML.split('-')[1].startsWith("Bttl") || el1.childNodes[0].innerHTML.split('-')[1].startsWith("Modl")) {
+        if (el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BAG") || el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BTTL") || el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("MODL")) {
           el1.parentNode.removeChild(el1);
           document.querySelector('.removed_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el1.id) + el1.innerHTML.replace('itemDelete', 'itemAdd') + '</div>');
 
@@ -878,7 +1008,7 @@ function itemAdd(element) {
   // console.log(el.innerText);
   // console.log(el.childNodes);
 
-  if (el.childNodes[0].innerHTML.split('-')[1].startsWith("Bag") || el.childNodes[0].innerHTML.split('-')[1].startsWith("Bttl") || el.childNodes[0].innerHTML.split('-')[1].startsWith("Modl")) {
+  if (el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BAG") || el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BTTL") || el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("MODL")) {
 
     el.parentNode.removeChild(el);
     document.querySelector('.cost_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el.id) + el.innerHTML.replace('itemAdd', 'itemDelete') + '</div>');
@@ -890,7 +1020,7 @@ function itemAdd(element) {
       } else {
         // console.log(item + `.${i}`);
 
-        if (el1.childNodes[0].innerHTML.split('-')[1].startsWith("Bag") || el1.childNodes[0].innerHTML.split('-')[1].startsWith("Bttl") || el1.childNodes[0].innerHTML.split('-')[1].startsWith("Modl")) {
+        if (el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BAG") || el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BTTL") || el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("MODL")) {
           el1.parentNode.removeChild(el1);
           document.querySelector('.cost_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el1.id) + el1.innerHTML.replace('itemAdd', 'itemDelete') + '</div>');
 
@@ -1470,7 +1600,7 @@ function sop() {
                     for (let r = 0; r < costText.length; r++) {
                       cntRawAssembly++;
                       if (costText[r].split('-')[1] !== undefined) {
-                        if (costText[r].split('-')[1].startsWith("Bag") || costText[r].split('-')[1].startsWith("bag") || costText[r].split('-')[1].startsWith("Bttl") || costText[r].split('-')[1].startsWith("bttl") || costText[r].split('-')[1].startsWith("Modl") || costText[r].split('-')[1].startsWith("modl") || costText[r].split('-')[1].startsWith("Equp") || costText[r].split('-')[1].startsWith("equp") || costText[r].split('-')[1].startsWith("Chem") || costText[r].split('-')[1].startsWith("chem") || costText[r].split('-')[1].startsWith("Ship") || costText[r].split('-')[1].startsWith("ship")) {
+                        if (costText[r].split('-')[1].toUpperCase().startsWith("BAG") || costText[r].split('-')[1].toUpperCase().startsWith("BTTL") || costText[r].split('-')[1].toUpperCase().startsWith("MODL") || costText[r].split('-')[1].toUpperCase().startsWith("EQUP") || costText[r].split('-')[1].toUpperCase().startsWith("CHEM") || costText[r].split('-')[1].toUpperCase().startsWith("SHIP")) {
 
                           if (costText[r].split('-')[0].split('.').length > 1) {
                             jumper = 0;
@@ -1561,7 +1691,7 @@ function sop() {
                           let costNum = costText[q].split('-')[0].split('.')[0];
                           if (removedNumbers.includes(costNum)) {
                             if (!numIgnore.includes(costText[q].split('-')[0])) {
-                              if (costText[q].split('-')[1].startsWith('Bag') || costText[q].split('-')[1].startsWith('Modl') || costText[q].split('-')[1].startsWith('Bttl')) {
+                              if (costText[q].split('-')[1].toUpperCase().startsWith('BAG') || costText[q].split('-')[1].toUpperCase().startsWith('MODL') || costText[q].split('-')[1].toUpperCase().startsWith('BTTL')) {
                                 numIgnore.push(costText[q].split('-')[0]);
                                 bomArray.push(`${costText[q].split('-')[1]};1`);
                               } else {
@@ -1765,7 +1895,7 @@ function sop() {
               for (let r = 0; r < costText.length; r++) {
                 cntRawAssembly++;
                 if (costText[r].split('-')[1] !== undefined) {
-                  if (costText[r].split('-')[1].startsWith("Bag") || costText[r].split('-')[1].startsWith("bag") || costText[r].split('-')[1].startsWith("Bttl") || costText[r].split('-')[1].startsWith("bttl") || costText[r].split('-')[1].startsWith("Modl") || costText[r].split('-')[1].startsWith("modl") || costText[r].split('-')[1].startsWith("Equp") || costText[r].split('-')[1].startsWith("equp") || costText[r].split('-')[1].startsWith("Chem") || costText[r].split('-')[1].startsWith("chem") || costText[r].split('-')[1].startsWith("Ship") || costText[r].split('-')[1].startsWith("ship")) {
+                  if (costText[r].split('-')[1].toUpperCase().startsWith("BAG") || costText[r].split('-')[1].toUpperCase().startsWith("BTTL") || costText[r].split('-')[1].toUpperCase().startsWith("MODL") || costText[r].split('-')[1].toUpperCase().startsWith("EQUP") || costText[r].split('-')[1].toUpperCase().startsWith("CHEM") || costText[r].split('-')[1].toUpperCase().startsWith("SHIP")) {
 
                     if (costText[r].split('-')[0].split('.').length > 1) {
                       jumper = 0;
@@ -1856,7 +1986,7 @@ function sop() {
                     let costNum = costText[q].split('-')[0].split('.')[0];
                     if (removedNumbers.includes(costNum)) {
                       if (!numIgnore.includes(costText[q].split('-')[0])) {
-                        if (costText[q].split('-')[1].startsWith('Bag') || costText[q].split('-')[1].startsWith('Modl') || costText[q].split('-')[1].startsWith('Bttl')) {
+                        if (costText[q].split('-')[1].toUpperCase().startsWith('BAG') || costText[q].split('-')[1].toUpperCase().startsWith('MODL') || costText[q].split('-')[1].toUpperCase().startsWith('BTTL')) {
                           numIgnore.push(costText[q].split('-')[0]);
                           bomArray.push(`${costText[q].split('-')[1]};1`);
                         } else {
@@ -2057,7 +2187,7 @@ function sop() {
             for (let r = 0; r < costText.length; r++) {
               cntRawAssembly++;
               if (costText[r].split('-')[1] !== undefined) {
-                if (costText[r].split('-')[1].startsWith("Bag") || costText[r].split('-')[1].startsWith("bag") || costText[r].split('-')[1].startsWith("Bttl") || costText[r].split('-')[1].startsWith("bttl") || costText[r].split('-')[1].startsWith("Modl") || costText[r].split('-')[1].startsWith("modl") || costText[r].split('-')[1].startsWith("Equp") || costText[r].split('-')[1].startsWith("equp") || costText[r].split('-')[1].startsWith("Chem") || costText[r].split('-')[1].startsWith("chem") || costText[r].split('-')[1].startsWith("Ship") || costText[r].split('-')[1].startsWith("ship")) {
+                if (costText[r].split('-')[1].toUpperCase().startsWith("BAG") || costText[r].split('-')[1].toUpperCase().startsWith("BTTL") || costText[r].split('-')[1].toUpperCase().startsWith("MODL") || costText[r].split('-')[1].toUpperCase().startsWith("EQUP") || costText[r].split('-')[1].toUpperCase().startsWith("CHEM") || costText[r].split('-')[1].toUpperCase().startsWith("SHIP")) {
 
                   if (costText[r].split('-')[0].split('.').length > 1) {
                     jumper = 0;
@@ -2148,7 +2278,7 @@ function sop() {
                   let costNum = costText[q].split('-')[0].split('.')[0];
                   if (removedNumbers.includes(costNum)) {
                     if (!numIgnore.includes(costText[q].split('-')[0])) {
-                      if (costText[q].split('-')[1].startsWith('Bag') || costText[q].split('-')[1].startsWith('Modl') || costText[q].split('-')[1].startsWith('Bttl')) {
+                      if (costText[q].split('-')[1].toUpperCase().startsWith('BAG') || costText[q].split('-')[1].toUpperCase().startsWith('MODL') || costText[q].split('-')[1].toUpperCase().startsWith('BTTL')) {
                         numIgnore.push(costText[q].split('-')[0]);
                         bomArray.push(`${costText[q].split('-')[1]};1`);
                       } else {

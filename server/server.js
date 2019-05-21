@@ -569,7 +569,7 @@ async function ckpFunc(req) {
   function rawBomSeparator4rules(sqlResult) {
     sqlResult.forEach(function (row) {
       // console.log("BOM1:", row);
-      if (row.idName.startsWith("Equp") || row.idName.startsWith("Chem") || row.idName.startsWith("Ship")) {
+      if (row.idName.toUpperCase().startsWith("EQUP") || row.idName.toUpperCase().startsWith("CHEM") || row.idName.toUpperCase().startsWith("SHIP")) {
         rawItem.push(row);
       } else {
         bomItem.push(row);
@@ -582,7 +582,7 @@ async function ckpFunc(req) {
     Object.keys(bomResult).forEach(function (key) {
       let row = bomResult[key];
       // console.log("BOM2:", row);
-      if (row.memItem.startsWith("Equp") || row.memItem.startsWith("equp") || row.memItem.startsWith("Chem") || row.memItem.startsWith("Ship")) {
+      if (row.memItem.toUpperCase().startsWith("EQUP") || row.memItem.toUpperCase().startsWith("CHEM") || row.memItem.toUpperCase().startsWith("SHIP")) {
         rawItemFromBOM.push(row);
       } else {
         bomItemFromBOM.push(row);
@@ -849,7 +849,7 @@ async function ckpFunc(req) {
     });
 
     totalRawItemsUnique.forEach(async function (item) {
-      if (item.idName.startsWith("Bag") || item.idName.startsWith("Modl") || item.idName.startsWith("Bttl")) {
+      if (item.idName.toUpperCase().startsWith("BAG") || item.idName.toUpperCase().startsWith("MODL") || item.idName.toUpperCase().startsWith("BTTL")) {
         console.log("ERROR@groupNaddItems:", item);
       }
     });
@@ -884,14 +884,14 @@ async function ckpFunc(req) {
     for (let m = 0; m < BOM.length; m++) {
       let parent = BOM[m];
 
-      if (parent.idName.startsWith("Equp") || parent.idName.startsWith("equp") || parent.idName.startsWith("Chem") || parent.idName.startsWith("Ship")) {
+      if (parent.idName.toUpperCase().startsWith("EQUP") || parent.idName.toUpperCase().startsWith("CHEM") || parent.idName.toUpperCase().startsWith("SHIP")) {
 
         let moreDeatils = dependencyTree.filter(function (item2Add) {
           return item2Add.idName == parent.idName;
         });
         // console.log(parent, moreDeatils);
         sum = sum + parent.qty * moreDeatils[0].averageCost;
-      } else if (parent.idName.startsWith("Bag") || parent.idName.startsWith("Bttl") || parent.idName.startsWith("Modl")) {
+      } else if (parent.idName.toUpperCase().startsWith("BAG") || parent.idName.toUpperCase().startsWith("BTTL") || parent.idName.toUpperCase().startsWith("MODL")) {
 
         let details1 = dependencyTree.filter(function (item2Add) {
           return item2Add.idName == parent.idName;
@@ -903,7 +903,7 @@ async function ckpFunc(req) {
 
             let details2 = details1[a];
 
-            if (details2.memItem.startsWith("Bag") || details2.memItem.startsWith("Bttl") || details2.memItem.startsWith("Modl")) {
+            if (details2.memItem.toUpperCase().startsWith("BAG") || details2.memItem.toUpperCase().startsWith("BTTL") || details2.memItem.toUpperCase().startsWith("MODL")) {
 
               let details3 = dependencyTree.filter(function (item2Add) {
                 return item2Add.idName == details2.memItem;
@@ -915,7 +915,7 @@ async function ckpFunc(req) {
 
                   let details4 = details3[b];
 
-                  if (details4.memItem.startsWith("Bag") || details4.memItem.startsWith("Bttl") || details4.memItem.startsWith("Modl")) {
+                  if (details4.memItem.toUpperCase().startsWith("BAG") || details4.memItem.toUpperCase().startsWith("BTTL") || details4.memItem.toUpperCase().startsWith("MODL")) {
 
                     let details5 = dependencyTree.filter(function (item2Add) {
                       return item2Add.idName == details4.memItem;
@@ -927,7 +927,7 @@ async function ckpFunc(req) {
 
                         let details6 = details5[a];
 
-                        if (details6.memItem.startsWith("Bag") || details6.memItem.startsWith("Bttl") || details6.memItem.startsWith("Modl")) {
+                        if (details6.memItem.toUpperCase().startsWith("BAG") || details6.memItem.toUpperCase().startsWith("BTTL") || details6.memItem.toUpperCase().startsWith("MODL")) {
                           console.log("One More Level of Hirearchy found:", details6);
                           let details7 = dependencyTree.filter(function (item2Add) {
                             return item2Add.idName == details2.memItem;
@@ -935,7 +935,7 @@ async function ckpFunc(req) {
 
 
 
-                        } else if (details6.memItem.startsWith("Equp") || details6.memItem.startsWith("equp") || details6.memItem.startsWith("Chem") || details6.memItem.startsWith("Ship")) {
+                        } else if (details6.memItem.toUpperCase().startsWith("EQUP") || details6.memItem.toUpperCase().startsWith("CHEM") || details6.memItem.toUpperCase().startsWith("SHIP")) {
                           sum = sum + details6.memQuantity * details6.averageCost;
                         } else {
                           console.log("Error@priceCalculator3:", details6);
@@ -943,7 +943,7 @@ async function ckpFunc(req) {
                       }
                     }
 
-                  } else if (details4.memItem.startsWith("Equp") || details4.memItem.startsWith("equp") || details4.memItem.startsWith("Chem") || details4.memItem.startsWith("Ship")) {
+                  } else if (details4.memItem.toUpperCase().startsWith("EQUP") || details4.memItem.toUpperCase().startsWith("CHEM") || details4.memItem.toUpperCase().startsWith("SHIP")) {
                     sum = sum + details4.memQuantity * details4.averageCost;
                   } else {
                     console.log("Error@priceCalculator2:", details4);
@@ -951,7 +951,7 @@ async function ckpFunc(req) {
                 }
               }
 
-            } else if (details2.memItem.startsWith("Equp") || details2.memItem.startsWith("equp") || details2.memItem.startsWith("Chem") || details2.memItem.startsWith("Ship")) {
+            } else if (details2.memItem.toUpperCase().startsWith("EQUP") || details2.memItem.toUpperCase().startsWith("CHEM") || details2.memItem.toUpperCase().startsWith("SHIP")) {
               sum = sum + details2.memQuantity * details2.averageCost;
             } else {
               console.log("Error@priceCalculator1:", details2);
@@ -1021,57 +1021,57 @@ async function ckpFunc(req) {
     }
 
     // Pipette Condition
-    let pipetteCountGC = 0;
+    let pipetteCount = 0;
 
     if (id.includes("gc-2")) {
-      pipetteCountGC += 2;
+      pipetteCount += 2;
     }
     if (id.includes("gc-4")) {
-      pipetteCountGC += 10;
+      pipetteCount += 10;
     }
     if (id.includes("gc-8")) {
-      pipetteCountGC += 2;
+      pipetteCount += 2;
     }
     if (id.includes("gc-10")) {
-      pipetteCountGC += 1;
+      pipetteCount += 1;
     }
     if (id.includes("gc-11")) {
-      pipetteCountGC += 1;
+      pipetteCount += 1;
     }
     if (id.includes("gc-14")) {
-      pipetteCountGC += 1;
+      pipetteCount += 1;
     }
     if (id.includes("gc-16")) {
-      pipetteCountGC += 7;
+      pipetteCount += 7;
     }
     if (id.includes("gc-17")) {
-      pipetteCountGC += 9;
+      pipetteCount += 9;
     }
     if (id.includes("gc-18")) {
-      pipetteCountGC += 4;
+      pipetteCount += 4;
     }
     if (id.includes("gc-19")) {
-      pipetteCountGC += 2;
+      pipetteCount += 2;
     }
 
-    pipetteCountGC = Math.ceil((pipetteCountGC * 1.25) / 10) * 10;
+    pipetteCount = Math.ceil((pipetteCount * 1.25) / 10) * 10;
 
-    let pipette2GC = Math.floor(pipetteCountGC / 20);
-    let pipette1GC = pipetteCountGC % 20;
+    let pipette2 = Math.floor(pipetteCount / 20);
+    let pipette1 = pipetteCount % 20;
 
-    if (pipette1GC > 0) {
+    if (pipette1 > 0) {
       itemsToAdd.push({
         idName: 'Bag1030',
         lab: 100,
-        qty: pipette1GC / 10,
+        qty: pipette1 / 10,
         unit: 'each'
       });
     }
-    if (pipette2GC > 0) {
+    if (pipette2 > 0) {
       itemsToAdd.push({
         idName: 'Bag1028',
         lab: 100,
-        qty: pipette2GC,
+        qty: pipette2,
         unit: 'each'
       });
     }
@@ -1338,45 +1338,45 @@ async function ckpFunc(req) {
     }
 
     // Pipette Condition
-    let pipetteCountIB = 0;
+    let pipetteCount = 0;
 
     if (id.includes("ib-2")) {
-      pipetteCountIB += 2;
+      pipetteCount += 2;
     }
     if (id.includes("ib-5")) {
-      pipetteCountIB += 10;
+      pipetteCount += 10;
     }
     if (id.includes("ib-6")) {
-      pipetteCountIB += 2;
+      pipetteCount += 2;
     }
     if (id.includes("ib-7")) {
-      pipetteCountIB += 1;
+      pipetteCount += 1;
     }
     if (id.includes("ib-9")) {
-      pipetteCountIB += 1;
+      pipetteCount += 1;
     }
     if (id.includes("ib-20")) {
-      pipetteCountIB += 1;
+      pipetteCount += 1;
     }
 
-    pipetteCountIB = Math.ceil((pipetteCountIB * 1.25) / 10) * 10;
+    pipetteCount = Math.ceil((pipetteCount * 1.25) / 10) * 10;
 
-    let pipette2IB = Math.floor(pipetteCountIB / 20);
-    let pipette1IB = pipetteCountIB % 20;
+    let pipette2 = Math.floor(pipetteCount / 20);
+    let pipette1 = pipetteCount % 20;
 
-    if (pipette1IB > 0) {
+    if (pipette1 > 0) {
       itemsToAdd.push({
         idName: 'Bag1030',
         lab: 200,
-        qty: pipette1IB / 10,
+        qty: pipette1 / 10,
         unit: 'each'
       });
     }
-    if (pipette2IB > 0) {
+    if (pipette2 > 0) {
       itemsToAdd.push({
         idName: 'Bag1028',
         lab: 200,
-        qty: pipette2IB,
+        qty: pipette2,
         unit: 'each'
       });
     }
@@ -1411,6 +1411,66 @@ async function ckpFunc(req) {
 
   function apAdditions(id, itemsToAdd) {
 
+    // TEST TUBES CONDITION // - 101
+    if (id.includes("ap-16") || id.includes("ap-17")) {
+      itemsToAdd.push({
+        idName: 'Bag1019',
+        lab: '16,17',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ap-4") || id.includes("ap-14")) {
+      itemsToAdd.push({
+        idName: 'Bag1018',
+        lab: '4,14',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Pipette Condition
+    let pipetteCount = 0;
+
+    if (id.includes("ap-2")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("ap-4")) {
+      pipetteCount += 5;
+    }
+    if (id.includes("ap-14")) {
+      pipetteCount += 17;
+    }
+    if (id.includes("ap-15")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("ap-16")) {
+      pipetteCount += 2;
+    }
+    if (id.includes("ap-17")) {
+      pipetteCount += 11;
+    }
+
+    pipetteCount = Math.ceil((pipetteCount * 1.25) / 10) * 10;
+
+    let pipette2 = Math.floor(pipetteCount / 20);
+    let pipette1 = pipetteCount % 20;
+
+    if (pipette1 > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1030',
+        lab: 100,
+        qty: pipette1 / 10,
+        unit: 'each'
+      });
+    }
+    if (pipette2 > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1028',
+        lab: 100,
+        qty: pipette2,
+        unit: 'each'
+      });
+    }
 
 
     return itemsToAdd;
@@ -1425,7 +1485,36 @@ async function ckpFunc(req) {
 
   function icAdditions(id, itemsToAdd) {
 
-
+    // TEST TUBES CONDITION // - 101
+    if (id.includes("ic-5")) {
+      itemsToAdd.push({
+        idName: 'Bag1019',
+        lab: '5',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ic-13")) {
+      itemsToAdd.push({
+        idName: 'Bag1018',
+        lab: '13',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ic-12") || id.includes("ic-15") || id.includes("ic-22")) {
+      itemsToAdd.push({
+        idName: 'Bag1017',
+        lab: '12,15,22',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ic-14")) {
+      itemsToAdd.push({
+        idName: 'Equp1019',
+        lab: '14',
+        qty: 1,
+        unit: 'each'
+      });
+    }
 
     return itemsToAdd;
   }
@@ -1447,45 +1536,45 @@ async function ckpFunc(req) {
   function esAdditions(id, itemsToAdd) {
 
     // Pipette Condition
-    let pipetteCountES = 0;
+    let pipetteCount = 0;
 
     if (id.includes("es-4")) {
-      pipetteCountES += 4;
+      pipetteCount += 4;
     }
     if (id.includes("gc-7")) {
-      pipetteCountES += 1;
+      pipetteCount += 1;
     }
     if (id.includes("gc-8")) {
-      pipetteCountES += 4;
+      pipetteCount += 4;
     }
     if (id.includes("gc-9")) {
-      pipetteCountES += 2;
+      pipetteCount += 2;
     }
     if (id.includes("gc-10")) {
-      pipetteCountES += 1;
+      pipetteCount += 1;
     }
     if (id.includes("gc-12")) {
-      pipetteCountES += 1;
+      pipetteCount += 1;
     }
 
-    pipetteCountES = Math.ceil((pipetteCountES * 1.25) / 10) * 10;
+    pipetteCount = Math.ceil((pipetteCount * 1.25) / 10) * 10;
 
-    let pipette2ES = Math.floor(pipetteCountES / 20);
-    let pipette1ES = pipetteCountES % 20;
+    let pipette2 = Math.floor(pipetteCount / 20);
+    let pipette1 = pipetteCount % 20;
 
-    if (pipette1ES > 0) {
+    if (pipette1 > 0) {
       itemsToAdd.push({
         idName: 'Bag1030',
         lab: 100,
-        qty: pipette1ES / 10,
+        qty: pipette1 / 10,
         unit: 'each'
       });
     }
-    if (pipette2ES > 0) {
+    if (pipette2 > 0) {
       itemsToAdd.push({
         idName: 'Bag1028',
         lab: 100,
-        qty: pipette2ES,
+        qty: pipette2,
         unit: 'each'
       });
     }
@@ -2062,7 +2151,7 @@ async function ckpFunc(req) {
         if (current.idName.toUpperCase().startsWith('EQUP') || current.idName.toUpperCase().startsWith('SHIP')) {
 
           // Neglecting one time consumable items 
-          if (current.idName !== 'Equp2029' && current.idName !== 'Equp7030') {
+          if (current.idName !== 'Equp2029' && current.idName !== 'Equp7030' && current.idName !== 'Ship8102') {
 
             // if the serverResponseOther's equp quantity is greater that the serverResponse's equp quantity
             if (present.idName === current.idName && current.qty > present.qty) {
@@ -2200,7 +2289,7 @@ async function ckpFunc(req) {
     const id = req;
 
     let ids;
-    let gp, gc, ib, ap, mb, ic, as, gb, es, fs, ip, hb, hg, sg, bg, rm, pt;
+    let gp, gc, ib, ap, mb, ic, ast, gb, es, fs, ip, hb, hg, sg, bg, rm, pt;
 
     gp = [];
     gc = [];
@@ -2237,7 +2326,11 @@ async function ckpFunc(req) {
           ib.push(subject[1]);
           break;
         case 'ap':
-          ap.push(subject[1]);
+          if (subject.length > 2) {
+            ap.push(-subject[2]);
+          } else {
+            ap.push(subject[1]);
+          }
           break;
         case 'mb':
           mb.push(subject[1]);
@@ -2899,18 +2992,18 @@ app.post('/ckp2/save', authenticate, async (req, res) => {
 
       // console.log('ckpAns:', ckpAns[4]);
       // let dependencyTree = ckpAns[4].filter(function (item){
-      //   return (item.idName.startsWith("Equp") || item.idName.startsWith("equp") || item.idName.startsWith("Chem") || item.idName.startsWith("Ship"));
+      //   return (item.idName.toUpperCase().startsWith("EQUP") || item.idName.toUpperCase().startsWith("CHEM") || item.idName.toUpperCase().startsWith("SHIP"));
       // });
       // console.log('ckpAns:', dependencyTree);
 
       let dependencyTree = ckpAns[4];
 
       let bomArrayEqup = ckpAns[3].filter(function (equpItem) {
-        return (equpItem.idName.startsWith("Equp") || equpItem.idName.startsWith("equp") || equpItem.idName.startsWith("Chem") || equpItem.idName.startsWith("Ship"));
+        return (equpItem.idName.toUpperCase().startsWith("EQUP") || equpItem.idName.toUpperCase().startsWith("CHEM") || equpItem.idName.toUpperCase().startsWith("SHIP"));
       });
 
       let bomArrayModl = ckpAns[3].filter(function (modlItem) {
-        return !(modlItem.idName.startsWith("Equp") || modlItem.idName.startsWith("equp") || modlItem.idName.startsWith("Chem") || modlItem.idName.startsWith("Ship"));
+        return !(modlItem.idName.toUpperCase().startsWith("EQUP") || modlItem.idName.toUpperCase().startsWith("CHEM") || modlItem.idName.toUpperCase().startsWith("SHIP"));
       });
 
       // BOM FILE
@@ -2958,7 +3051,7 @@ app.post('/ckp2/save', authenticate, async (req, res) => {
             filePackingList.write(`${pCounter}.${id}-${v.idName};${dependency[0].displayName};${dependency[0].lab === undefined ? 'undefined' : dependency[0].lab};1;NULL` + '\n');
 
             dependency.forEach(async (item) => {
-              if (item.memItem.startsWith('Bag') || item.memItem.startsWith('Bttl') || item.memItem.startsWith('Modl')) {
+              if (item.memItem.toUpperCase().startsWith('BAG') || item.memItem.toUpperCase().startsWith('BTTL') || item.memItem.toUpperCase().startsWith('MODL')) {
                 let arrayItem = [];
                 arrayItem.push({ 'idName': item.memItem });
                 modlPack(arrayItem, dependencyTree, insidePcounter++);
@@ -2976,7 +3069,7 @@ app.post('/ckp2/save', authenticate, async (req, res) => {
             filePackingList.write(`${pCounter}-${v.idName};${dependency[0].displayName};${dependency[0].lab === undefined ? 'undefined' : dependency[0].lab};1;NULL` + '\n');
             let insidePcounter = 1
             dependency.forEach(async (item) => {
-              if (item.memItem.startsWith('Bag') || item.memItem.startsWith('Bttl') || item.memItem.startsWith('Modl')) {
+              if (item.memItem.toUpperCase().startsWith('BAG') || item.memItem.toUpperCase().startsWith('BTTL') || item.memItem.toUpperCase().startsWith('MODL')) {
                 let arrayItem = [];
                 arrayItem.push({ 'idName': item.memItem });
                 modlPack(arrayItem, dependencyTree, insidePcounter++);

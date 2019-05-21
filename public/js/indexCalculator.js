@@ -124,7 +124,137 @@ function generateLabString() {
 
   });
 
-  // let txt = gctxt + gptxt + ictxt + ibtxt + aptxt + mbtxt;
+  // Note: All the dissection items needed will have -ve sin for labs.
+  // Suppose lab 5 requires pig, you need to send ap--5
+
+  // A&P Dissection Condition.
+
+  let apd1 = document.getElementsByName('ap-d1');
+  // console.log('txt:', txt);
+  // Dissection is not removed
+  if (!(apd1[0].checked)) {
+
+    if (txt.includes('ap-5')) {
+      txt = txt + 'ap--5' + " ";
+    }
+    if (txt.includes('ap-6')) {
+      txt = txt + 'ap--6' + " ";
+    }
+    if (txt.includes('ap-7')) {
+      txt = txt + 'ap--7' + " ";
+    }
+    if (txt.includes('ap-8')) {
+      txt = txt + 'ap--8' + " ";
+    }
+    if (txt.includes('ap-9')) {
+      txt = txt + 'ap--9' + " ";
+    }
+    if (txt.includes('ap-10')) {
+      txt = txt + 'ap--10' + " ";
+    }
+    if (txt.includes('ap-11')) {
+      txt = txt + 'ap--11' + " ";
+    }
+    if (txt.includes('ap-12')) {
+      txt = txt + 'ap--12' + " ";
+    }
+    if (txt.includes('ap-13')) {
+      txt = txt + 'ap--13' + " ";
+    }
+    if (txt.includes('ap-14')) {
+      txt = txt + 'ap--14' + " ";
+    }
+    if (txt.includes('ap16')) {
+      txt = txt + 'ap--16' + " ";
+    }
+    if (txt.includes('ap-18')) {
+      txt = txt + 'ap--18' + " ";
+    }
+
+  } else if (apd1[0].checked) {
+    // replace the standard modules with customized modules
+    // First remove
+    let is8 = 0;
+    let is10 = 0;
+    if (txt.includes('ap-8')) {
+      txt = txt.replace('ap-8', '');
+      is8 = 1;
+    }
+
+    if (txt.includes('ap-10')) {
+      txt = txt.replace('ap-10', '');
+      is10 = 1
+    }
+
+    // Second Add
+    if (is8) {
+      txt = txt + 'ap-108' + " ";
+    }
+
+    if (is10) {
+      txt = txt + 'ap-110' + " ";
+    }
+  }
+
+  // console.log('txt:', txt);
+
+  let apd2 = document.getElementsByName('ap-d2');
+  // Pig not removed
+  if (!(apd2[0].checked) && !(apd1[0].checked)) {
+    if (txt.includes('ap-5')) {
+      txt = txt + 'ap--1005' + " ";
+    }
+    if (txt.includes('ap-6')) {
+      txt = txt + 'ap--1006' + " ";
+    }
+    if (txt.includes('ap-7')) {
+      txt = txt + 'ap--1007' + " ";
+    }
+    if (txt.includes('ap-8')) {
+      txt = txt + 'ap--1008' + " ";
+    }
+    if (txt.includes('ap-9')) {
+      txt = txt + 'ap--1009' + " ";
+    }
+    if (txt.includes('ap-11')) {
+      txt = txt + 'ap--1010' + " ";
+    }
+    if (txt.includes('ap-12')) {
+      txt = txt + 'ap--1012' + " ";
+    }
+    if (txt.includes('ap-13')) {
+      txt = txt + 'ap--1013' + " ";
+    }
+    if (txt.includes('ap-14')) {
+      txt = txt + 'ap--1014' + " ";
+    }
+    if (txt.includes('ap16')) {
+      txt = txt + 'ap--1016' + " ";
+    }
+    if (txt.includes('ap-18')) {
+      txt = txt + 'ap--1018' + " ";
+    }
+  }
+
+  let apd3 = document.getElementsByName('ap-d3');
+  // Add Kidney
+  if (apd3[0].checked) {
+    txt = txt + 'ap-1001' + " ";
+  }
+
+  let apd4 = document.getElementsByName('ap-d4');
+  // Add Rat
+  if (apd4[0].checked) {
+    txt = txt + 'ap-1002' + " ";
+  }
+
+  let apd5 = document.getElementsByName('ap-d5');
+  // Add Rabbit
+  if (apd5[0].checked) {
+    txt = txt + 'ap-1003' + " ";
+  }
+
+
   txt = txt.slice(0, -1);
   // Getting Selected Labs
 
@@ -202,7 +332,8 @@ document.querySelector('.clearButton').addEventListener('click', () => {
   var checkboxesKitVersion = document.getElementsByName('kitVersion');
   checkboxesKitVersion.forEach((element) => element.checked = false);
 
-  document.querySelector('.price_projected--value').textContent = "0";
+  document.querySelector('.price_projected_1--value').textContent = "0";
+  document.querySelector('.price_projected_2--value').textContent = "0";
 
   document.getElementById("notes").value = '';
 
