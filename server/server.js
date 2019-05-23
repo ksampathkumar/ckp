@@ -1054,7 +1054,7 @@ async function ckpFunc(req) {
       pipetteCount += 2;
     }
 
-    pipetteCount = Math.ceil((pipetteCount * 1.25) / 10) * 10;
+    pipetteCount = Math.ceil(pipetteCount / 10) * 10;
 
     let pipette2 = Math.floor(pipetteCount / 20);
     let pipette1 = pipetteCount % 20;
@@ -1359,7 +1359,7 @@ async function ckpFunc(req) {
       pipetteCount += 1;
     }
 
-    pipetteCount = Math.ceil((pipetteCount * 1.25) / 10) * 10;
+    pipetteCount = Math.ceil(pipetteCount / 10) * 10;
 
     let pipette2 = Math.floor(pipetteCount / 20);
     let pipette1 = pipetteCount % 20;
@@ -1450,7 +1450,7 @@ async function ckpFunc(req) {
       pipetteCount += 11;
     }
 
-    pipetteCount = Math.ceil((pipetteCount * 1.25) / 10) * 10;
+    pipetteCount = Math.ceil(pipetteCount / 10) * 10;
 
     let pipette2 = Math.floor(pipetteCount / 20);
     let pipette1 = pipetteCount % 20;
@@ -1528,7 +1528,58 @@ async function ckpFunc(req) {
 
   function gbAdditions(id, itemsToAdd) {
 
+    // Pipette Condition
+    let pipetteCount = 0;
 
+    if (id.includes("gb-2")) {
+      pipetteCount += 2;
+    }
+    if (id.includes("gb-5")) {
+      pipetteCount += 7;
+    }
+    if (id.includes("gb-6")) {
+      pipetteCount += 9;
+    }
+    if (id.includes("gb-7")) {
+      pipetteCount += 2;
+    }
+    if (id.includes("gb-8")) {
+      pipetteCount += 5;
+    }
+    if (id.includes("gb-13")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("gb-14")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("gb-15")) {
+      pipetteCount += 9;
+    }
+    if (id.includes("gc-18")) {
+      pipetteCount += 8;
+    }
+
+    pipetteCount = Math.ceil(pipetteCount / 10) * 10;
+
+    let pipette2 = Math.floor(pipetteCount / 20);
+    let pipette1 = pipetteCount % 20;
+
+    if (pipette1 > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1030',
+        lab: 100,
+        qty: pipette1 / 10,
+        unit: 'each'
+      });
+    }
+    if (pipette2 > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1028',
+        lab: 100,
+        qty: pipette2,
+        unit: 'each'
+      });
+    }
 
     return itemsToAdd;
   }
@@ -1557,7 +1608,7 @@ async function ckpFunc(req) {
       pipetteCount += 1;
     }
 
-    pipetteCount = Math.ceil((pipetteCount * 1.25) / 10) * 10;
+    pipetteCount = Math.ceil(pipetteCount / 10) * 10;
 
     let pipette2 = Math.floor(pipetteCount / 20);
     let pipette1 = pipetteCount % 20;
