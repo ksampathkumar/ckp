@@ -98,8 +98,10 @@ module.exports = {
             ["ap-6", "2E - Anatomy and Physiology $$$ The Skeletal System"],
             ["ap-7", "2E - Anatomy and Physiology $$$ The Muscular System"],
             ["ap-8", "2E - Anatomy and Physiology $$$ The Nervous System"],
+            ["ap-108", "2E - Anatomy and Physiology $$$ The Nervous System - No Dissection"],
             ["ap-9", "2E - Anatomy and Physiology $$$ The Endocrine System"],
             ["ap-10", "2E - Anatomy and Physiology $$$ Blood and the Heart"],
+            ["ap-110", "2E - Anatomy and Physiology $$$ Blood and the Heart - No Dissection"],
             ["ap-11", "2E - Anatomy and Physiology $$$ The Circulatory System"],
             ["ap-12", "2E - Anatomy and Physiology $$$ The Lymphatic System and Immunity"],
             ["ap-13", "2E - Anatomy and Physiology $$$ The Respiratory System"],
@@ -390,28 +392,30 @@ module.exports = {
             let labCount = 1;
 
             labs.forEach(element => {
-                let labComplex = labsMap.get(element.trim()).split("$$$");
-                let obj1 = {
-                    text: labComplex[0].trim(),
-                    fontSize: 14
-                };
-                let obj2 = {
-                    text: labComplex[1].trim(),
-                    fontSize: 14
-                };
-                let obj3 = {
-                    text: labCount,
-                    fontSize: 14
-                };
-
-                let eachLabArray = [];
-                eachLabArray.push(obj1);
-                eachLabArray.push(obj2);
-                eachLabArray.push(obj3);
-
-                formatDataArray.push(eachLabArray);
-
-                labCount++;
+                if(element.split('-').length === 2 && parseInt(element.split('-')[1]) < 1000){
+                    let labComplex = labsMap.get(element.trim()).split("$$$");
+                    let obj1 = {
+                        text: labComplex[0].trim(),
+                        fontSize: 14
+                    };
+                    let obj2 = {
+                        text: labComplex[1].trim(),
+                        fontSize: 14
+                    };
+                    let obj3 = {
+                        text: labCount,
+                        fontSize: 14
+                    };
+    
+                    let eachLabArray = [];
+                    eachLabArray.push(obj1);
+                    eachLabArray.push(obj2);
+                    eachLabArray.push(obj3);
+    
+                    formatDataArray.push(eachLabArray);
+    
+                    labCount++; 
+                }
             });
 
             return formatDataArray;

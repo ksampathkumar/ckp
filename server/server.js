@@ -2150,8 +2150,13 @@ async function ckpFunc(req) {
         // Criteria applied only to Equp and Ship
         if (current.idName.toUpperCase().startsWith('EQUP') || current.idName.toUpperCase().startsWith('SHIP')) {
 
-          // Neglecting one time consumable items 
-          if (current.idName !== 'Equp2029' && current.idName !== 'Equp7030' && current.idName !== 'Ship8102') {
+          // Neglecting one time consumable items. This idNames were given by Cait.
+          if (current.idName !== 'Equp2029' && current.idName !== 'Equp7030' && current.idName !== 'Equp8129' && current.idName !== 'Equp1632'
+            && current.idName !== 'Equp3047' && current.idName !== 'Equp7125' && current.idName !== 'Equp9019' && current.idName !== 'Equp8026'
+            && current.idName !== 'Equp6101' && current.idName !== 'Equp8014' && current.idName !== 'Equp2213' && current.idName !== 'Equp2031'
+            && current.idName !== 'Equp1385' && current.idName !== 'Equp1384' && current.idName !== 'Equp8022' && current.idName !== 'Equp1237'
+            && current.idName !== 'Equp1313' && current.idName !== 'Equp1680' && current.idName !== 'Equp1682' && current.idName !== 'Equp1684'
+            && current.idName !== 'Ship8102') {
 
             // if the serverResponseOther's equp quantity is greater that the serverResponse's equp quantity
             if (present.idName === current.idName && current.qty > present.qty) {
@@ -2934,16 +2939,17 @@ app.post('/ckp2/save', authenticate, async (req, res) => {
     userID: req.user._id,
     name: sDocName,
     type: 'PROPOSAL',
-    bActual: pageArray[2],
-    institution: pageArray[3],
-    instructor: pageArray[4],
-    pNumber: pageArray[5],
-    pDescription: pageArray[6],
-    estimate: pageArray[7],
-    uPrice: pageArray[8],
-    uShip: pageArray[9],
-    txt: pageArray[10],
-    notes: pageArray[11],
+    bLower: pageArray[2],
+    bUpper: pageArray[3],
+    institution: pageArray[4],
+    instructor: pageArray[5],
+    pNumber: pageArray[6],
+    pDescription: pageArray[7],
+    estimate: pageArray[8],
+    uPrice: pageArray[9],
+    uShip: pageArray[10],
+    txt: pageArray[11],
+    notes: pageArray[12],
     proposalDOC: `proposal_${sDocName}.pdf`,
     bomCSV: `bom_${sDocName}.csv`,
     packingCSV: `packingList_${sDocName}.csv`
@@ -3065,7 +3071,8 @@ app.post('/ckp2/save', authenticate, async (req, res) => {
             let dependency = dependencyTree.filter(function (item) {
               return v.idName === item.idName;
             });
-
+            // console.log('v:', v);
+            // console.log('dependency:',dependency);
             filePackingList.write(`${pCounter}-${v.idName};${dependency[0].displayName};${dependency[0].lab === undefined ? 'undefined' : dependency[0].lab};1;NULL` + '\n');
             let insidePcounter = 1
             dependency.forEach(async (item) => {

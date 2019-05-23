@@ -1207,8 +1207,18 @@ function showPD(data) {
       var txt = data.txt.split(' ');
       var i;
       for (i = 0; i < txt.length; i++) {
-
-        document.querySelectorAll(`input[type='checkbox'][value='${txt[i]}']`)[0].checked = true;
+        let labCheck = '';
+        if (txt[i].split('-').length == 2 && parseInt(txt[i].split('-')[1]) < 1000) {
+          if (parseInt(txt[i].split('-')[1]) > 100) {
+            labCheck = `${txt[i].split('-')[0]}-${parseInt(txt[i].split('-')[1]) % 100}`;
+          } else {
+            labCheck = txt[i];
+          }
+          document.querySelectorAll(`input[type='checkbox'][value='${labCheck}']`)[0].checked = true;
+          let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
+          content.previousElementSibling.classList.toggle("active");
+          content.style.display = "block";
+        }
 
       }
     }
@@ -1239,11 +1249,19 @@ function showPD(data) {
       var txt = data.txt.split(' ');
       var i;
       for (i = 0; i < txt.length; i++) {
+        let labCheck = '';
+        if (txt[i].split('-').length == 2 && parseInt(txt[i].split('-')[1]) < 1000) {
+          if (parseInt(txt[i].split('-')[1]) > 100) {
+            labCheck = `${txt[i].split('-')[0]}-${parseInt(txt[i].split('-')[1]) % 100}`;
+          } else {
+            labCheck = txt[i];
+          }
+          document.querySelectorAll(`input[type='checkbox'][value='${labCheck}']`)[0].checked = true;
+          let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
+          content.previousElementSibling.classList.toggle("active");
+          content.style.display = "block";
+        }
 
-        document.querySelectorAll(`input[type='checkbox'][value='${txt[i]}']`)[0].checked = true;
-        let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
-        content.previousElementSibling.classList.toggle("active");
-        content.style.display = "block";
       }
     }
   }

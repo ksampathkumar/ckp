@@ -779,7 +779,8 @@ function saveDraft(docName) {
   if (window.globalData !== undefined) {
     isFresh = `0!${window.globalData.data.name}`;
   }
-  let projected = document.getElementsByClassName("price_projected--value")[0].innerText;
+  let projected1 = document.getElementsByClassName("price_projected_1--value")[0].innerText;
+  let projected2 = document.getElementsByClassName("price_projected_2--value")[0].innerText;
   let institution = document.getElementById("institution").value;
   let instructor = document.getElementById("instructor").value;
   let pNumber = document.getElementById("pNumber").value;
@@ -794,7 +795,8 @@ function saveDraft(docName) {
   let draftArray = [];
   draftArray.push(isFresh);
   draftArray.push(docName);
-  draftArray.push(projected);
+  draftArray.push(projected1);
+  draftArray.push(projected2);
   draftArray.push(institution);
   draftArray.push(instructor);
   draftArray.push(pNumber);
@@ -838,7 +840,8 @@ function showPD(data) {
 
   if (data.type === 'DRAFT') {
 
-    document.getElementsByClassName("price_projected--value")[0].innerText = data.fLower === undefined ? data.bActual : Math.round((parseFloat(data.fLower) + parseFloat(data.fUpper)) / 2);
+    document.getElementsByClassName("price_projected_1--value")[0].innerText = data.fLower === undefined ? data.bLower : Math.round(data.fLower);
+    document.getElementsByClassName("price_projected_2--value")[0].innerText = data.fUpper === undefined ? data.bUpper : Math.round(data.fUpper);
     document.getElementById("institution").value = data.institution;
     document.getElementById("instructor").value = data.instructor;
     document.getElementById("pNumber").value = data.pNumber;
@@ -853,16 +856,26 @@ function showPD(data) {
       var txt = data.txt.split(' ');
       var i;
       for (i = 0; i < txt.length; i++) {
-
-        document.querySelectorAll(`input[type='checkbox'][value='${txt[i]}']`)[0].checked = true;
-        document.getElementsByClassName(txt[i].split('-')[0]).style.display = "none";
+        let labCheck = '';
+        if (txt[i].split('-').length == 2 && parseInt(txt[i].split('-')[1]) < 1000) {
+          if (parseInt(txt[i].split('-')[1]) > 100) {
+            labCheck = `${txt[i].split('-')[0]}-${parseInt(txt[i].split('-')[1]) % 100}`;
+          } else {
+            labCheck = txt[i];
+          }
+          document.querySelectorAll(`input[type='checkbox'][value='${labCheck}']`)[0].checked = true;
+          let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
+          content.previousElementSibling.classList.toggle("active");
+          content.style.display = "block";
+        }
 
       }
     }
 
   } else if (data.type === 'PROPOSAL') {
 
-    document.getElementsByClassName("price_projected--value")[0].innerText = data.fLower === undefined ? data.bActual : Math.round((parseFloat(data.fLower) + parseFloat(data.fUpper)) / 2);
+    document.getElementsByClassName("price_projected_1--value")[0].innerText = data.fLower === undefined ? data.bLower : Math.round(data.fLower);
+    document.getElementsByClassName("price_projected_2--value")[0].innerText = data.fUpper === undefined ? data.bUpper : Math.round(data.fUpper);
     document.getElementById("institution").value = data.institution;
     document.getElementById("instructor").value = data.instructor;
     document.getElementById("pNumber").value = data.pNumber;
@@ -877,11 +890,18 @@ function showPD(data) {
       var txt = data.txt.split(' ');
       var i;
       for (i = 0; i < txt.length; i++) {
-
-        document.querySelectorAll(`input[type='checkbox'][value='${txt[i]}']`)[0].checked = true;
-        let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
-        content.previousElementSibling.classList.toggle("active");
-        content.style.display = "block";
+        let labCheck = '';
+        if (txt[i].split('-').length == 2 && parseInt(txt[i].split('-')[1]) < 1000) {
+          if (parseInt(txt[i].split('-')[1]) > 100) {
+            labCheck = `${txt[i].split('-')[0]}-${parseInt(txt[i].split('-')[1]) % 100}`;
+          } else {
+            labCheck = txt[i];
+          }
+          document.querySelectorAll(`input[type='checkbox'][value='${labCheck}']`)[0].checked = true;
+          let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
+          content.previousElementSibling.classList.toggle("active");
+          content.style.display = "block";
+        }
 
       }
     }
@@ -897,7 +917,8 @@ function sop() {
   }
   // console.log('isFresh:', isFresh);
 
-  let bActual = document.getElementsByClassName("price_projected--value")[0].innerText;
+  let bLower = document.getElementsByClassName("price_projected_1--value")[0].innerText;
+  let bUpper = document.getElementsByClassName("price_projected_2--value")[0].innerText;
 
   let institution = document.getElementById("institution").value;
   let instructor = document.getElementById("instructor").value;
@@ -1001,7 +1022,8 @@ function sop() {
                     // push TOP details
                     pageArray.push(isFresh);
                     pageArray.push(docName);
-                    pageArray.push(bActual);
+                    pageArray.push(bLower);
+                    pageArray.push(bUpper);
                     // push All SOP details
                     pageArray.push(institution);
                     pageArray.push(instructor);
@@ -1059,7 +1081,8 @@ function sop() {
               // push TOP details
               pageArray.push(isFresh);
               pageArray.push(docName);
-              pageArray.push(bActual);
+              pageArray.push(bLower);
+              pageArray.push(bUpper);
               // push All SOP details
               pageArray.push(institution);
               pageArray.push(instructor);
@@ -1113,7 +1136,8 @@ function sop() {
             // push TOP details
             pageArray.push(isFresh);
             pageArray.push(docName);
-            pageArray.push(bActual);
+            pageArray.push(bLower);
+            pageArray.push(bUpper);
             // push All SOP details
             pageArray.push(institution);
             pageArray.push(instructor);
