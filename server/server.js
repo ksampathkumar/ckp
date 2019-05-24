@@ -893,6 +893,10 @@ async function ckpFunc(req) {
         sum = sum + parent.qty * moreDeatils[0].averageCost;
       } else if (parent.idName.toUpperCase().startsWith("BAG") || parent.idName.toUpperCase().startsWith("BTTL") || parent.idName.toUpperCase().startsWith("MODL")) {
 
+        if (parent.qty > 1){
+        console.log(`\nparent.idName:${parent.idName}-${parent.qty}\n`);
+        }
+
         let details1 = dependencyTree.filter(function (item2Add) {
           return item2Add.idName == parent.idName;
         });
@@ -904,6 +908,10 @@ async function ckpFunc(req) {
             let details2 = details1[a];
 
             if (details2.memItem.toUpperCase().startsWith("BAG") || details2.memItem.toUpperCase().startsWith("BTTL") || details2.memItem.toUpperCase().startsWith("MODL")) {
+
+              if (details2.memQuantity > 1){
+                console.log(`\ndetails2.memItem:${details2.memItem}-${details2.memQuantity}\n`);
+              }
 
               let details3 = dependencyTree.filter(function (item2Add) {
                 return item2Add.idName == details2.memItem;
@@ -917,6 +925,10 @@ async function ckpFunc(req) {
 
                   if (details4.memItem.toUpperCase().startsWith("BAG") || details4.memItem.toUpperCase().startsWith("BTTL") || details4.memItem.toUpperCase().startsWith("MODL")) {
 
+                    if (details4.memQuantity > 1){
+                      console.log(`\ndetails4.memItem:${details4.memItem}-${details4.memQuantity}\n`);
+                    }
+
                     let details5 = dependencyTree.filter(function (item2Add) {
                       return item2Add.idName == details4.memItem;
                     });
@@ -928,6 +940,7 @@ async function ckpFunc(req) {
                         let details6 = details5[a];
 
                         if (details6.memItem.toUpperCase().startsWith("BAG") || details6.memItem.toUpperCase().startsWith("BTTL") || details6.memItem.toUpperCase().startsWith("MODL")) {
+                          // this is just added to check if one more level down bag has been detected. Actuall this level down is working
                           console.log("One More Level of Hirearchy found:", details6);
                           let details7 = dependencyTree.filter(function (item2Add) {
                             return item2Add.idName == details2.memItem;
@@ -936,7 +949,7 @@ async function ckpFunc(req) {
 
 
                         } else if (details6.memItem.toUpperCase().startsWith("EQUP") || details6.memItem.toUpperCase().startsWith("CHEM") || details6.memItem.toUpperCase().startsWith("SHIP")) {
-                          sum = sum + details6.memQuantity * details6.averageCost;
+                          sum = sum + parent.qty * details2.memQuantity * details4.memQuantity * details6.memQuantity * details6.averageCost;
                         } else {
                           console.log("Error@priceCalculator3:", details6);
                         }
@@ -944,7 +957,7 @@ async function ckpFunc(req) {
                     }
 
                   } else if (details4.memItem.toUpperCase().startsWith("EQUP") || details4.memItem.toUpperCase().startsWith("CHEM") || details4.memItem.toUpperCase().startsWith("SHIP")) {
-                    sum = sum + details4.memQuantity * details4.averageCost;
+                    sum = sum + parent.qty * details2.memQuantity * details4.memQuantity * details4.averageCost;
                   } else {
                     console.log("Error@priceCalculator2:", details4);
                   }
@@ -952,7 +965,7 @@ async function ckpFunc(req) {
               }
 
             } else if (details2.memItem.toUpperCase().startsWith("EQUP") || details2.memItem.toUpperCase().startsWith("CHEM") || details2.memItem.toUpperCase().startsWith("SHIP")) {
-              sum = sum + details2.memQuantity * details2.averageCost;
+              sum = sum + parent.qty * details2.memQuantity * details2.averageCost;
             } else {
               console.log("Error@priceCalculator1:", details2);
             }
@@ -1555,7 +1568,7 @@ async function ckpFunc(req) {
     if (id.includes("gb-15")) {
       pipetteCount += 9;
     }
-    if (id.includes("gc-18")) {
+    if (id.includes("gb-18")) {
       pipetteCount += 8;
     }
 
@@ -1739,7 +1752,46 @@ async function ckpFunc(req) {
 
   function hbAdditions(id, itemsToAdd) {
 
+    // Pipette Condition
+    let pipetteCount = 0;
 
+    if (id.includes("hb-16")) {
+      pipetteCount += 2;
+    }
+    if (id.includes("hb-2")) {
+      pipetteCount += 5;
+    }
+    if (id.includes("hb-4")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("hb-9")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("hb-14")) {
+      pipetteCount += 3;
+    }
+
+    pipetteCount = Math.ceil(pipetteCount / 10) * 10;
+
+    let pipette2 = Math.floor(pipetteCount / 20);
+    let pipette1 = pipetteCount % 20;
+
+    if (pipette1 > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1030',
+        lab: 100,
+        qty: pipette1 / 10,
+        unit: 'each'
+      });
+    }
+    if (pipette2 > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1028',
+        lab: 100,
+        qty: pipette2,
+        unit: 'each'
+      });
+    }
 
     return itemsToAdd;
   }
