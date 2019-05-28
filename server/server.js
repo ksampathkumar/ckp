@@ -77,7 +77,7 @@ const {
 
 // MONGO DB //
 
-// pdfmake //
+// pdfmake - installation is a bit different. Follow @https://www.npmjs.com/package/pdfmake//
 
 const pdfmakePath = path.join(__dirname, '/pdfmake');
 // pdfmake For Server Save//
