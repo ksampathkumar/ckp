@@ -626,13 +626,14 @@ function OLDdispPrice() {
   let cost_list = document.querySelector('.cost_list');
 
   let sum = 5;
-  sum2 = 0;
+
   if (cost_list.childElementCount > 0) {
 
+    var parentMap = new Map();
     cost_list.childNodes.forEach((element) => {
 
       if (element.childElementCount > 1) {
-        // console.log(element.childNodes[0].innerHTML.split('-')[1]);
+        // console.log(element.childNodes[0].innerHTML.split('-')[0]);
         let quantity = parseFloat(element.childNodes[element.childElementCount - 2].innerHTML);
         let unitCost = parseFloat(element.childNodes[element.childElementCount - 1].childNodes[0].innerHTML);
         // console.log(`${element.childNodes[0].innerHTML.split('-')[1]} = ${quantity} - ${unitCost} = ${quantity * unitCost}`);
@@ -641,14 +642,36 @@ function OLDdispPrice() {
           unitCost = 0;
         }
 
-        sum = sum + quantity * unitCost;
-        sum2 = sum2 + quantity;
+        let currentNumber = element.childNodes[0].innerHTML.split('-')[0];
+        let multiply = [];
+        parentMap.forEach(function (value, key) {
+          if (currentNumber.includes(key)) {
+            multiply.push(value);
+          }
+        });
+
+        if (multiply.length > 0) {
+          let factor = 0;
+          multiply.forEach((mul) => {
+            factor = mul * quantity;
+          });
+          sum = sum + factor * unitCost;
+        } else {
+          sum = sum + quantity * unitCost;
+        }
+
+      } else {
+        let parentNumber = element.childNodes[0].getElementsByClassName('idName')[0].innerHTML.split('-')[0];
+        parentQty = parseInt(element.childNodes[0].getElementsByClassName('qty')[0].innerHTML);
+
+        parentMap.set(parentNumber, parentQty);
       }
 
     });
 
+    // console.log('parentMap:', parentMap);
+
     // console.log("SUM:", sum);
-    // console.log("SUM2:", sum2);
 
     document.querySelector('.UIprice_cost--value').textContent = Math.round(sum * 100) / 100;
     document.querySelector('.UIprice_projected_1--value').textContent = Math.round(sum * (1 / 0.35) * 100) / 100;

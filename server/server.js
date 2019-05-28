@@ -894,7 +894,7 @@ async function ckpFunc(req) {
       } else if (parent.idName.toUpperCase().startsWith("BAG") || parent.idName.toUpperCase().startsWith("BTTL") || parent.idName.toUpperCase().startsWith("MODL")) {
 
         if (parent.qty > 1){
-        console.log(`\nparent.idName:${parent.idName}-${parent.qty}\n`);
+        // console.log(`\nparent.idName:${parent.idName}-${parent.qty}\n`);
         }
 
         let details1 = dependencyTree.filter(function (item2Add) {
@@ -910,7 +910,7 @@ async function ckpFunc(req) {
             if (details2.memItem.toUpperCase().startsWith("BAG") || details2.memItem.toUpperCase().startsWith("BTTL") || details2.memItem.toUpperCase().startsWith("MODL")) {
 
               if (details2.memQuantity > 1){
-                console.log(`\ndetails2.memItem:${details2.memItem}-${details2.memQuantity}\n`);
+                // console.log(`\ndetails2.memItem:${details2.memItem}-${details2.memQuantity}\n`);
               }
 
               let details3 = dependencyTree.filter(function (item2Add) {
@@ -926,7 +926,7 @@ async function ckpFunc(req) {
                   if (details4.memItem.toUpperCase().startsWith("BAG") || details4.memItem.toUpperCase().startsWith("BTTL") || details4.memItem.toUpperCase().startsWith("MODL")) {
 
                     if (details4.memQuantity > 1){
-                      console.log(`\ndetails4.memItem:${details4.memItem}-${details4.memQuantity}\n`);
+                      // console.log(`\ndetails4.memItem:${details4.memItem}-${details4.memQuantity}\n`);
                     }
 
                     let details5 = dependencyTree.filter(function (item2Add) {
