@@ -681,6 +681,9 @@ function OLDdispPrice() {
 
   } else {
     alert('No item in Cost List, Please fill the List');
+    document.querySelector('.UIprice_cost--value').textContent = 0;
+    document.querySelector('.UIprice_projected_1--value').textContent = 0;
+    document.querySelector('.UIprice_projected_2--value').textContent = 0;
   }
 }
 
@@ -972,8 +975,15 @@ function itemDelete(element) {
 
   if (el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BAG") || el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BTTL") || el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("MODL")) {
 
-    el.parentNode.removeChild(el);
-    document.querySelector('.removed_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el.id) + el.innerHTML.replace('itemDelete', 'itemAdd') + '</div>');
+    // console.log(el);
+    // console.log(el.parentNode);
+    // console.log(el.parentNode.parentNode);
+
+    let elRef = el;
+    elRef.parentNode.parentNode.removeChild(elRef.parentNode);
+    elRef.parentNode.removeChild(elRef);
+    document.querySelector('.removed_list').insertAdjacentHTML('beforeend', '<h2 <button class="collapsible2"><div class="item clearfix" id="%id%">'.replace("%id%", elRef.id) + elRef.innerHTML.replace('itemDelete', 'itemAdd') + '</div></h2>');
+
     for (let i = 1; i < 99; i++) {
       el1 = document.getElementById(item + `.${i}`);
 
@@ -983,8 +993,10 @@ function itemDelete(element) {
         // console.log(item + `.${i}`);
 
         if (el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BAG") || el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BTTL") || el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("MODL")) {
-          el1.parentNode.removeChild(el1);
-          document.querySelector('.removed_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el1.id) + el1.innerHTML.replace('itemDelete', 'itemAdd') + '</div>');
+          let el1Ref = el1;
+          el1Ref.parentNode.parentNode.removeChild(el1Ref.parentNode);
+          el1Ref.parentNode.removeChild(el1Ref);
+          document.querySelector('.removed_list').insertAdjacentHTML('beforeend', '<h2 <button class="collapsible3"><div class="item clearfix" id="%id%">'.replace("%id%", el1Ref.id) + el1Ref.innerHTML.replace('itemDelete', 'itemAdd') + '</div></h2>');
 
           for (let n = 1; n < 99; n++) {
             el2 = document.getElementById(`${item}.${i}.${n}`);
@@ -993,8 +1005,29 @@ function itemDelete(element) {
             if (el2 === null) {
               break;
             } else {
-              el2.parentNode.removeChild(el2);
-              document.querySelector('.removed_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el2.id) + el2.innerHTML.replace('itemDelete', 'itemAdd') + '</div>');
+
+              if (el2.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BAG") || el2.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BTTL") || el2.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("MODL")) {
+                let el2Ref = el2;
+                el2Ref.parentNode.parentNode.removeChild(el2Ref.parentNode);
+                el2Ref.parentNode.removeChild(el2Ref);
+                document.querySelector('.removed_list').insertAdjacentHTML('beforeend', '<h2 <button class="collapsible3"><div class="item clearfix" id="%id%">'.replace("%id%", el2Ref.id) + el2Ref.innerHTML.replace('itemDelete', 'itemAdd') + '</div></h2>');
+
+                for (let t = 1; t < 99; t++) {
+                  el3 = document.getElementById(`${item}.${i}.${n}.${t}`);
+                  // console.log("el3:", el3);
+
+                  if (el3 === null) {
+                    break;
+                  } else {
+                    el3.parentNode.removeChild(el3);
+                    document.querySelector('.removed_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el3.id) + el3.innerHTML.replace('itemDelete', 'itemAdd') + '</div>');
+                  }
+                }
+              } else {
+                el2.parentNode.removeChild(el2);
+                document.querySelector('.removed_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el2.id) + el2.innerHTML.replace('itemDelete', 'itemAdd') + '</div>');
+              }
+
             }
           }
         } else {
@@ -1003,6 +1036,7 @@ function itemDelete(element) {
         }
       }
     }
+
   } else {
     el.parentNode.removeChild(el);
     document.querySelector('.removed_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el.id) + el.innerHTML.replace('itemDelete', 'itemAdd') + '</div>');
@@ -1022,19 +1056,27 @@ function itemDelete(element) {
 
 // itemAdd Function //
 function itemAdd(element) {
+
   console.log(element.parentNode.parentNode.parentNode.id);
 
   let el = document.getElementById(element.parentNode.parentNode.parentNode.id);
 
   let item = element.parentNode.parentNode.parentNode.id;
 
-  // console.log(el.innerText);
-  // console.log(el.childNodes);
+  // console.log('1:', el.innerText);
+  // console.log('2:',el.childNodes);
 
   if (el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BAG") || el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BTTL") || el.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("MODL")) {
 
-    el.parentNode.removeChild(el);
-    document.querySelector('.cost_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el.id) + el.innerHTML.replace('itemAdd', 'itemDelete') + '</div>');
+    // console.log(el);
+    // console.log(el.parentNode);
+    // console.log(el.parentNode.parentNode);
+
+    let elRef = el;
+    elRef.parentNode.parentNode.removeChild(elRef.parentNode);
+    elRef.parentNode.removeChild(elRef);
+    document.querySelector('.cost_list').insertAdjacentHTML('beforeend', '<h2 <button class="collapsible2"><div class="item clearfix" id="%id%">'.replace("%id%", elRef.id) + elRef.innerHTML.replace('itemAdd', 'itemDelete') + '</div></h2>');
+
     for (let i = 1; i < 99; i++) {
       el1 = document.getElementById(item + `.${i}`);
 
@@ -1044,8 +1086,10 @@ function itemAdd(element) {
         // console.log(item + `.${i}`);
 
         if (el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BAG") || el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BTTL") || el1.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("MODL")) {
-          el1.parentNode.removeChild(el1);
-          document.querySelector('.cost_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el1.id) + el1.innerHTML.replace('itemAdd', 'itemDelete') + '</div>');
+          let el1Ref = el1;
+          el1Ref.parentNode.parentNode.removeChild(el1Ref.parentNode);
+          el1Ref.parentNode.removeChild(el1Ref);
+          document.querySelector('.cost_list').insertAdjacentHTML('beforeend', '<h2 <button class="collapsible3"><div class="item clearfix" id="%id%">'.replace("%id%", el1Ref.id) + el1Ref.innerHTML.replace('itemAdd', 'itemDelete') + '</div></h2>');
 
           for (let n = 1; n < 99; n++) {
             el2 = document.getElementById(`${item}.${i}.${n}`);
@@ -1054,8 +1098,29 @@ function itemAdd(element) {
             if (el2 === null) {
               break;
             } else {
-              el2.parentNode.removeChild(el2);
-              document.querySelector('.cost_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el2.id) + el2.innerHTML.replace('itemAdd', 'itemDelete') + '</div>');
+
+              if (el2.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BAG") || el2.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("BTTL") || el2.childNodes[0].innerHTML.split('-')[1].toUpperCase().startsWith("MODL")) {
+                let el2Ref = el2;
+                el2Ref.parentNode.parentNode.removeChild(el2Ref.parentNode);
+                el2Ref.parentNode.removeChild(el2Ref);
+                document.querySelector('.cost_list').insertAdjacentHTML('beforeend', '<h2 <button class="collapsible3"><div class="item clearfix" id="%id%">'.replace("%id%", el2Ref.id) + el2Ref.innerHTML.replace('itemAdd', 'itemDelete') + '</div></h2>');
+
+                for (let t = 1; t < 99; t++) {
+                  el3 = document.getElementById(`${item}.${i}.${n}.${t}`);
+                  // console.log("el3:", el3);
+
+                  if (el3 === null) {
+                    break;
+                  } else {
+                    el3.parentNode.removeChild(el3);
+                    document.querySelector('.cost_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el3.id) + el3.innerHTML.replace('itemAdd', 'itemDelete') + '</div>');
+                  }
+                }
+              } else {
+                el2.parentNode.removeChild(el2);
+                document.querySelector('.cost_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el2.id) + el2.innerHTML.replace('itemAdd', 'itemDelete') + '</div>');
+              }
+
             }
           }
         } else {
@@ -1064,6 +1129,7 @@ function itemAdd(element) {
         }
       }
     }
+
   } else {
     el.parentNode.removeChild(el);
     document.querySelector('.cost_list').insertAdjacentHTML('beforeend', '<div class="item clearfix" id="%id%">'.replace("%id%", el.id) + el.innerHTML.replace('itemAdd', 'itemDelete') + '</div>');
