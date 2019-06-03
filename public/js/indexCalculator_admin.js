@@ -88,38 +88,39 @@ for (i = 0; i < coll.length; i++) {
   });
 }
 
-function collap() {
-  var coll2 = document.getElementsByClassName("collapsible2");
-  var i;
+// the below function collap lines enables the modules collapsible feature.
+// function collap() {
+//   var coll2 = document.getElementsByClassName("collapsible2");
+//   var i;
 
-  for (i = 0; i < coll2.length; i++) {
-    coll2[i].addEventListener("click", function () {
-      // console.log("clicked");
-      this.classList.toggle("active");
-      var content = this.nextElementSibling;
-      if (content.style.display === "block") {
-        content.style.display = "none";
-      } else {
-        content.style.display = "block";
-      }
-    });
-  }
+//   for (i = 0; i < coll2.length; i++) {
+//     coll2[i].addEventListener("click", function () {
+//       // console.log("clicked");
+//       this.classList.toggle("active");
+//       var content = this.nextElementSibling;
+//       if (content.style.display === "block") {
+//         content.style.display = "none";
+//       } else {
+//         content.style.display = "block";
+//       }
+//     });
+//   }
 
-  var coll3 = document.getElementsByClassName("collapsible3");
-  var i;
+//   var coll3 = document.getElementsByClassName("collapsible3");
+//   var i;
 
-  for (i = 0; i < coll3.length; i++) {
-    coll3[i].addEventListener("click", function () {
-      this.classList.toggle("active");
-      var content = this.nextElementSibling;
-      if (content.style.display === "block") {
-        content.style.display = "none";
-      } else {
-        content.style.display = "block";
-      }
-    });
-  }
-}
+//   for (i = 0; i < coll3.length; i++) {
+//     coll3[i].addEventListener("click", function () {
+//       this.classList.toggle("active");
+//       var content = this.nextElementSibling;
+//       if (content.style.display === "block") {
+//         content.style.display = "none";
+//       } else {
+//         content.style.display = "block";
+//       }
+//     });
+//   }
+// }
 
 // Collapsible Menu Navigator //
 
@@ -503,9 +504,14 @@ function dispPrice(BOM, dependencyTree) {
   for (let m = 0; m < BOM.length; m++) {
     parent = BOM[m];
 
-    htmlParentProto = '<h2 <button class="collapsible2"><div class="item clearfix" id="cost-%itemCount%"><div class="idName">%idName%</div><div class="displayName">%displayName%</div><div class="lab">%lab%</div><div class="qty">%qty%</div><div class="right clearfix"><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div></h2><div class="content">';
+    // the below 3 commented lines enables the modules collapsible feature.
+    // htmlParentProto = '<h2 <button class="collapsible2"><div class="item clearfix" id="cost-%itemCount%"><div class="idName">%idName%</div><div class="displayName">%displayName%</div><div class="lab">%lab%</div><div class="qty">%qty%</div><div class="right clearfix"><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div></h2><div class="content">';
+    // htmlChildProto = '<div class="item clearfix" id="cost-%childCount%"><div class="memItem">%memItem%</div><div class="memDisplayName">%memDisplayName%</div><div class="memQuantity">%memQuantity%</div><div class="right clearfix"><div class="item_value">%item_value%</div><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+    // htmlParentProto2 = '<h2 <button class="collapsible3"><div class="item clearfix" id="cost-%bagCount%"><div class="idName">%memBag%</div><div class="displayName">%memBagDisplayName%</div><div class="qty">%qty%</div><div class="right clearfix"><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div></h2><div class="content">';
+
+    htmlParentProto = '<h2 <button class="collapsible2"><div class="item clearfix" id="cost-%itemCount%"><div class="idName">%idName%</div><div class="displayName">%displayName%</div><div class="lab">%lab%</div><div class="qty">%qty%</div><div class="right clearfix"><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div></h2>';
     htmlChildProto = '<div class="item clearfix" id="cost-%childCount%"><div class="memItem">%memItem%</div><div class="memDisplayName">%memDisplayName%</div><div class="memQuantity">%memQuantity%</div><div class="right clearfix"><div class="item_value">%item_value%</div><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
-    htmlParentProto2 = '<h2 <button class="collapsible3"><div class="item clearfix" id="cost-%bagCount%"><div class="idName">%memBag%</div><div class="displayName">%memBagDisplayName%</div><div class="qty">%qty%</div><div class="right clearfix"><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div></h2><div class="content">';
+    htmlParentProto2 = '<h2 <button class="collapsible3"><div class="item clearfix" id="cost-%bagCount%"><div class="idName">%memBag%</div><div class="displayName">%memBagDisplayName%</div><div class="qty">%qty%</div><div class="right clearfix"><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div></h2>';
 
 
     if (parent.idName.toUpperCase().startsWith("BAG") || parent.idName.toUpperCase().startsWith("BTTL") || parent.idName.toUpperCase().startsWith("MODL")) {
@@ -626,7 +632,7 @@ function dispPrice(BOM, dependencyTree) {
 function OLDdispPrice() {
   // this function does the calculation from what's visible on the screen
 
-  collap();
+  // collap();
 
   let cost_list = document.querySelector('.cost_list');
 
@@ -637,41 +643,42 @@ function OLDdispPrice() {
     var parentMap = new Map();
     cost_list.childNodes.forEach((element) => {
 
-      console.log('element:', element.childNodes);
-      // if (element.childElementCount > 1) {
-      //   console.log('inner:', element.childNodes[0].innerHTML.split('-')[0]);
-      //   let quantity = parseFloat(element.childNodes[element.childElementCount - 2].innerHTML);
-      //   let unitCost = parseFloat(element.childNodes[element.childElementCount - 1].childNodes[0].innerHTML);
-      //   // console.log(`${element.childNodes[0].innerHTML.split('-')[1]} = ${quantity} - ${unitCost} = ${quantity * unitCost}`);
+      // the below 2 commented lines is for debugging the modules collapsibe feature.
+      // console.log('element:', element.childNodes);
+      if (element.childElementCount > 1) {
+        // console.log('inner:', element.childNodes[0].innerHTML.split('-')[0]);
+        let quantity = parseFloat(element.childNodes[element.childElementCount - 2].innerHTML);
+        let unitCost = parseFloat(element.childNodes[element.childElementCount - 1].childNodes[0].innerHTML);
+        // console.log(`${element.childNodes[0].innerHTML.split('-')[1]} = ${quantity} - ${unitCost} = ${quantity * unitCost}`);
 
-      //   if (unitCost < 0 || isNaN(unitCost)) {
-      //     unitCost = 0;
-      //   }
+        if (unitCost < 0 || isNaN(unitCost)) {
+          unitCost = 0;
+        }
 
-      //   let currentNumber = element.childNodes[0].innerHTML.split('-')[0];
-      //   let multiply = [];
-      //   parentMap.forEach(function (value, key) {
-      //     if (currentNumber.includes(key)) {
-      //       multiply.push(value);
-      //     }
-      //   });
+        let currentNumber = element.childNodes[0].innerHTML.split('-')[0];
+        let multiply = [];
+        parentMap.forEach(function (value, key) {
+          if (currentNumber.includes(key)) {
+            multiply.push(value);
+          }
+        });
 
-      //   if (multiply.length > 0) {
-      //     let factor = 0;
-      //     multiply.forEach((mul) => {
-      //       factor = mul * quantity;
-      //     });
-      //     sum = sum + factor * unitCost;
-      //   } else {
-      //     sum = sum + quantity * unitCost;
-      //   }
+        if (multiply.length > 0) {
+          let factor = 0;
+          multiply.forEach((mul) => {
+            factor = mul * quantity;
+          });
+          sum = sum + factor * unitCost;
+        } else {
+          sum = sum + quantity * unitCost;
+        }
 
-      // } else {
-      //   let parentNumber = element.childNodes[0].getElementsByClassName('idName')[0].innerHTML.split('-')[0];
-      //   parentQty = parseInt(element.childNodes[0].getElementsByClassName('qty')[0].innerHTML);
+      } else {
+        let parentNumber = element.childNodes[0].getElementsByClassName('idName')[0].innerHTML.split('-')[0];
+        parentQty = parseInt(element.childNodes[0].getElementsByClassName('qty')[0].innerHTML);
 
-      //   parentMap.set(parentNumber, parentQty);
-      // }
+        parentMap.set(parentNumber, parentQty);
+      }
 
     });
 
