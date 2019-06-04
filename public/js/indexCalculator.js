@@ -322,15 +322,7 @@ document.querySelector('.updateCost').addEventListener('click', () => {
 document.querySelector('.clearButton').addEventListener('click', () => {
 
   // clearing the checkboxes //
-  var checkboxesgp = document.getElementsByName('gp');
-  checkboxesgp.forEach((element) => element.checked = false);
-
-  var checkboxesgc = document.getElementsByName('gc');
-  checkboxesgc.forEach((element) => element.checked = false);
-
-
-  var checkboxesKitVersion = document.getElementsByName('kitVersion');
-  checkboxesKitVersion.forEach((element) => element.checked = false);
+  clearCheckBoxes();
 
   document.querySelector('.price_projected_1--value').textContent = "0";
   document.querySelector('.price_projected_2--value').textContent = "0";
