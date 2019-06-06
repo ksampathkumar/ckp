@@ -130,7 +130,7 @@ function generateLabString() {
   let txt = "";
 
   let subs = [];
-  subs.push('ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'gs', 'gb', 'rm', 'pt');
+  subs.push('ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'sg', 'bg', 'rm', 'pt');
   let i;
   subs.forEach((sub) => {
     let id = document.getElementsByName(sub);
@@ -357,7 +357,7 @@ function clearCheckBoxes() {
   // clearing the checkboxes //
 
   let subs = [];
-  subs.push('kitVersion', 'ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'gs', 'gb', 'rm', 'pt');
+  subs.push('kitVersion', 'ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'sg', 'bg', 'rm', 'pt');
   subs.forEach((sub) => {
     let checkbox = document.getElementsByName(sub);
     checkbox.forEach((element) => element.checked = false);
@@ -369,7 +369,7 @@ function checkAllBoxes() {
   // clearing the checkboxes //
 
   let subs = [];
-  subs.push('kitVersion', 'ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'gs', 'gb', 'rm', 'pt');
+  subs.push('kitVersion', 'ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'sg', 'bg', 'rm', 'pt');
   subs.forEach((sub) => {
     let checkbox = document.getElementsByName(sub);
     checkbox.forEach((element) => element.checked = true);

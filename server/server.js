@@ -893,8 +893,8 @@ async function ckpFunc(req) {
         sum = sum + parent.qty * moreDeatils[0].averageCost;
       } else if (parent.idName.toUpperCase().startsWith("BAG") || parent.idName.toUpperCase().startsWith("BTTL") || parent.idName.toUpperCase().startsWith("MODL")) {
 
-        if (parent.qty > 1){
-        // console.log(`\nparent.idName:${parent.idName}-${parent.qty}\n`);
+        if (parent.qty > 1) {
+          // console.log(`\nparent.idName:${parent.idName}-${parent.qty}\n`);
         }
 
         let details1 = dependencyTree.filter(function (item2Add) {
@@ -909,7 +909,7 @@ async function ckpFunc(req) {
 
             if (details2.memItem.toUpperCase().startsWith("BAG") || details2.memItem.toUpperCase().startsWith("BTTL") || details2.memItem.toUpperCase().startsWith("MODL")) {
 
-              if (details2.memQuantity > 1){
+              if (details2.memQuantity > 1) {
                 // console.log(`\ndetails2.memItem:${details2.memItem}-${details2.memQuantity}\n`);
               }
 
@@ -925,7 +925,7 @@ async function ckpFunc(req) {
 
                   if (details4.memItem.toUpperCase().startsWith("BAG") || details4.memItem.toUpperCase().startsWith("BTTL") || details4.memItem.toUpperCase().startsWith("MODL")) {
 
-                    if (details4.memQuantity > 1){
+                    if (details4.memQuantity > 1) {
                       // console.log(`\ndetails4.memItem:${details4.memItem}-${details4.memQuantity}\n`);
                     }
 
@@ -1805,7 +1805,21 @@ async function ckpFunc(req) {
 
   function sgAdditions(id, itemsToAdd) {
 
-
+    // Lab 9 - Quartz Sandstone and Granite
+    if (id.includes("sg-9") && !(id.includes("sg-4")) && !(id.includes("sg-5")) && !(id.includes("sg-6"))) {
+      itemsToAdd.push({
+        idName: 'Equp3711',
+        lab: '9',
+        qty: 1,
+        unit: 'each'
+      });
+      itemsToAdd.push({
+        idName: 'Equp3024',
+        lab: '9',
+        qty: 1,
+        unit: 'each'
+      });
+    }
 
     return itemsToAdd;
   }
