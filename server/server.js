@@ -991,15 +991,15 @@ async function ckpFunc(req) {
 
   function gpAdditions(id, itemsToAdd) {
 
-    // Aluminum Tube Condition
-    if (id.includes("gp-7") && !(id.includes("gp-18")) || id.includes("gp-7") && !(id.includes("gp-20"))) {
-      itemsToAdd.push({
-        idName: 'Equp2132',
-        lab: '7',
-        qty: 1,
-        unit: 'each'
-      });
-    }
+    // Aluminum Tube Condition - this is wrong. Cait(email)
+    // if (id.includes("gp-7") && !(id.includes("gp-18")) || id.includes("gp-7") && !(id.includes("gp-20"))) {
+    //   itemsToAdd.push({
+    //     idName: 'Equp2132',
+    //     lab: '7',
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // }
 
     // Carbon Resistor Condition
     if (id.includes("gp-22") && !(id.includes("gp-21")) || id.includes("gp-22") && !(id.includes("gp-23"))) {
@@ -1668,6 +1668,25 @@ async function ckpFunc(req) {
       });
     }
 
+    // CHEMICALS
+
+    // Acetic Acid Condition
+    if (id.includes('es-7') && id.includes('es-10') && id.includes('es-13')) {
+      itemsToAdd.push({
+        idName: 'Bttl4012',
+        lab: '7,10,13',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('es-7') || id.includes('es-10')) {
+      itemsToAdd.push({
+        idName: 'Bttl3022',
+        lab: '7,10',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
 
 
     return itemsToAdd;
@@ -1789,6 +1808,23 @@ async function ckpFunc(req) {
         idName: 'Bag1028',
         lab: 100,
         qty: pipette2,
+        unit: 'each'
+      });
+    }
+
+    // Glass Test Tube Condition
+    if (id.includes("hb-2")) {
+      itemsToAdd.push({
+        idName: 'Bag1019',
+        lab: '2',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("hb-14")) {
+      itemsToAdd.push({
+        idName: 'Bag1017',
+        lab: '14',
+        qty: 1,
         unit: 'each'
       });
     }
