@@ -22,7 +22,12 @@ npm install
 
 After ```npm install```, there should not be any error.
 
-Before proceeding further, please make sure to setup permissions(through firewall) to access contents in both the databases. Use the Public IP Address of the machine on which server is inteded to run. 
+Before proceeding further, please make sure to setup permissions(through firewall) to access contents in both the databases. Use the Public IP Address of the machine on which server is inteded to run.
+
+NOTE: Once you plan to run the server, please share your public IP with me so that I can add you as an authorized user to access the content from both the databases. Do not forget to share your IP, I need to add you in firewall rules and create user in the database administration.
+
+## to find public-IP
+please use any one of the instructions :https://www.tecmint.com/find-linux-server-public-ip-address/
 ## Databases:
 1. MYSQL
 2. MongoDB
