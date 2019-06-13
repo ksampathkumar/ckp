@@ -287,6 +287,18 @@ function generateLabString() {
 
   }
 
+  // General Biology Dissection Condition.
+
+  let ibd1 = document.getElementsByName('ib-d1');
+
+  if (!(ibd1[0].checked)) {
+
+    if (txt.includes('ib-23')) {
+      txt = txt + 'ib--23' + " ";
+    }
+
+  }
+
   txt = txt.slice(0, -1);
   // Getting Selected Labs
 
