@@ -105,7 +105,7 @@ function addUser() {
                 alert("Error:", data);
             }
         }
-        reqAddUser.send(encodeURIComponent(JSON.stringify(reqObj)));
+        reqAddUser.send(JSON.stringify(reqObj));
     }
 }
 

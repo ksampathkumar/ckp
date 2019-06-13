@@ -143,7 +143,7 @@ function generateLabString() {
 
   });
 
-  // Note: All the dissection items needed will have -ve sin for labs.
+  // Note: All the dissection items needed will have -ve sign for labs.
   // Suppose lab 5 requires pig, you need to send ap--5
 
   // A&P Dissection Condition.
@@ -273,6 +273,25 @@ function generateLabString() {
     txt = txt + 'ap-1003' + " ";
   }
 
+  // Human Biology Dissection Condition.
+
+  let hbd1 = document.getElementsByName('hb-d1');
+
+  if (!(hbd1[0].checked)) {
+
+    if (txt.includes('hb-10')) {
+      txt = txt + 'hb--10' + " ";
+    }
+    if (txt.includes('hb-12')) {
+      txt = txt + 'hb--12' + " ";
+    }
+    if (txt.includes('hb-13')) {
+      txt = txt + 'hb--13' + " ";
+    }
+
+  }
+
+  // console.log('txt:', txt);
 
   txt = txt.slice(0, -1);
   // Getting Selected Labs

@@ -1,8 +1,8 @@
 
 const mysqlConfig = {
-    host: "192.168.5.8",
-    user: "root",
-    password: "escience",
+    host: "35.194.5.71",
+    user: "reader",
+    password: "escienceReader",
     dialect: "mysql",
     native: true,
     pool: { maxConnections: 50, maxIdleTime: 30 }

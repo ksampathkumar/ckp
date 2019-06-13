@@ -34,7 +34,7 @@ function register(element) {
                     location.href = 'accessDenied.html';
                 }
             }
-            request.send(encodeURIComponent(JSON.stringify(reqObj)));
+            request.send(JSON.stringify(reqObj));
         }
 
 

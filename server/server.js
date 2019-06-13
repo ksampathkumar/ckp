@@ -622,7 +622,7 @@ async function ckpFunc(req) {
 
     let queryAdd, queryDivide, queryMax;
     let queries = [];
-    queryAdd = `SELECT idName, lab, qty, unit FROM z_netsuite.${subject} where BINARY operator = '+' and (lab = -1 or `; //${subject}
+    queryAdd = `SELECT idName, lab, qty, unit FROM subjects.${subject} where BINARY operator = '+' and (lab = -1 or `; //${subject}
 
     labs.forEach(lab => {
       queryAdd += "lab = ";
@@ -648,7 +648,7 @@ async function ckpFunc(req) {
   }
 
   const labsQueryGenerator4displayLabs = async (rules, sub) => {
-    let returnQuery = `SELECT idName, lab, operator FROM z_netsuite.${sub} where (BINARY idName ='`;
+    let returnQuery = `SELECT idName, lab, operator FROM subjects.${sub} where (BINARY idName ='`;
     while (rules.length > 0) {
       let temp = rules.pop();
       returnQuery += temp;
@@ -2481,7 +2481,11 @@ async function ckpFunc(req) {
           gc.push(subject[1]);
           break;
         case 'ib':
-          ib.push(subject[1]);
+          if (subject.length > 2) {
+            ib.push(-subject[2]);
+          } else {
+            ib.push(subject[1]);
+          }
           break;
         case 'ap':
           if (subject.length > 2) {
@@ -2500,7 +2504,11 @@ async function ckpFunc(req) {
           ast.push(subject[1]);
           break;
         case 'gb':
-          gb.push(subject[1]);
+          if (subject.length > 2) {
+            gb.push(-subject[2]);
+          } else {
+            gb.push(subject[1]);
+          }
           break;
         case 'es':
           es.push(subject[1]);
@@ -2512,7 +2520,11 @@ async function ckpFunc(req) {
           ip.push(subject[1]);
           break;
         case 'hb':
-          hb.push(subject[1]);
+          if (subject.length > 2) {
+            hb.push(-subject[2]);
+          } else {
+            hb.push(subject[1]);
+          }
           break;
         case 'hg':
           hg.push(subject[1]);
