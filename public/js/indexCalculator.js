@@ -272,6 +272,21 @@ function generateLabString() {
 
   }
 
+  // General Biology Dissection Condition.
+
+  let gbd1 = document.getElementsByName('gb-d1');
+
+  if (!(gbd1[0].checked)) {
+
+    if (txt.includes('gb-19')) {
+      txt = txt + 'gb--19' + " ";
+    }
+    if (txt.includes('gb-20')) {
+      txt = txt + 'gb--20' + " ";
+    }
+
+  }
+
   txt = txt.slice(0, -1);
   // Getting Selected Labs
 

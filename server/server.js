@@ -1594,6 +1594,16 @@ async function ckpFunc(req) {
       });
     }
 
+    // Hand Lens Condition
+    if (id.includes("gb--19") && !(id.includes("gb-17"))) {
+      itemsToAdd.push({
+        idName: 'Equp8094',
+        lab: '19',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
     return itemsToAdd;
   }
 
