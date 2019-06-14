@@ -1,15 +1,17 @@
 # ckp
 
-The Project Server is to be Run on an Ubuntu based machine as few dependencies are available only on Ubuntu. The server is built on Ubuntu 18.04.02. 
+The Project Server is to be Run on an Ubuntu based machine as project based dependencies are available only on Ubuntu. The server is built on Ubuntu 18.04.02. 
 
-After cloning the project, run the below commands to setup the dependencies for npm.
+After cloning the project, run the below commands to setup the dependencies before running npm install.
 
 ## Dependencies - execute in CLI/shell
 
 # install pkg-config:
 ```
+
 sudo apt install pkg-config
 ```
+
 # install poppler and cairo:
 ```
 sudo apt install libpoppler-qt5-dev libcairo2-dev
@@ -28,20 +30,25 @@ NOTE: Once you plan to run the server, please share your public IP with me so th
 
 ## to find public-IP
 please use any one of the instructions :https://www.tecmint.com/find-linux-server-public-ip-address/
+
 ## Databases:
 1. MYSQL
 2. MongoDB
 
 ## To run the server:
 cd to the directory server/
+
 # start the server:
 ```
 node server.js
 ```
+
 # Expected message:
 	CKP Server Running on port xxxxx
 	Connected to MongoDB server
 	Connected to mysql Server
+
+please proceed further only after geting the above message on console.
 
 # Open in Web-Browser
 Open browser of your choice and type in ```ip:port``` to get to index.html page
