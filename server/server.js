@@ -1529,6 +1529,260 @@ async function ckpFunc(req) {
       });
     }
 
+    // Pipette Condition
+    let pipetteCount = 0;
+
+    if (id.includes("ic-1")) {
+      pipetteCount += 2;
+    }
+    if (id.includes("ic-2")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("ic-5")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("ic-6")) {
+      pipetteCount += 2;
+    }
+    if (id.includes("ic-14")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("ic-15")) {
+      pipetteCount += 2;
+    }
+    if (id.includes("ic-19")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("ic-20")) {
+      pipetteCount += 2;
+    }
+    if (id.includes("ic-23")) {
+      pipetteCount += 6;
+    }
+    if (id.includes("ic-24")) {
+      pipetteCount += 3;
+    }
+
+    pipetteCount = Math.ceil(pipetteCount / 10) * 10;
+
+    let pipette2 = Math.floor(pipetteCount / 20);
+    let pipette1 = pipetteCount % 20;
+
+    if (pipette1 > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1030',
+        lab: 100,
+        qty: pipette1 / 10,
+        unit: 'each'
+      });
+    }
+    if (pipette2 > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1028',
+        lab: 100,
+        qty: pipette2,
+        unit: 'each'
+      });
+    }
+
+    // Lab 16, 20, 22 // 3% Hydrogen Peroxide Condition //
+    if (id.includes("ic-16") && id.includes("ic-20") && id.includes("ic-22")) {
+      itemsToAdd.push({
+        idName: 'Bttl1046',
+        lab: '16,20,22',
+        qty: 3,
+        unit: 'each'
+      });
+      itemsToAdd.push({
+        idName: 'Bttl1752',
+        lab: '16,20,22',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if ((id.includes("ic-16") && id.includes("ic-22")) || (id.includes("ic-16") && id.includes("ic-20"))) {
+      itemsToAdd.push({
+        idName: 'Bttl1046',
+        lab: '16,22,20',
+        qty: 3,
+        unit: 'each'
+      });
+    } else if (id.includes("ic-20") && id.includes("ic-22")) {
+      itemsToAdd.push({
+        idName: 'Bttl1046',
+        lab: '20,22',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ic-16")) {
+      itemsToAdd.push({
+        idName: 'Bttl1046',
+        lab: '16',
+        qty: 2,
+        unit: 'each'
+      });
+      itemsToAdd.push({
+        idName: 'Bttl1752',
+        lab: '16',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ic-20") || id.includes("ic-22")) {
+      itemsToAdd.push({
+        idName: 'Bttl1752',
+        lab: '20,22',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Iodine-Potassium Iodide Solution condition
+    if (id.includes("ic-22")) {
+      itemsToAdd.push({
+        idName: 'Bttl1464',
+        lab: '22',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ic-6")) {
+      itemsToAdd.push({
+        idName: 'Bttl1173',
+        lab: '6',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Lab 1,6,16,23 // 4.5 % Actic Acid (vinegar) //
+
+    /*// All four IN
+    if (id.includes("gc-18") && id.includes("gc-13") && id.includes("gc-21") && id.includes("gc-2")) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      itemsToAdd.push({
+        idName: 'Bttl7104',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      // Combination 3 IN
+    } else if (id.includes("gc-18") && id.includes("gc-13") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-13") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl4012',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      itemsToAdd.push({
+        idName: 'Bttl4765',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-18") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-18") && id.includes("gc-13") && id.includes("gc-21")) {
+      itemsToAdd.push({
+        idName: 'Bttl4012',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      itemsToAdd.push({
+        idName: 'Bttl4014',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      // Combination 2 IN
+    } else if (id.includes("gc-18") && id.includes("gc-13")) {
+      itemsToAdd.push({
+        idName: 'Bttl4014',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-18") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl4100',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-18") && id.includes("gc-21")) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-13") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl4765',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-13") && id.includes("gc-21")) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+      // Just 1 Lab IN
+    } else if (id.includes("gc-18")) {
+      itemsToAdd.push({
+        idName: 'Bttl3041',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-13")) {
+      itemsToAdd.push({
+        idName: 'Bttl4765',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-7")) {
+      itemsToAdd.push({
+        idName: 'Bttl7105',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-21")) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    }*/
+
     return itemsToAdd;
   }
 

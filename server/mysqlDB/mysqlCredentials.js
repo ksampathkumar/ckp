@@ -1,6 +1,6 @@
 
 const mysqlConfig = {
-    host: "35.194.5.71",
+    host: "35.184.100.181",
     user: "reader",
     password: "escienceReader",
     dialect: "mysql",
