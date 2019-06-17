@@ -8,7 +8,6 @@ After cloning the project, run the below commands to setup the dependencies befo
 
 # install pkg-config:
 ```
-
 sudo apt install pkg-config
 ```
 
@@ -35,7 +34,21 @@ please use any one of the instructions :https://www.tecmint.com/find-linux-serve
 1. MYSQL
 2. MongoDB
 
-## To run the server:
+## need to install pdfmake package in the ckp folder
+cd to the directory ckp/
+```
+git clone --branch 0.1 https://github.com/bpampuch/pdfmake.git
+```
+```
+cd pdfmake/
+```
+```
+npm install
+```
+
+Reference guide:~ https://www.npmjs.com/package/pdfmake
+
+## To run the server: (come back one folder after completing the above step)
 cd to the directory server/
 
 # start the server:
@@ -48,7 +61,7 @@ node server.js
 	Connected to MongoDB server
 	Connected to mysql Server
 
-please proceed further only after geting the above message on console.
+please proceed further only after geting the above message on console. Neglect any warnings!!!
 
 # Open in Web-Browser
 Open browser of your choice and type in ```ip:port``` to get to index.html page
