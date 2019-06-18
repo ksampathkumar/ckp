@@ -340,6 +340,14 @@ function calcUp() {
         console.log("Server Data:", data);
         document.querySelector(".price_projected_1--value").textContent = data[0];
         document.querySelector(".price_projected_2--value").textContent = data[1];
+
+        // Scroll Window to top smooth
+        window.scrollTo({
+          top: 125,
+          left: 0,
+          behavior: 'smooth'
+        });
+
       } else if (request.status === 406) {
         alert(this.response);
       } else {

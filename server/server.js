@@ -1114,212 +1114,231 @@ async function ckpFunc(req) {
       });
     }
 
-    // 0.5% Sodium Chloride Solution Condition - 103
-    if (id.includes("gc-22")) {
+    // Ship9121 Glass Beaker Cover - Chamber Pack CONDITION // - 4,19,8,9,12,14,19,21,22
+
+    if (id.includes("gc-4") || id.includes("gc-19")) {
       itemsToAdd.push({
-        idName: 'Bttl4106',
-        lab: 100,
+        idName: 'Ship9121',
+        lab: '4,19',
         qty: 1,
         unit: 'each'
       });
-    } else if (id.includes("gc-4")) {
+    }
+    if (id.includes("gc-8") || id.includes("gc-9") || id.includes("gc-12") || id.includes("gc-14") || id.includes("gc-19") || id.includes("gc-21") || id.includes("gc-22")) {
       itemsToAdd.push({
-        idName: 'Bttl4301',
-        lab: 100,
+        idName: 'Ship9121',
+        lab: '8,9,12,14,19,21,22',
         qty: 1,
         unit: 'each'
       });
     }
 
-    // Lab 8 - Lab 16 // 3% Hydrogen Peroxide Condition // - 104
-    if (id.includes("gc-8") && id.includes("gc-16")) {
-      itemsToAdd.push({
-        idName: 'Bttl4243',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-16")) {
-      itemsToAdd.push({
-        idName: 'Bttl1752',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-8")) {
-      itemsToAdd.push({
-        idName: 'Bttl5027',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    }
+    // // 0.5% Sodium Chloride Solution Condition - 103
+    // if (id.includes("gc-22")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4106',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-4")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4301',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // }
 
-    // Lab 18, 13, (2, 5, 17), 21 // 4.5 % Actic Acid (vinegar) // - 105
+    // // Lab 8 - Lab 16 // 3% Hydrogen Peroxide Condition // - 104
+    // if (id.includes("gc-8") && id.includes("gc-16")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4243',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-16")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl1752',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-8")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl5027',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // }
 
-    // All four IN
-    if (id.includes("gc-18") && id.includes("gc-13") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-      itemsToAdd.push({
-        idName: 'Bttl1216',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-      itemsToAdd.push({
-        idName: 'Bttl7104',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-      // Combination 3 IN
-    } else if (id.includes("gc-18") && id.includes("gc-13") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-      itemsToAdd.push({
-        idName: 'Bttl1216',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-13") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-      itemsToAdd.push({
-        idName: 'Bttl4012',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-      itemsToAdd.push({
-        idName: 'Bttl4765',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-18") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-      itemsToAdd.push({
-        idName: 'Bttl1216',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-18") && id.includes("gc-13") && id.includes("gc-21")) {
-      itemsToAdd.push({
-        idName: 'Bttl4012',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-      itemsToAdd.push({
-        idName: 'Bttl4014',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-      // Combination 2 IN
-    } else if (id.includes("gc-18") && id.includes("gc-13")) {
-      itemsToAdd.push({
-        idName: 'Bttl4014',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-18") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-      itemsToAdd.push({
-        idName: 'Bttl4100',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-18") && id.includes("gc-21")) {
-      itemsToAdd.push({
-        idName: 'Bttl1216',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-13") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-      itemsToAdd.push({
-        idName: 'Bttl4765',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-13") && id.includes("gc-21")) {
-      itemsToAdd.push({
-        idName: 'Bttl1216',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-      itemsToAdd.push({
-        idName: 'Bttl1216',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-      // Just 1 Lab IN
-    } else if (id.includes("gc-18")) {
-      itemsToAdd.push({
-        idName: 'Bttl3041',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-13")) {
-      itemsToAdd.push({
-        idName: 'Bttl4765',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-7")) {
-      itemsToAdd.push({
-        idName: 'Bttl7105',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-21")) {
-      itemsToAdd.push({
-        idName: 'Bttl1216',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    }
+    // // Lab 18, 13, (2, 5, 17), 21 // 4.5 % Actic Acid (vinegar) // - 105
+
+    // // All four IN
+    // if (id.includes("gc-18") && id.includes("gc-13") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl1216',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    //   itemsToAdd.push({
+    //     idName: 'Bttl7104',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    //   // Combination 3 IN
+    // } else if (id.includes("gc-18") && id.includes("gc-13") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl1216',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-13") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4012',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4765',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-18") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl1216',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-18") && id.includes("gc-13") && id.includes("gc-21")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4012',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4014',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    //   // Combination 2 IN
+    // } else if (id.includes("gc-18") && id.includes("gc-13")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4014',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-18") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4100',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-18") && id.includes("gc-21")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl1216',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-13") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4765',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-13") && id.includes("gc-21")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl1216',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl1216',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    //   // Just 1 Lab IN
+    // } else if (id.includes("gc-18")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl3041',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-13")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4765',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-7")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl7105',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-21")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl1216',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // }
 
 
-    // Iodine-Potassium Iodide Solution condition - 106
-    if (id.includes("gc-16")) {
-      itemsToAdd.push({
-        idName: 'Bttl4232',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-25") && !(id.includes("gc-16"))) {
-      itemsToAdd.push({
-        idName: 'Bttl8804',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    }
+    // // Iodine-Potassium Iodide Solution condition - 106
+    // if (id.includes("gc-16")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4232',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-25") && !(id.includes("gc-16"))) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl8804',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // }
 
-    // Turmeric indicator (Add 1/4 teaspoon (1.23ml) of turmeric to four tablespoons (60 ml) of rubbing alcohol condition - 107
-    if (id.includes("gc-17") && id.includes("gc-20")) {
-      itemsToAdd.push({
-        idName: 'Bttl4098',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    } else if (id.includes("gc-17") ? !(id.includes("gc-20")) : id.includes("gc-20")) {
-      itemsToAdd.push({
-        idName: 'Bttl4198',
-        lab: 100,
-        qty: 1,
-        unit: 'each'
-      });
-    }
+    // // Turmeric indicator (Add 1/4 teaspoon (1.23ml) of turmeric to four tablespoons (60 ml) of rubbing alcohol condition - 107
+    // if (id.includes("gc-17") && id.includes("gc-20")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4098',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // } else if (id.includes("gc-17") ? !(id.includes("gc-20")) : id.includes("gc-20")) {
+    //   itemsToAdd.push({
+    //     idName: 'Bttl4198',
+    //     lab: 100,
+    //     qty: 1,
+    //     unit: 'each'
+    //   });
+    // }
 
     return itemsToAdd;
   }

@@ -738,6 +738,13 @@ function OLDdispPrice() {
 
     // update BUDGET here please
 
+    // Scroll Window to top smooth
+    window.scrollTo({
+      top: 125,
+      left: 0,
+      behavior: 'smooth'
+    });
+
   } else {
     alert('No item in Cost List, Please fill the List');
     document.querySelector('.UIprice_cost--value').textContent = 0;
