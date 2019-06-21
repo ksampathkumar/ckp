@@ -168,7 +168,7 @@ handleDisconnect();
 //   console.log("PORT:", port);
 // });
 
-// HTTPS //
+// HTTPS // have http redirect to https route
 
 
 // ROUTES //
@@ -1133,212 +1133,89 @@ async function ckpFunc(req) {
       });
     }
 
-    // // 0.5% Sodium Chloride Solution Condition - 103
-    // if (id.includes("gc-22")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4106',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-4")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4301',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // }
+    // CHEMICALS ///////////////////////////////////////////////////////////////////
 
-    // // Lab 8 - Lab 16 // 3% Hydrogen Peroxide Condition // - 104
-    // if (id.includes("gc-8") && id.includes("gc-16")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4243',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-16")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl1752',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-8")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl5027',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // }
+    // 3% Hydrogen Peroxide Solution Condition
+    if (id.includes("gc-8") && id.includes("gc-16")) {
+      itemsToAdd.push({
+        idName: 'Bttl1046',
+        lab: '8,16',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-8") || id.includes("gc-16")) {
+      itemsToAdd.push({
+        idName: 'Bttl1752',
+        lab: '8,16',
+        qty: 1,
+        unit: 'each'
+      });
+    }
 
-    // // Lab 18, 13, (2, 5, 17), 21 // 4.5 % Actic Acid (vinegar) // - 105
+    // // Lab 21, 18, (2, 5, 17) // 4.5 % Actic Acid (vinegar) //
+    if (id.includes("gc-21") && (id.includes("gc-2") && id.includes("gc-5") || id.includes("gc-17") || id.includes("gc-18"))) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: '21,18,2,5,17',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-21")) {
+      itemsToAdd.push({
+        idName: 'Bttl4012',
+        lab: '21',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-18")) {
+      itemsToAdd.push({
+        idName: 'Bttl3022',
+        lab: '18',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17")) {
+      itemsToAdd.push({
+        idName: 'Bttl7105',
+        lab: '2,5,17',
+        qty: 1,
+        unit: 'each'
+      });
+    }
 
-    // // All four IN
-    // if (id.includes("gc-18") && id.includes("gc-13") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl1216',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    //   itemsToAdd.push({
-    //     idName: 'Bttl7104',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    //   // Combination 3 IN
-    // } else if (id.includes("gc-18") && id.includes("gc-13") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl1216',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-13") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4012',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4765',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-18") && id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl1216',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-18") && id.includes("gc-13") && id.includes("gc-21")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4012',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4014',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    //   // Combination 2 IN
-    // } else if (id.includes("gc-18") && id.includes("gc-13")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4014',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-18") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4100',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-18") && id.includes("gc-21")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl1216',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-13") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4765',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-13") && id.includes("gc-21")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl1216',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-21") && (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-17"))) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl1216',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    //   // Just 1 Lab IN
-    // } else if (id.includes("gc-18")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl3041',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-13")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4765',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-2") || id.includes("gc-5") || id.includes("gc-7")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl7105',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-21")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl1216',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // }
+    // Iodine-Potassium Iodide Solution condition - 106
+    if (id.includes("gc-16")) {
+      itemsToAdd.push({
+        idName: 'Bttl1464',
+        lab: '16,25',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-25")) {
+      itemsToAdd.push({
+        idName: 'Bttl1173',
+        lab: '25',
+        qty: 1,
+        unit: 'each'
+      });
+    }
 
-
-    // // Iodine-Potassium Iodide Solution condition - 106
-    // if (id.includes("gc-16")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4232',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-25") && !(id.includes("gc-16"))) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl8804',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // }
-
-    // // Turmeric indicator (Add 1/4 teaspoon (1.23ml) of turmeric to four tablespoons (60 ml) of rubbing alcohol condition - 107
-    // if (id.includes("gc-17") && id.includes("gc-20")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4098',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // } else if (id.includes("gc-17") ? !(id.includes("gc-20")) : id.includes("gc-20")) {
-    //   itemsToAdd.push({
-    //     idName: 'Bttl4198',
-    //     lab: 100,
-    //     qty: 1,
-    //     unit: 'each'
-    //   });
-    // }
+    // Turmeric indicator (Add 1/4 teaspoon (1.23ml) of turmeric to four tablespoons (60 ml) of rubbing alcohol condition - 107
+    if (id.includes("gc-17") && id.includes("gc-20")) {
+      itemsToAdd.push({
+        idName: 'Bttl4098',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gc-17") ? !(id.includes("gc-20")) : id.includes("gc-20")) {
+      itemsToAdd.push({
+        idName: 'Bttl4198',
+        lab: 100,
+        qty: 1,
+        unit: 'each'
+      });
+    }
 
     return itemsToAdd;
   }
@@ -1413,25 +1290,78 @@ async function ckpFunc(req) {
       });
     }
 
+    // CHEMICALS ///////////////////////////////////////////////////////////////////
+
     // 1% Glucose Solution, C6H12O6
     if (id.includes('ib-9')) {
       itemsToAdd.push({
-        idName: 'Bttl5069',
-        lab: 200,
+        idName: 'Bttl1078',
+        lab: '9',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('ib-5') || id.includes('ib-6')) {
+      itemsToAdd.push({
+        idName: 'Bttl1600',
+        lab: '5,6',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // 4.5% Acetic Acid (vinegar), C2H4O2 Solution
+    if (id.includes('ib-7') && id.includes('ib-24')) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: '7,24',
+        qty: 2,
+        unit: 'each'
+      });
+    } else if (id.includes('ib-7') || id.includes('ib-24')) {
+      itemsToAdd.push({
+        idName: 'Bttl1216',
+        lab: '7,24',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('ib-2') || id.includes('ib-20') || id.includes('ib-27')) {
+      itemsToAdd.push({
+        idName: 'Bttl7105',
+        lab: '2,20,27',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Iodine-Potassium Iodide, IKI Solution
+    if (id.includes('ib-8')) {
+      itemsToAdd.push({
+        idName: 'Bttl1464',
+        lab: '8',
         qty: 1,
         unit: 'each'
       });
     } else if (id.includes('ib-6')) {
       itemsToAdd.push({
-        idName: 'Bttl1081',
-        lab: 200,
+        idName: 'Bttl1173',
+        lab: '6',
         qty: 1,
         unit: 'each'
       });
-    } else if (id.includes('ib-5')) {
+    }
+
+    // Liquid Starch Solution
+    if (id.includes('ib-8')) {
       itemsToAdd.push({
-        idName: 'Bttl1081',
-        lab: 200,
+        idName: 'Bttl1054',
+        lab: '8',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes('ib-6')) {
+      itemsToAdd.push({
+        idName: 'Bttl5071',
+        lab: '6',
         qty: 1,
         unit: 'each'
       });
@@ -1500,6 +1430,25 @@ async function ckpFunc(req) {
         idName: 'Bag1028',
         lab: 100,
         qty: pipette2,
+        unit: 'each'
+      });
+    }
+
+    // CHEMICALS ///////////////////////////////////////////////////////////////////
+
+    // 1% Glucose Solution Condition
+    if (id.includes("ap-4") && id.includes("ap-17")) {
+      itemsToAdd.push({
+        idName: 'Bttl1078',
+        lab: '4,17',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ap-4") || id.includes("ap-17")) {
+      itemsToAdd.push({
+        idName: 'Bttl1600',
+        lab: '4,17',
+        qty: 1,
         unit: 'each'
       });
     }
@@ -1604,6 +1553,8 @@ async function ckpFunc(req) {
       });
     }
 
+    // CHEMICALS ///////////////////////////////////////////////////////////////////
+
     // Iodine-Potassium Iodide Solution condition
     if (id.includes("ic-22")) {
       itemsToAdd.push({
@@ -1653,8 +1604,8 @@ async function ckpFunc(req) {
         qty: 1,
         unit: 'each'
       });
-    } 
-    
+    }
+
     // Lab 16,23 // 4.5 % Actic Acid (vinegar) //
     else if (id.includes("ic-16") && id.includes("ic-23")) {
       itemsToAdd.push({
@@ -1754,6 +1705,8 @@ async function ckpFunc(req) {
       });
     }
 
+    // CHEMICALS ///////////////////////////////////////////////////////////////////
+
     return itemsToAdd;
   }
 
@@ -1818,6 +1771,7 @@ async function ckpFunc(req) {
         unit: 'each'
       });
     }
+
     // Seed Mixture Packet (zinnia, marigold, morning glory, cosmos and ryegrass_
     if (id.includes("es-6") && !(id.includes("es-5"))) {
       itemsToAdd.push({
@@ -1828,7 +1782,7 @@ async function ckpFunc(req) {
       });
     }
 
-    // CHEMICALS
+    // CHEMICALS ///////////////////////////////////////////////////////////////////
 
     // Acetic Acid Condition
     if (id.includes('es-7') && id.includes('es-10') && id.includes('es-13')) {
@@ -2035,6 +1989,8 @@ async function ckpFunc(req) {
   }
 
   function ptAdditions(id, itemsToAdd) {
+
+    // CHEMICALS ///////////////////////////////////////////////////////////////////
 
     if (id.includes('pt-1') && id.includes('pt-3') && id.includes('pt-5')) {
       itemsToAdd.push({
