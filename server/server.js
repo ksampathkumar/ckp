@@ -1642,6 +1642,48 @@ async function ckpFunc(req) {
 
   function gbAdditions(id, itemsToAdd) {
 
+    // TEST TUBES CONDITION //
+    // This is a one time usable test tube
+    if (id.includes("gb-6")) {
+      itemsToAdd.push({
+        idName: 'Bag1017',
+        lab: '6',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // This is a normal condition
+    if (id.includes("gb-8") || id.includes("gb-23")) {
+      itemsToAdd.push({
+        idName: 'Bag1019',
+        lab: '8,23',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gb-5") || id.includes("gb-6") || id.includes("gb-18")) {
+      itemsToAdd.push({
+        idName: 'Bag1018',
+        lab: '5,6,18',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gb-7") || id.includes("gb-15")) {
+      itemsToAdd.push({
+        idName: 'Bag1017',
+        lab: '7,15',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("gb-16")) {
+      itemsToAdd.push({
+        idName: 'Equp1015',
+        lab: '16',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
     // Pipette Condition
     let pipetteCount = 0;
 
