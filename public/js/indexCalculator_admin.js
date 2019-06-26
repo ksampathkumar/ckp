@@ -291,32 +291,32 @@ function generateLabString() {
 
   }
 
-    // General Biology Dissection Condition.
+  // General Biology Dissection Condition.
 
-    let gbd1 = document.getElementsByName('gb-d1');
+  let gbd1 = document.getElementsByName('gb-d1');
 
-    if (!(gbd1[0].checked)) {
-  
-      if (txt.includes('gb-19')) {
-        txt = txt + 'gb--19' + " ";
-      }
-      if (txt.includes('gb-20')) {
-        txt = txt + 'gb--20' + " ";
-      }
-  
+  if (!(gbd1[0].checked)) {
+
+    if (txt.includes('gb-19')) {
+      txt = txt + 'gb--19' + " ";
+    }
+    if (txt.includes('gb-20')) {
+      txt = txt + 'gb--20' + " ";
     }
 
-    // General Biology Dissection Condition.
+  }
 
-    let ibd1 = document.getElementsByName('ib-d1');
+  // General Biology Dissection Condition.
 
-    if (!(ibd1[0].checked)) {
-  
-      if (txt.includes('ib-23')) {
-        txt = txt + 'ib--23' + " ";
-      }
-  
+  let ibd1 = document.getElementsByName('ib-d1');
+
+  if (!(ibd1[0].checked)) {
+
+    if (txt.includes('ib-23')) {
+      txt = txt + 'ib--23' + " ";
     }
+
+  }
 
   // console.log('txt:', txt);
 
@@ -354,7 +354,7 @@ document.querySelector('.calculateButton').addEventListener('click', () => {
         document.querySelector(".price_projected_1--value").textContent = Math.round(data[0] * 100) / 100;
         document.querySelector(".price_projected_2--value").textContent = Math.round(data[1] * 100) / 100;
         document.querySelector(".price_cost--value").textContent = Math.round(data[2] * 100) / 100;
-        dispPrice(data[3], data[4]);
+        dispPrice(data[3], data[4], data[2]);
       } else if (request.status === 406) {
         alert(this.response);
       } else {
@@ -492,7 +492,7 @@ document.querySelector('.updateCost').addEventListener('click', () => {
 // FUNCTIONS //
 
 // Display Price // Inside each for of the Packaged items, have 2 more for's.
-function dispPrice(BOM, dependencyTree) {
+function dispPrice(BOM, dependencyTree, serverSum) {
 
   let itemCount, parent, html, htmlParentProto, htmlParentProto2, htmlPlainParentProto, htmlChildProto, htmlTemp, htmlTemp2, htmlTemp3, htmlTemp4;
 
@@ -670,19 +670,20 @@ function dispPrice(BOM, dependencyTree) {
     }
   }
 
-  OLDdispPrice();
+  OLDdispPrice(serverSum);
 
 }
 
+let serverComputedPackingCost = 0;
 // OLD Display Price // - this calculates the cost
-function OLDdispPrice() {
+function OLDdispPrice(serverSum) {
   // this function does the calculation from what's visible on the screen
 
   // collap();
 
   let cost_list = document.querySelector('.cost_list');
 
-  let sum = 5;
+  let sum = 0;
 
   if (cost_list.childElementCount > 0) {
 
@@ -732,9 +733,14 @@ function OLDdispPrice() {
 
     // console.log("SUM:", sum);
 
-    document.querySelector('.UIprice_cost--value').textContent = Math.round(sum * 100) / 100;
-    document.querySelector('.UIprice_projected_1--value').textContent = Math.round(sum * (1 / 0.35) * 100) / 100;
-    document.querySelector('.UIprice_projected_2--value').textContent = Math.round(sum * (1 / 0.31) * 100) / 100;
+    if (serverComputedPackingCost === 0) {
+      serverComputedPackingCost = serverSum - sum;
+    }
+
+    document.querySelector('.UIprice_cost--value').textContent = Math.round((sum + serverComputedPackingCost) * 100) / 100;
+    document.querySelector('.packingCost--value').textContent = Math.round(serverComputedPackingCost * 100) / 100;
+    document.querySelector('.UIprice_projected_1--value').textContent = Math.round((sum + serverComputedPackingCost) * (1 / 0.35) * 100) / 100;
+    document.querySelector('.UIprice_projected_2--value').textContent = Math.round((sum + serverComputedPackingCost) * (1 / 0.31) * 100) / 100;
 
     // update BUDGET here please
 

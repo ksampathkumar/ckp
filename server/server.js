@@ -860,7 +860,7 @@ async function ckpFunc(req) {
     return totalRawItemsUnique;
   }
 
-  async function priceCalculator(BOM, dependencyTree) {
+  async function priceCalculator(BOM, dependencyTree, sub) {
 
     // console.log("Checker1:", BOM);
     // console.log("Checker2:", dependencyTree);
@@ -946,8 +946,6 @@ async function ckpFunc(req) {
                             return item2Add.idName == details2.memItem;
                           });
 
-
-
                         } else if (details6.memItem.toUpperCase().startsWith("EQUP") || details6.memItem.toUpperCase().startsWith("CHEM") || details6.memItem.toUpperCase().startsWith("SHIP")) {
                           sum = sum + parent.qty * details2.memQuantity * details4.memQuantity * details6.memQuantity * details6.averageCost;
                         } else {
@@ -972,21 +970,45 @@ async function ckpFunc(req) {
           }
         }
 
-
-
       } else {
         console.log("Error@priceCalculator:", parent);
       }
 
-
-
-
     }
 
+    let packingAndOtherCost = await baseKitCost(sub);
 
-    let packingAndOtherCost = 5;
+    return sum + packingAndOtherCost * 1;
+  }
 
-    return sum + packingAndOtherCost;
+  async function baseKitCost(requestSub) {
+
+    let baseKit = [];
+
+    baseKit.push({ sub: 'gp', cost: 6 });
+    baseKit.push({ sub: 'ip', cost: 5 });
+    baseKit.push({ sub: 'gb', cost: 10 });
+    baseKit.push({ sub: 'ib', cost: 6 });
+    baseKit.push({ sub: 'hb', cost: 8 });
+    baseKit.push({ sub: 'ap', cost: 8 });
+    baseKit.push({ sub: 'gc', cost: 10 });
+    baseKit.push({ sub: 'ic', cost: 9 });
+    baseKit.push({ sub: 'as', cost: 4 });
+    baseKit.push({ sub: 'es', cost: 14 });
+    baseKit.push({ sub: 'hg', cost: 5 });
+    baseKit.push({ sub: 'sg', cost: 4 });
+    baseKit.push({ sub: 'bg', cost: 2 });
+    baseKit.push({ sub: 'rm', cost: 2 });
+    baseKit.push({ sub: 'mb', cost: 11 });
+    baseKit.push({ sub: 'fs', cost: 4 });
+    baseKit.push({ sub: 'pt', cost: 4 });
+
+    let result = await baseKit.filter(function (e) {
+      return e.sub == requestSub;
+    });
+
+    return result[0].cost;
+
   }
 
   function gpAdditions(id, itemsToAdd) {
@@ -2418,7 +2440,7 @@ async function ckpFunc(req) {
     let resAR = [];
     let response = await adminPageMapping(resAR, priceQueryResults, sub);
     // console.log('response:', response);
-    let kitCost = await priceCalculator(BOM, dependencyTree);
+    let kitCost = await priceCalculator(BOM, dependencyTree, sub);
 
     let lowerPrice = kitCost / 0.35;
     let upperPrice = kitCost / 0.31;
@@ -2450,7 +2472,7 @@ async function ckpFunc(req) {
   // Equipment and ship items like beaker, thermometer, sleeve for thermometer etc. are combined meaning the max is put in the Kit.
   // Euipment that are one time consumable like Styrofoam Cup, Catch Pan are added.
   // All other Modules, Bags, Bottles are untouched.
-  async function combineTHEsubjects(serverResponse, serverResponseOther) {
+  async function combineTHEsubjects(serverResponse, serverResponseOther, sub) {
 
     let interscetionItems = [];
 
@@ -2567,12 +2589,14 @@ async function ckpFunc(req) {
     // Not required now, add later, if needed
     // await sleep(100);
 
+    let diffAmount = await baseKitCost(sub) * 0.5;
+
     // this will add the remaining items from the serverResponseOther to serverResponse and adjust the pricing
     if (serverResponseOther[3].length > 0) {
 
-      serverResponse[0] += serverResponseOther[0] - 5 / 0.35;
-      serverResponse[1] += serverResponseOther[1] - 5 / 0.31;
-      serverResponse[2] += serverResponseOther[2] - 5;
+      serverResponse[0] += serverResponseOther[0] - diffAmount / 0.35;
+      serverResponse[1] += serverResponseOther[1] - diffAmount / 0.31;
+      serverResponse[2] += serverResponseOther[2] - diffAmount;
 
       serverResponseOther[3].forEach((bomItem) => {
         serverResponse[3].push(bomItem);
@@ -2584,9 +2608,9 @@ async function ckpFunc(req) {
       });
 
     } else {
-      serverResponse[0] += serverResponseOther[0] - 5 / 0.35;
-      serverResponse[1] += serverResponseOther[1] - 5 / 0.31;
-      serverResponse[2] += serverResponseOther[2] - 5;
+      serverResponse[0] += serverResponseOther[0] - diffAmount / 0.35;
+      serverResponse[1] += serverResponseOther[1] - diffAmount / 0.31;
+      serverResponse[2] += serverResponseOther[2] - diffAmount;
     }
 
     // this will remove duplicates from the dependency tree or the items under the modules, bags, bottles will duplicated at the UI level
@@ -2770,7 +2794,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 1');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseGP);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseGP, 'gp');
 
       }
     }
@@ -2782,7 +2806,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 2');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseGC);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseGC, 'gc');
 
       }
     }
@@ -2794,7 +2818,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 3');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseIB);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseIB, 'ib');
 
       }
     }
@@ -2806,7 +2830,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 4');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseAP);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseAP, 'ap');
 
       }
     }
@@ -2818,7 +2842,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 5');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseMB);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseMB, 'mb');
 
       }
     }
@@ -2830,7 +2854,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 6');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseIC);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseIC, 'ic');
 
       }
     }
@@ -2842,7 +2866,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 7');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseAS);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseAS, 'as');
 
       }
     }
@@ -2854,7 +2878,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 8');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseGB);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseGB, 'gb');
 
       }
     }
@@ -2866,7 +2890,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 9');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseES);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseES, 'es');
 
       }
     }
@@ -2878,7 +2902,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 10');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseFS);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseFS, 'fs');
 
       }
     }
@@ -2890,7 +2914,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 11');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseIP);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseIP, 'ip');
 
       }
     }
@@ -2902,7 +2926,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 12');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseHB);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseHB, 'hb');
 
       }
     }
@@ -2914,7 +2938,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 13');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseHG);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseHG, 'hg');
 
       }
     }
@@ -2926,7 +2950,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 14');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseSG);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseSG, 'sg');
 
       }
     }
@@ -2938,7 +2962,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 15');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseBG);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseBG, 'bg');
 
       }
     }
@@ -2950,7 +2974,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 16');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponseRM);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseRM, 'rm');
 
       }
     }
@@ -2962,7 +2986,7 @@ async function ckpFunc(req) {
         });
       } else {
         // console.log('in 17');
-        serverResponse = await combineTHEsubjects(serverResponse, serverResponsePT);
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponsePT, 'pt');
 
       }
     }

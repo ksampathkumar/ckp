@@ -129,7 +129,7 @@ function startUP() {
         let adminCount = 0
         let salesCount = 0;
 
-        let htmlUser = '<div class="item clearfix" id="%id%"><div class="role">%role%</div><div class="name">%fullName%</div><div class="email">%email%</div><div class="right clearfix"><div class="item_delete"><button onclick="userDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+        let htmlUser = '<div class="item clearfix" id="%id%"><div class="role">%role%</div><div class="name">%fullName%</div><div class="email">%email%</div><div class="clearfix"><div class="item_delete"><button onclick="userDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
         let htmlDisplay = '';
         let htmlTemp = '';
         data.forEach(element => {
