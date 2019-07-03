@@ -41,8 +41,8 @@ body {
 **********************************************/
 
 .top {
-    height: 50vh;
-    background-image: linear-gradient(rgba(50, 50, 50, 0.35), rgba(50, 50, 50, 0.35)), url("images/back.png");
+    height: 59vh;
+    background-image: linear-gradient(rgba(0, 37, 105, 0.993), rgba(0, 0, 0, 0.25)), url("images/back.png");
     background-size: cover;
     background-position: center;
     position: relative;
@@ -65,13 +65,13 @@ body {
     font-weight: 1000;
 }
 
-.packingCost, .price_cost, .price_projected_1, .price_projected_2 {
+.lastPurchasePrice, .packingCost, .price_cost, .price_projected_1, .price_projected_2 {
     padding: 12.5px;
     text-transform: uppercase;
     width: 500px;
 }
 
-.packingCost, .price_cost {
+.lastPurchasePrice, .packingCost, .price_cost {
     margin-bottom: 10px;
     background-color: rgb(252, 252, 252);
 }
@@ -86,7 +86,7 @@ body {
     background-color: rgb(75, 255, 75);
 }
 
-.packingCost--text, .price_cost--text, .price_projected_1--text, .price_projected_2--text {
+.lastPurchasePrice--text, .packingCost--text, .price_cost--text, .price_projected_1--text, .price_projected_2--text {
     float: left;
     font-size: 25px;
     color: rgb(0, 0, 0);
@@ -94,7 +94,7 @@ body {
     font-weight: 500;
 }
 
-.packingCost--value, .price_cost--value, .price_projected_1--value, .price_projected_2--value, .UIprice_projected_1--value, .UIprice_projected_2--value, .UIprice_cost--value {
+.lastPurchasePrice--value, .packingCost--value, .price_cost--value, .price_projected_1--value, .price_projected_2--value, .UIprice_projected_1--value, .UIprice_projected_2--value, .UIprice_cost--value {
     letter-spacing: 1px;
     float: left;
     font-size: 25px;

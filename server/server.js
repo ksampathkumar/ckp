@@ -692,7 +692,7 @@ async function ckpFunc(req) {
   }
 
   const priceQueryGenerator = async (rawItems) => {
-    let returnQuery = "SELECT idName, displayName, averageCost FROM netsuite.allItems where (BINARY idName ='";
+    let returnQuery = "SELECT idName, displayName, averageCost, unitsType, stockUnit, purchaseUnit, purchasePrice, lastPurchasePrice FROM netsuite.allItems where (BINARY idName ='";
     while (rawItems.length > 0) {
       let temp = rawItems.pop();
       returnQuery += temp.idName;
@@ -880,7 +880,9 @@ async function ckpFunc(req) {
     // // working code
 
     let sum = 0;
+    let sumLastPurchase = 0;
 
+    // price calculation based on average cost of individual items
     for (let m = 0; m < BOM.length; m++) {
       let parent = BOM[m];
 
@@ -949,7 +951,7 @@ async function ckpFunc(req) {
                         } else if (details6.memItem.toUpperCase().startsWith("EQUP") || details6.memItem.toUpperCase().startsWith("CHEM") || details6.memItem.toUpperCase().startsWith("SHIP")) {
                           sum = sum + parent.qty * details2.memQuantity * details4.memQuantity * details6.memQuantity * details6.averageCost;
                         } else {
-                          console.log("Error@priceCalculator3:", details6);
+                          console.log("Error@priceCalculator1:", details6);
                         }
                       }
                     }
@@ -965,43 +967,143 @@ async function ckpFunc(req) {
             } else if (details2.memItem.toUpperCase().startsWith("EQUP") || details2.memItem.toUpperCase().startsWith("CHEM") || details2.memItem.toUpperCase().startsWith("SHIP")) {
               sum = sum + parent.qty * details2.memQuantity * details2.averageCost;
             } else {
-              console.log("Error@priceCalculator1:", details2);
+              console.log("Error@priceCalculator3:", details2);
             }
           }
         }
 
       } else {
-        console.log("Error@priceCalculator:", parent);
+        console.log("Error@priceCalculator4:", parent);
+      }
+
+    }
+
+    // price calculation based on last purchase price of individual items
+    for (let m = 0; m < BOM.length; m++) {
+      let parent = BOM[m];
+
+      if (parent.idName.toUpperCase().startsWith("EQUP") || parent.idName.toUpperCase().startsWith("CHEM") || parent.idName.toUpperCase().startsWith("SHIP")) {
+
+        let moreDeatils = dependencyTree.filter(function (item2Add) {
+          return item2Add.idName == parent.idName;
+        });
+        // console.log('lastPurchasePrice:', moreDeatils);
+        sumLastPurchase = sumLastPurchase + parent.qty * moreDeatils[0].lastPurchasePrice;
+      } else if (parent.idName.toUpperCase().startsWith("BAG") || parent.idName.toUpperCase().startsWith("BTTL") || parent.idName.toUpperCase().startsWith("MODL")) {
+
+        if (parent.qty > 1) {
+          // console.log(`\nparent.idName:${parent.idName}-${parent.qty}\n`);
+        }
+
+        let details1 = dependencyTree.filter(function (item2Add) {
+          return item2Add.idName == parent.idName;
+        });
+
+        if (details1.length > 0) {
+
+          for (let a = 0; a < details1.length; a++) {
+
+            let details2 = details1[a];
+
+            if (details2.memItem.toUpperCase().startsWith("BAG") || details2.memItem.toUpperCase().startsWith("BTTL") || details2.memItem.toUpperCase().startsWith("MODL")) {
+
+              if (details2.memQuantity > 1) {
+                // console.log(`\ndetails2.memItem:${details2.memItem}-${details2.memQuantity}\n`);
+              }
+
+              let details3 = dependencyTree.filter(function (item2Add) {
+                return item2Add.idName == details2.memItem;
+              });
+
+              if (details3.length > 0) {
+
+                for (let b = 0; b < details3.length; b++) {
+
+                  let details4 = details3[b];
+
+                  if (details4.memItem.toUpperCase().startsWith("BAG") || details4.memItem.toUpperCase().startsWith("BTTL") || details4.memItem.toUpperCase().startsWith("MODL")) {
+
+                    if (details4.memQuantity > 1) {
+                      // console.log(`\ndetails4.memItem:${details4.memItem}-${details4.memQuantity}\n`);
+                    }
+
+                    let details5 = dependencyTree.filter(function (item2Add) {
+                      return item2Add.idName == details4.memItem;
+                    });
+
+                    if (details5.length > 0) {
+
+                      for (let a = 0; a < details5.length; a++) {
+
+                        let details6 = details5[a];
+
+                        if (details6.memItem.toUpperCase().startsWith("BAG") || details6.memItem.toUpperCase().startsWith("BTTL") || details6.memItem.toUpperCase().startsWith("MODL")) {
+                          // this is just added to check if one more level down bag has been detected. Actuall this level down is working
+                          console.log("One More Level of Hirearchy found:", details6);
+                          let details7 = dependencyTree.filter(function (item2Add) {
+                            return item2Add.idName == details2.memItem;
+                          });
+
+                        } else if (details6.memItem.toUpperCase().startsWith("EQUP") || details6.memItem.toUpperCase().startsWith("CHEM") || details6.memItem.toUpperCase().startsWith("SHIP")) {
+                          sumLastPurchase = sumLastPurchase + parent.qty * details2.memQuantity * details4.memQuantity * details6.memQuantity * details6.lastPurchasePrice;
+                        } else {
+                          console.log("Error@priceCalculator5:", details6);
+                        }
+                      }
+                    }
+
+                  } else if (details4.memItem.toUpperCase().startsWith("EQUP") || details4.memItem.toUpperCase().startsWith("CHEM") || details4.memItem.toUpperCase().startsWith("SHIP")) {
+                    sumLastPurchase = sumLastPurchase + parent.qty * details2.memQuantity * details4.memQuantity * details4.lastPurchasePrice;
+                  } else {
+                    console.log("Error@priceCalculator6:", details4);
+                  }
+                }
+              }
+
+            } else if (details2.memItem.toUpperCase().startsWith("EQUP") || details2.memItem.toUpperCase().startsWith("CHEM") || details2.memItem.toUpperCase().startsWith("SHIP")) {
+              sumLastPurchase = sumLastPurchase + parent.qty * details2.memQuantity * details2.lastPurchasePrice;
+            } else {
+              console.log("Error@priceCalculator7:", details2);
+            }
+          }
+        }
+
+      } else {
+        console.log("Error@priceCalculato8:", parent);
       }
 
     }
 
     let packingAndOtherCost = await baseKitCost(sub);
 
-    return sum + packingAndOtherCost * 1;
+    let costArray = [];
+    costArray.push(sum + packingAndOtherCost * 1.15);
+    costArray.push(sumLastPurchase + packingAndOtherCost * 1.15);
+    // console.log('costarray:', sumLastPurchase);
+    return costArray;
   }
 
   async function baseKitCost(requestSub) {
 
     let baseKit = [];
 
-    baseKit.push({ sub: 'gp', cost: 6 });
-    baseKit.push({ sub: 'ip', cost: 5 });
-    baseKit.push({ sub: 'gb', cost: 10 });
-    baseKit.push({ sub: 'ib', cost: 6 });
-    baseKit.push({ sub: 'hb', cost: 8 });
-    baseKit.push({ sub: 'ap', cost: 8 });
-    baseKit.push({ sub: 'gc', cost: 10 });
-    baseKit.push({ sub: 'ic', cost: 9 });
+    baseKit.push({ sub: 'gp', cost: 5 });
+    baseKit.push({ sub: 'ip', cost: 4 });
+    baseKit.push({ sub: 'gb', cost: 5 });
+    baseKit.push({ sub: 'ib', cost: 5 });
+    baseKit.push({ sub: 'hb', cost: 4 });
+    baseKit.push({ sub: 'ap', cost: 7 });
+    baseKit.push({ sub: 'gc', cost: 7 });
+    baseKit.push({ sub: 'ic', cost: 7 });
     baseKit.push({ sub: 'as', cost: 4 });
-    baseKit.push({ sub: 'es', cost: 14 });
-    baseKit.push({ sub: 'hg', cost: 5 });
-    baseKit.push({ sub: 'sg', cost: 4 });
+    baseKit.push({ sub: 'es', cost: 8 });
+    baseKit.push({ sub: 'hg', cost: 3 });
+    baseKit.push({ sub: 'sg', cost: 3 });
     baseKit.push({ sub: 'bg', cost: 2 });
     baseKit.push({ sub: 'rm', cost: 2 });
-    baseKit.push({ sub: 'mb', cost: 11 });
+    baseKit.push({ sub: 'mb', cost: 8 });
     baseKit.push({ sub: 'fs', cost: 4 });
-    baseKit.push({ sub: 'pt', cost: 4 });
+    baseKit.push({ sub: 'pt', cost: 3 });
 
     let result = await baseKit.filter(function (e) {
       return e.sub == requestSub;
@@ -1716,7 +1818,7 @@ async function ckpFunc(req) {
       pipetteCount += 7;
     }
     if (id.includes("gb-6")) {
-      pipetteCount += 9;
+      pipetteCount += 10;
     }
     if (id.includes("gb-7")) {
       pipetteCount += 2;
@@ -1731,7 +1833,7 @@ async function ckpFunc(req) {
       pipetteCount += 1;
     }
     if (id.includes("gb-15")) {
-      pipetteCount += 9;
+      pipetteCount += 10;
     }
     if (id.includes("gb-18")) {
       pipetteCount += 8;
@@ -2221,6 +2323,8 @@ async function ckpFunc(req) {
       if (addItem.length > 0) {
         item["memDisplayName"] = addItem[0].displayName;
         item["averageCost"] = addItem[0].averageCost;
+        item["purchasePrice"] = addItem[0].purchasePrice;
+        item["lastPurchasePrice"] = addItem[0].lastPurchasePrice;
       }
     });
     // Combines dependencyTree.memItem with priceQueryResults.idName to combine memItem display name
@@ -2234,6 +2338,8 @@ async function ckpFunc(req) {
       if (addItem.length > 0) {
         item["displayName"] = addItem[0].displayName;
         item["averageCost"] = addItem[0].averageCost;
+        item["purchasePrice"] = addItem[0].purchasePrice;
+        item["lastPurchasePrice"] = addItem[0].lastPurchasePrice;
       }
     });
     // Combines dependencyTree.idName with priceQueryResults.idName to combine item display name
@@ -2428,24 +2534,231 @@ async function ckpFunc(req) {
     console.log("\nSQL Result Size:", priceQueryResults.length);
     // console.log(priceQueryResults);
 
+    // For each raw material:
+    // 1. Do unit conversion for cost, get average cost to base unit equivalent cost. Units Type -> *Base Unit* SYNC *Stock Unit*.
+    // 2. Print items that have average cost of -1.
     priceQueryResults.forEach(async function (item) {
-      if (item.averageCost === -1) {
-        console.log("ERROR@priceQueryResults:", item);
-        item.averageCost = 0;
-      }
-    });
 
+      // Convert Stock(Average Cost) Units to Base Units
+      if ((item.unitsType.toUpperCase() === 'AREA' && item.stockUnit.toUpperCase() !== 'SQUARE FOOT') ||
+        (item.unitsType.toUpperCase() === 'COUNT' && item.stockUnit.toUpperCase() !== 'EACH') ||
+        (item.unitsType.toUpperCase() === 'LENGTH' && item.stockUnit.toUpperCase() !== 'INCH') ||
+        (item.unitsType.toUpperCase() === 'PAD' && item.stockUnit.toUpperCase() !== 'PAD') ||
+        (item.unitsType.toUpperCase() === 'VOLUME' && item.stockUnit.toUpperCase() !== 'LITER') ||
+        (item.unitsType.toUpperCase() === 'WEIGHT' && item.stockUnit.toUpperCase() !== 'GRAM')) {
+        // console.log(`UNIT CONVERSION ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit}`);
+
+        // UNITS CONVERSION : AREA, LENGTH, VOLUME, WEIGHT
+        if (item.unitsType.toUpperCase() === 'AREA') {
+          if (item.stockUnit.toUpperCase() === 'SQUARE INCH' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Square Foot';
+            item.averageCost = 144 * item.averageCost;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          }
+
+          // Add any more conversions if it shows up in future.
+
+        } else if (item.unitsType.toUpperCase() === 'LENGTH') {
+          if (item.stockUnit.toUpperCase() === 'FOOT' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Inch';
+            item.averageCost = item.averageCost / 12;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          }
+
+          // Add any more conversions if it shows up in future.
+
+        } else if (item.unitsType.toUpperCase() === 'VOLUME') {
+          if (item.stockUnit.toUpperCase() === 'CUBIC FOOT' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Liter';
+            item.averageCost = item.averageCost / 28.317;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else if (item.stockUnit.toUpperCase() === 'MILLILITER' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Liter';
+            item.averageCost = item.averageCost * 1000;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else if (item.stockUnit.toUpperCase() === 'QUART' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Liter';
+            item.averageCost = item.averageCost / 1.057;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          }
+
+          // Add any more conversions if it shows up in future.
+
+        } else if (item.unitsType.toUpperCase() === 'WEIGHT') {
+          if (item.stockUnit.toUpperCase() === 'OUNCE' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Gram';
+            item.averageCost = item.averageCost / 28.35;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else if (item.stockUnit.toUpperCase() === 'POUND' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Gram';
+            item.averageCost = item.averageCost / 453.592;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          }
+
+          // Add any more conversions if it shows up in future.
+
+        }
+      }
+
+      // Convert Purchase(Purchase, Last Purchase) Units to Base Units
+      if ((item.unitsType.toUpperCase() === 'AREA' && item.purchaseUnit.toUpperCase() !== 'SQUARE FOOT') ||
+        (item.unitsType.toUpperCase() === 'COUNT' && item.purchaseUnit.toUpperCase() !== 'EACH') ||
+        (item.unitsType.toUpperCase() === 'LENGTH' && item.purchaseUnit.toUpperCase() !== 'INCH') ||
+        (item.unitsType.toUpperCase() === 'PAD' && item.purchaseUnit.toUpperCase() !== 'PAD') ||
+        (item.unitsType.toUpperCase() === 'VOLUME' && item.purchaseUnit.toUpperCase() !== 'LITER') ||
+        (item.unitsType.toUpperCase() === 'WEIGHT' && item.purchaseUnit.toUpperCase() !== 'GRAM')) {
+        // console.log(`UNIT CONVERSION ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit}`);
+
+        // UNITS CONVERSION : AREA, LENGTH, VOLUME, WEIGHT
+        if (item.unitsType.toUpperCase() === 'AREA') {
+          if (item.purchaseUnit.toUpperCase() === 'SQUARE INCH') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = 144 * item.purchasePrice;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = 144 * item.lastPurchasePrice;
+            }
+            item.purchaseUnit = 'Square Foot';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          }
+
+          // Add any more conversions if it shows up in future.
+
+        } else if (item.unitsType.toUpperCase() === 'LENGTH') {
+          if (item.purchaseUnit.toUpperCase() === 'FOOT') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = item.purchasePrice / 12;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = item.lastPurchasePrice / 12;
+            }
+            item.purchaseUnit = 'Inch';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          }
+
+          // Add any more conversions if it shows up in future.
+
+        } else if (item.unitsType.toUpperCase() === 'VOLUME') {
+          if (item.purchaseUnit.toUpperCase() === 'CUBIC FOOT') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = item.purchasePrice / 28.317;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = item.lastPurchasePrice / 28.317;
+            }
+            item.purchaseUnit = 'Liter';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else if (item.purchaseUnit.toUpperCase() === 'MILLILITER') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = item.purchasePrice * 1000;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = item.lastPurchasePrice * 1000;
+            }
+            item.purchaseUnit = 'Liter';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else if (item.purchaseUnit.toUpperCase() === 'QUART') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = item.purchasePrice / 1.057;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = item.lastPurchasePrice / 1.057;
+            }
+            item.purchaseUnit = 'Liter';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          }
+
+          // Add any more conversions if it shows up in future.
+
+        } else if (item.unitsType.toUpperCase() === 'WEIGHT') {
+          if (item.purchaseUnit.toUpperCase() === 'OUNCE') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = item.purchasePrice / 28.35;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = item.lastPurchasePrice / 28.35;
+            }
+            item.purchaseUnit = 'Gram';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else if (item.purchaseUnit.toUpperCase() === 'POUND') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = item.purchasePrice / 453.592;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = item.lastPurchasePrice / 453.592;
+            }
+            item.purchaseUnit = 'Gram';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          }
+
+          // Add any more conversions if it shows up in future.
+
+        }
+      }
+
+      // if (item.unitsType.toUpperCase() === 'AREA' && item.stockUnit.toUpperCase() === 'SQUARE FOOT') {
+      //   console.log(`UNIT CONVERSION ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit}`);
+      // }
+
+      // if ((Math.round(item.averageCost/item.purchasePrice) > 10 || Math.round(item.purchasePrice/item.averageCost) > 10) && item.stockUnit === item.purchaseUnit && item.unitsType.toUpperCase() !== 'COUNT') {
+      //   console.log(`COST VARIATION  ----------------- ${item.idName} ---- ${item.averageCost} ---- ${item.purchasePrice}`);
+      // }
+
+      // Average Cost set to last purchase price or purchase price if less than or equal to zero
+      if (item.averageCost <= 0) {
+        if (item.lastPurchasePrice > 0) {
+          item.averageCost = item.lastPurchasePrice;
+          // console.log(`ERROR@looper4eachSubject set to LASTPURCHASEPRICE:", ${item.idName} --- ${item.averageCost}`);
+        } else if (item.purchasePrice > 0) {
+          item.averageCost = item.purchasePrice;
+          // console.log(`ERROR@looper4eachSubject set to PURCHASEPRICE:", ${item.idName} --- ${item.averageCost}`);
+        } else {
+          console.log(`ERROR@looper4eachSubject - Average Cost = 0:", ${item.idName}`);
+          item.averageCost = 0;
+        }
+      }
+
+      // // Cost set to last purchase price if its more than average cost
+      // if (item.lastPurchasePrice > item.averageCost) {
+      //   console.log(`COST_SWITCH@looper4eachSubject set to LASTPURCHASEPRICE:", ${item.idName} --- ${item.averageCost} --- ${item.lastPurchasePrice} --- ${item.purchasePrice}`);
+      //   item.averageCost = item.lastPurchasePrice;
+      // }
+
+    });
 
     // this is done coz there was a disturbacy in th price
     let resAR = [];
     let response = await adminPageMapping(resAR, priceQueryResults, sub);
     // console.log('response:', response);
-    let kitCost = await priceCalculator(BOM, dependencyTree, sub);
+    let kitCostArray = await priceCalculator(BOM, dependencyTree, sub);
+    let kitCost = kitCostArray[0];
+    let lastPurchasePrice = kitCostArray[1];
 
     let lowerPrice = kitCost / 0.35;
     let upperPrice = kitCost / 0.31;
 
-    console.log("ESTIMATED KIT COST:", kitCost);
+    console.log("ESTIMATED KIT COST:", kitCostArray);
 
     response.push(kitCost);
     response.push(lowerPrice);
@@ -2462,6 +2775,8 @@ async function ckpFunc(req) {
     serverResponse.push(response[2]);
     serverResponse.push(response[0]);
     serverResponse.push(response[1]);
+    serverResponse.push(lastPurchasePrice);
+
 
     return serverResponse;
 
@@ -2505,11 +2820,17 @@ async function ckpFunc(req) {
               present.qty = current.qty;
               // let posBOM = serverResponse[3].map(function (e) { return e.idName; }).indexOf(present.idName);
               let pos = serverResponseOther[4].map(function (e) { return e.idName; }).indexOf(present.idName);
+
               let pricePerUnit = serverResponseOther[4][pos].averageCost;
               let differenceAmount = (current.qty - oldQty) * pricePerUnit;
+
+              let pricePerUnitLast = serverResponseOther[4][pos].lastPurchasePrice;
+              let differenceAmountLast = (current.qty - oldQty) * pricePerUnitLast;
+
               serverResponse[0] += differenceAmount / 0.35;
               serverResponse[1] += differenceAmount / 0.31;
               serverResponse[2] += differenceAmount;
+              serverResponse[5] += differenceAmountLast;
 
               // this part will add the difference item to the final array
 
@@ -2518,6 +2839,7 @@ async function ckpFunc(req) {
               serverResponseOther[0] -= pricePerUnit * current.qty / 0.35;
               serverResponseOther[1] -= pricePerUnit * current.qty / 0.31;
               serverResponseOther[2] -= pricePerUnit * current.qty;
+              serverResponseOther[5] -= pricePerUnitLast * current.qty;
               interscetionItems.push(current);
               // console.log('\ndifferenceAmount 1:', differenceAmount);
               // console.log('\nEND\nserverResponse:', serverResponse[3]);
@@ -2532,11 +2854,17 @@ async function ckpFunc(req) {
               // console.log('in current lesser');
               // console.log('serverResponseOther:', serverResponseOther);
               let pos = serverResponseOther[4].map(function (e) { return e.idName; }).indexOf(present.idName);
+
               let pricePerUnit = serverResponseOther[4][pos].averageCost;
               // let differenceAmount = (current.qty - present.qty) * pricePerUnit;
+
+              let pricePerUnitLast = serverResponseOther[4][pos].lastPurchasePrice;
+              // let differenceAmountLast = (current.qty - oldQty) * pricePerUnitLast;
+
               serverResponseOther[0] -= pricePerUnit * current.qty / 0.35;
               serverResponseOther[1] -= pricePerUnit * current.qty / 0.31;
               serverResponseOther[2] -= pricePerUnit * current.qty;
+              serverResponseOther[5] -= pricePerUnitLast * current.qty;
               interscetionItems.push(current);
               // console.log('\ndifferenceAmount 2:', differenceAmount);
 
@@ -2550,10 +2878,15 @@ async function ckpFunc(req) {
               //   console.log('present:', present);
               //   console.log('buggy:', serverResponse[4]);
               // }
+
               let differenceAmount = present.qty * serverResponseOther[4][pos].averageCost;
+
+              let differenceAmountLast = present.qty * serverResponseOther[4][pos].lastPurchasePrice;
+
               serverResponseOther[0] -= differenceAmount / 0.35;
               serverResponseOther[1] -= differenceAmount / 0.31;
               serverResponseOther[2] -= differenceAmount;
+              serverResponseOther[5] -= differenceAmountLast;
               interscetionItems.push(current);
               // console.log(differenceAmount);
             } else {
@@ -2597,6 +2930,7 @@ async function ckpFunc(req) {
       serverResponse[0] += serverResponseOther[0] - diffAmount / 0.35;
       serverResponse[1] += serverResponseOther[1] - diffAmount / 0.31;
       serverResponse[2] += serverResponseOther[2] - diffAmount;
+      serverResponse[5] += serverResponseOther[5] - diffAmount;
 
       serverResponseOther[3].forEach((bomItem) => {
         serverResponse[3].push(bomItem);
@@ -2611,6 +2945,7 @@ async function ckpFunc(req) {
       serverResponse[0] += serverResponseOther[0] - diffAmount / 0.35;
       serverResponse[1] += serverResponseOther[1] - diffAmount / 0.31;
       serverResponse[2] += serverResponseOther[2] - diffAmount;
+      serverResponse[5] += serverResponseOther[5] - diffAmount;
     }
 
     // this will remove duplicates from the dependency tree or the items under the modules, bags, bottles will duplicated at the UI level
