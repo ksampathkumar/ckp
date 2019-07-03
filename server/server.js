@@ -2555,6 +2555,13 @@ async function ckpFunc(req) {
             item.stockUnit = 'Square Foot';
             item.averageCost = 144 * item.averageCost;
             // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else if (item.stockUnit.toUpperCase() === 'SQUARE YARD' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Square Foot';
+            item.averageCost = item.averageCost / 9;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else {
+            console.log(`Average Price: Price Conversion criteria not avaliable Units Type: ${item.unitsType}, Stock Unit: ${item.stockUnit}, Purchase Unit: ${item.purchaseUnit}, idName:${item.idName}`);
           }
 
           // Add any more conversions if it shows up in future.
@@ -2565,6 +2572,13 @@ async function ckpFunc(req) {
             item.stockUnit = 'Inch';
             item.averageCost = item.averageCost / 12;
             // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else if (item.stockUnit.toUpperCase() === 'YARD' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Inch';
+            item.averageCost = item.averageCost / 36;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else {
+            console.log(`Average Price: Price Conversion criteria not avaliable Units Type: ${item.unitsType}, Stock Unit: ${item.stockUnit}, Purchase Unit: ${item.purchaseUnit}, idName:${item.idName}`);
           }
 
           // Add any more conversions if it shows up in future.
@@ -2585,6 +2599,18 @@ async function ckpFunc(req) {
             item.stockUnit = 'Liter';
             item.averageCost = item.averageCost / 1.057;
             // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else if (item.stockUnit.toUpperCase() === 'GALLON' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Liter';
+            item.averageCost = item.averageCost / 3.78541;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else if (item.stockUnit.toUpperCase() === 'OUNCE' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Liter';
+            item.averageCost = item.averageCost * 33.814;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else {
+            console.log(`Average Price: Price Conversion criteria not avaliable Units Type: ${item.unitsType}, Stock Unit: ${item.stockUnit}, Purchase Unit: ${item.purchaseUnit}, idName:${item.idName}`);
           }
 
           // Add any more conversions if it shows up in future.
@@ -2600,6 +2626,13 @@ async function ckpFunc(req) {
             item.stockUnit = 'Gram';
             item.averageCost = item.averageCost / 453.592;
             // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else if (item.stockUnit.toUpperCase() === 'KILOGRAM' && item.averageCost >= 0) {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+            item.stockUnit = 'Gram';
+            item.averageCost = item.averageCost / 1000;
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.stockUnit} --- ${item.averageCost}`);
+          } else {
+            console.log(`Average Price: Price Conversion criteria not avaliable Units Type: ${item.unitsType}, Stock Unit: ${item.stockUnit}, Purchase Unit: ${item.purchaseUnit}, idName:${item.idName}`);
           }
 
           // Add any more conversions if it shows up in future.
@@ -2629,6 +2662,19 @@ async function ckpFunc(req) {
             item.purchaseUnit = 'Square Foot';
 
             // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else if (item.purchaseUnit.toUpperCase() === 'SQUARE YARD') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = item.purchasePrice / 9;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = item.lastPurchasePrice / 9;
+            }
+            item.purchaseUnit = 'Square Foot';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else {
+            console.log(`Purchase Price: Price Conversion criteria not avaliable Units Type: ${item.unitsType}, Stock Unit: ${item.stockUnit}, Purchase Unit: ${item.purchaseUnit}, idName:${item.idName}`);
           }
 
           // Add any more conversions if it shows up in future.
@@ -2645,6 +2691,19 @@ async function ckpFunc(req) {
             item.purchaseUnit = 'Inch';
 
             // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else if (item.purchaseUnit.toUpperCase() === 'YARD') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = item.purchasePrice / 36;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = item.lastPurchasePrice / 36;
+            }
+            item.purchaseUnit = 'Inch';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else {
+            console.log(`Purchase Price: Price Conversion criteria not avaliable Units Type: ${item.unitsType}, Stock Unit: ${item.stockUnit}, Purchase Unit: ${item.purchaseUnit}, idName:${item.idName}`);
           }
 
           // Add any more conversions if it shows up in future.
@@ -2683,6 +2742,30 @@ async function ckpFunc(req) {
             item.purchaseUnit = 'Liter';
 
             // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else if (item.purchaseUnit.toUpperCase() === 'GALLON') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = item.purchasePrice / 3.78541;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = item.lastPurchasePrice / 3.78541;
+            }
+            item.purchaseUnit = 'Liter';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else if (item.purchaseUnit.toUpperCase() === 'OUNCE') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = item.purchasePrice * 33.814;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = item.lastPurchasePrice * 33.814;
+            }
+            item.purchaseUnit = 'Liter';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else {
+            console.log(`Purchase Price: Price Conversion criteria not avaliable Units Type: ${item.unitsType}, Stock Unit: ${item.stockUnit}, Purchase Unit: ${item.purchaseUnit}, idName:${item.idName}`);
           }
 
           // Add any more conversions if it shows up in future.
@@ -2710,6 +2793,19 @@ async function ckpFunc(req) {
             item.purchaseUnit = 'Gram';
 
             // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else if (item.purchaseUnit.toUpperCase() === 'KILOGRAM') {
+            // console.log(`UNIT CONVERSION BEFORE ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+            if (item.purchasePrice >= 0) {
+              item.purchasePrice = item.purchasePrice / 1000;
+            }
+            if (item.lastPurchasePrice >= 0) {
+              item.lastPurchasePrice = item.lastPurchasePrice / 1000;
+            }
+            item.purchaseUnit = 'Gram';
+
+            // console.log(`UNIT CONVERSION AFTER  ----------------- ${item.idName} ---- ${item.unitsType} ---- ${item.purchaseUnit} --- ${item.purchasePrice} --- ${item.lastPurchasePrice}`);
+          } else {
+            console.log(`Purchase Price: Price Conversion criteria not avaliable Units Type: ${item.unitsType}, Stock Unit: ${item.stockUnit}, Purchase Unit: ${item.purchaseUnit}, idName:${item.idName}`);
           }
 
           // Add any more conversions if it shows up in future.
@@ -2734,7 +2830,7 @@ async function ckpFunc(req) {
           item.averageCost = item.purchasePrice;
           // console.log(`ERROR@looper4eachSubject set to PURCHASEPRICE:", ${item.idName} --- ${item.averageCost}`);
         } else {
-          console.log(`ERROR@looper4eachSubject - Average Cost = 0:", ${item.idName}`);
+          console.log(`ERROR@looper4eachSubject - Average Cost = 0: ${item.idName}`);
           item.averageCost = 0;
         }
       }
