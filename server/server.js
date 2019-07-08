@@ -1077,8 +1077,8 @@ async function ckpFunc(req) {
     let packingAndOtherCost = await baseKitCost(sub);
 
     let costArray = [];
-    costArray.push(sum + packingAndOtherCost * 1.15);
-    costArray.push(sumLastPurchase + packingAndOtherCost * 1.15);
+    costArray.push(sum + packingAndOtherCost * 1.25);
+    costArray.push(sumLastPurchase + packingAndOtherCost * 1.25);
     // console.log('costarray:', sumLastPurchase);
     return costArray;
   }
