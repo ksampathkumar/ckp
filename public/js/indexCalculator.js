@@ -89,20 +89,6 @@ for (i = 0; i < coll.length; i++) {
   });
 }
 
-var coll = document.getElementsByClassName("collapsible2");
-var i;
-
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function () {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.display === "block") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "block";
-    }
-  });
-}
 // Collapsible Menu Navigator //
 
 function generateLabString() {
@@ -363,12 +349,12 @@ function calcUp() {
 
 }
 
-// update cost button same as calculate
-document.querySelector('.updateCost').addEventListener('click', () => {
+// // update cost button same as calculate
+// document.querySelector('.updateCost').addEventListener('click', () => {
 
-  calcUp();
+//   calcUp();
 
-});
+// });
 
 // Clear Button Event //
 document.querySelector('.clearButton').addEventListener('click', () => {
