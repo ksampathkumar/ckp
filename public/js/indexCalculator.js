@@ -728,6 +728,7 @@ document.querySelector('.saveDraft').addEventListener('click', () => {
     }
   }
 
+  // console.log('docName:', docName);
   let check = new XMLHttpRequest();
   check.open('get', `/ckp/verifyDraft/${docName}`, true);
   let token = localStorage.getItem('x-auth_token');
@@ -805,10 +806,10 @@ document.querySelector('.saveDraft').addEventListener('click', () => {
 // save Draft Function
 function saveDraft(docName) {
 
-  let isFresh = '1!1';
-  if (window.globalData !== undefined) {
-    isFresh = `0!${window.globalData.data.name}`;
-  }
+  // let isFresh = '1!1';
+  // if (window.globalData !== undefined) {
+  //   isFresh = `0!${window.globalData.data.name}`;
+  // }
   let projected1 = document.getElementsByClassName("price_projected_1--value")[0].innerText;
   let projected2 = document.getElementsByClassName("price_projected_2--value")[0].innerText;
   let institution = document.getElementById("institution").value;
@@ -823,7 +824,7 @@ function saveDraft(docName) {
   txt = generateLabString();
 
   let draftArray = [];
-  draftArray.push(isFresh);
+  // draftArray.push(isFresh);
   draftArray.push(docName);
   draftArray.push(projected1);
   draftArray.push(projected2);
@@ -847,7 +848,7 @@ function saveDraft(docName) {
   requestDraft.onload = function () {
 
     if (requestDraft.status === 200) {
-      location.reload(); // to avoid saving the same doc
+      // location.reload(); // to avoid saving the same doc
       alert("Draft was saved");
     } else {
       console.log('error:', this.response);

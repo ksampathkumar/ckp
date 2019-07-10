@@ -4056,16 +4056,17 @@ app.post('/ckp2/draft', authenticate, async (req, res) => {
     userID: req.user._id,
     name: sDocName,
     type: 'DRAFT',
-    bActual: sop[1],
-    institution: sop[2],
-    instructor: sop[3],
-    pNumber: sop[4],
-    pDescription: sop[5],
-    estimate: sop[6],
-    uPrice: sop[7],
-    uShip: sop[8],
-    txt: sop[9],
-    notes: sop[10],
+    bLower: sop[1],
+    bUpper: sop[2],
+    institution: sop[3],
+    instructor: sop[4],
+    pNumber: sop[5],
+    pDescription: sop[6],
+    estimate: sop[7],
+    uPrice: sop[8],
+    uShip: sop[9],
+    txt: sop[10],
+    notes: sop[11],
   });
 
   // save the draft - MULTIPLE DRAFT ONE USER
@@ -4319,6 +4320,7 @@ app.get('/ckp/verifyDraft/:name', authenticate, async (req, res) => {
       // console.log('response:', `${present}/${version}`);
       res.status(200).send(JSON.stringify(`${present}/${version}/${req.user._id}`));
     } else {
+      // console.log('response:', `${present}/${version}`);
       res.status(200).send(JSON.stringify(`${present}/${version}/${req.user._id}`));
     }
   }, (e) => {
