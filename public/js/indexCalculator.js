@@ -753,7 +753,7 @@ document.querySelector('.saveDraft').addEventListener('click', () => {
 
         if (window.globalData !== undefined) {
           if (data.split('/')[2] !== window.globalData.data.userID) {
-            if (window, globalData.data.type === 'DRAFT') {
+            if (window.globalData.data.type === 'DRAFT') {
 
               docName = prompt("Enter Draft Name!");
               if (docName === null) {
@@ -848,7 +848,7 @@ function saveDraft(docName) {
   requestDraft.onload = function () {
 
     if (requestDraft.status === 200) {
-      // location.reload(); // to avoid saving the same doc
+      location.reload(); // to avoid saving the same doc
       alert("Draft was saved");
     } else {
       console.log('error:', this.response);
@@ -1020,7 +1020,7 @@ function sop() {
 
             if (data.split('/')[2] !== window.globalData.data.userID) {
 
-              if (window, globalData.data.type === 'PROPOSAL') {
+              if (window.globalData.data.type === 'PROPOSAL') {
 
                 docName = prompt("Enter Proposal Name!");
                 if (docName === null) {
