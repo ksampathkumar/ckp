@@ -48,10 +48,10 @@ var {
 // EXPRESS and APP. PORT //
 app.use(express.static(publicPath));
 
-const min = 20000;
-const max = 30000;
-const port = Math.floor(Math.random() * (max - min)) + min;
-// const port = 25000;
+// const min = 20000;
+// const max = 30000;
+// const port = Math.floor(Math.random() * (max - min)) + min;
+const port = 25000;
 
 const jwtLogin = require('jwt-login');
 
