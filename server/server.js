@@ -3088,71 +3088,131 @@ async function ckpFunc(req) {
 
       switch (subject[0]) {
         case 'gp':
-          gp.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            gp.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'gc':
-          gc.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            gc.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'ib':
-          if (subject.length > 2) {
+          if (subject.length > 2 && !subject[2].startsWith('v') && !subject[2].startsWith('d')) {
             ib.push(-subject[2]);
-          } else {
+          } else if (subject.length == 2 && !subject[1].startsWith('v') && !subject[1].startsWith('d')) {
             ib.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
           }
           break;
         case 'ap':
-          if (subject.length > 2) {
+          if (subject.length > 2 && !subject[2].startsWith('v') && !subject[2].startsWith('d')) {
             ap.push(-subject[2]);
-          } else {
+          } else if (subject.length == 2 && !subject[1].startsWith('v') && !subject[1].startsWith('d')) {
             ap.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
           }
           break;
         case 'mb':
-          mb.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            mb.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'ic':
-          ic.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            ic.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'as':
-          ast.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            ast.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'gb':
-          if (subject.length > 2) {
+          if (subject.length > 2 && !subject[2].startsWith('v') && !subject[2].startsWith('d')) {
             gb.push(-subject[2]);
-          } else {
+          } else if (subject.length == 2 && !subject[1].startsWith('v') && !subject[1].startsWith('d')) {
             gb.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
           }
           break;
         case 'es':
-          es.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            es.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'fs':
-          fs.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            fs.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'ip':
-          ip.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            ip.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'hb':
-          if (subject.length > 2) {
+          if (subject.length > 2 && !subject[2].startsWith('v') && !subject[2].startsWith('d')) {
             hb.push(-subject[2]);
-          } else {
+          } else if (subject.length == 2 && !subject[1].startsWith('v') && !subject[1].startsWith('d')) {
             hb.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
           }
           break;
         case 'hg':
-          hg.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            hg.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'sg':
-          sg.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            sg.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'bg':
-          bg.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            bg.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'rm':
-          rm.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            rm.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         case 'pt':
-          pt.push(subject[1]);
+          if (!subject[1].startsWith('v')) {
+            pt.push(subject[1]);
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
           break;
         default:
           console.log("ERROR@ckpProcessor2:", ids[i]);
@@ -3687,7 +3747,7 @@ app.post('/ckp1/savePartial', authenticate, async (req, res) => {
 
 });
 
-// 2 // route 5 - Sales - for saving the proposal --- COMPLETE & TESTING!!! ------------------------------------------------------------------------------------------
+// 2 // route 5 - Sales - for saving the proposal --- COMPLETE  ------------------------------------------------------------------------------------------
 app.post('/ckp2/save', authenticate, async (req, res) => {
 
   // call the ckpFunc() from this endpoint, get the results. Process the results to generate the proposal pdf, bom, packing list and save it in mongoDB.
@@ -4024,7 +4084,7 @@ app.post('/ckp1/draft', authenticate, async (req, res) => {
 
 });
 
-// 2 // route 7 - Sales - for saving the draft --- COMPLETE & TESTING!!! ---------------------------------------------------------------------------------------------
+// 2 // route 7 - Sales - for saving the draft --- COMPLETE  ---------------------------------------------------------------------------------------------
 app.post('/ckp2/draft', authenticate, async (req, res) => {
 
   let cdata = req.body;

@@ -8,7 +8,8 @@ validateRequest.setRequestHeader('x-auth', token);
 validateRequest.onload = function () {
   if (validateRequest.status === 200) {
     let userDets = JSON.parse(this.response);
-    if (userDets.currentRole !== 1) {
+    // console.log(userDets);
+    if (userDets.role !== 0) {
       alert('Please Change Your Role to Access the Page');
       location.href = 'indexCalculator_admin.html';
     } else {

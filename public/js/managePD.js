@@ -14,7 +14,8 @@ validateRequest.setRequestHeader('x-auth', token);
 validateRequest.onload = function () {
     if (validateRequest.status === 200) {
         userDets = JSON.parse(this.response);
-        if (userDets.role !== 0 || userDets.currentRole !== 1) {
+        // console.log(userDets);
+        if (userDets.role !== 0) {
             var sAdmin = document.getElementsByClassName("admin");
             while (sAdmin.length > 0) {
                 sAdmin[0].parentNode.removeChild(sAdmin[0]);
@@ -30,17 +31,6 @@ validateRequest.onload = function () {
 validateRequest.send();
 
 // ******** Static to Dynamic page ******* //
-
-startTime();
-
-// DISPLAY TIME
-function startTime() {
-    var today = new Date();
-    document.getElementById('time').innerHTML =
-        today.toLocaleString();
-    var t = setTimeout(startTime, 500);
-}
-
 
 // Logout
 function logout() {
@@ -93,7 +83,7 @@ draftRequest1.onload = function () {
             htmlTemp = htmlTemp.replace('%docName%', element.name);
             typeHtml = typeHtml + htmlTemp;
         });
-        document.querySelector('.sright_col').insertAdjacentHTML('beforeend', typeHtml);
+        document.querySelector('.selfDraft_list').insertAdjacentHTML('beforeend', typeHtml);
 
     } else if (draftRequest1.status === 204) {
 
@@ -128,7 +118,7 @@ proposalRequest1.onload = function () {
             htmlTemp = htmlTemp.replace('%docName%', element.name);
             typeHtml = typeHtml + htmlTemp;
         });
-        document.querySelector('.sleft_col').insertAdjacentHTML('beforeend', typeHtml);
+        document.querySelector('.selfProp_list').insertAdjacentHTML('beforeend', typeHtml);
 
     } else if (proposalRequest1.status === 204) {
 
@@ -163,7 +153,7 @@ draftRequest2.onload = function () {
             htmlTemp = htmlTemp.replace('%docName%', element.name);
             typeHtml = typeHtml + htmlTemp;
         });
-        document.querySelector('.oright_col').insertAdjacentHTML('beforeend', typeHtml);
+        document.querySelector('.othersDraft_list').insertAdjacentHTML('beforeend', typeHtml);
 
     } else if (draftRequest2.status === 204) {
 
@@ -198,7 +188,7 @@ proposalRequest2.onload = function () {
             htmlTemp = htmlTemp.replace('%docName%', element.name);
             typeHtml = typeHtml + htmlTemp;
         });
-        document.querySelector('.oleft_col').insertAdjacentHTML('beforeend', typeHtml);
+        document.querySelector('.othersProp_list').insertAdjacentHTML('beforeend', typeHtml);
 
     } else if (proposalRequest2.status === 204) {
 

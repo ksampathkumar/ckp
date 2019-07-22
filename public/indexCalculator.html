@@ -11,18 +11,22 @@
 
 <body>
 
-    <h2>
-        <div id="time"></div>
-    </h2>
+
     <button type="button" onclick="logout()" class="logout">Logout</button>
     <button type="button" onclick="switchUI()" class="switchUI">SWITCH</button>
-    <label id="username"></label>
+    <label style="font-size: 25px; color:#00A1DF; font-weight: 700;" id="username"></label>
     <button type="button" onclick="window.location='managePD.html';" class="managepd">Proposal/Draft</button>
+
+    <!-- <img src="images/corner_ribbon.png" alt="ESL" class="esl"> -->
 
     <div class="top">
 
-        <div class="logocontainer">
-            <img src="images/eslLogo.jpg" alt="ESL" class="esl">
+        <img src="images/logo.png" alt="ESL" class="esl">
+        <!-- <div class="page_title">
+            Custom Kit Pricing Generator
+        </div> -->
+        <!-- <div class="logocontainer">
+            <img src="images/corner_ribbon.png" alt="ESL" class="esl">
         </div>
 
         <div class="price">
@@ -30,19 +34,10 @@
                 eScience Labs Kit<span class="price_title--kit"></span>:
             </div>
 
-            <!-- <div class="price_cost clearfix">
-                <div class="price_cost--text">Actual</div>
-                <div class="right">
-                    <div class="price_cost--value">100.00</div>
-                    <div class="price_cost--percentage">&nbsp;</div>
-                </div>
-            </div> -->
-
             <div class="price_projected_1 clearfix">
                 <div class="price_projected_1--text">Projected Lower</div>
                 <div class="right clearfix">
                     <div class="price_projected_1--value">0</div>
-                    <!-- <div class="price_projected_1--percentage">35%</div> -->
                 </div>
             </div>
 
@@ -50,560 +45,1079 @@
                 <div class="price_projected_2--text">Projected Upper</div>
                 <div class="right clearfix">
                     <div class="price_projected_2--value">0</div>
-                     <!-- <div class="price_projected_2--percentage">31%</div> -->
                 </div>
             </div>
-        </div>
+        </div> -->
 
     </div>
 
-
+    <!-- <p>&nbsp;</p> -->
 
     <div class="bottom">
 
         <div class="container2 clearfix">
 
-            <div class="subjects">
-                <h2 class="subjects_title">Subjects</h2>
+            <div class="subjects_cart">
 
-                <div class="subjects_list">
+                <div class="row">
+                    <h2 class="subjects_title">Subjects</h2>
 
-                    <h2 <button class="collapsible">2nd Edition General Physics
-                        <input name="kitVersion" type="checkbox" value="gp-v1" onclick="kitVersion(this)"> Version 1
-                        <input name="kitVersion" type="checkbox" value="gp-v2" onclick="kitVersion(this)"> Version 2
-                        <input name="kitVersion" type="checkbox" value="gp-v3" onclick="kitVersion(this)"> Version 3
-                        </button></h2>
+                    <div class="column1">
 
-                    <div class="content">
-                        <input type="checkbox" name="gp" value="gp-1"> Lab 1: Introduction to Science<br>
-                        <input type="checkbox" name="gp" value="gp-2"> Lab 2: General Lab Safety<br>
-                        <input type="checkbox" name="gp" value="gp-3"> Lab 3: Measurements and Uncertainty<br>
-                        <input type="checkbox" name="gp" value="gp-4"> Lab 4: 1-D Kinematics<br>
-                        <input type="checkbox" name="gp" value="gp-5"> Lab 5: 2-D Kinematics and Projectile Motion<br>
-                        <input type="checkbox" name="gp" value="gp-6"> Lab 6: Newton’s Laws<br>
-                        <input type="checkbox" name="gp" value="gp-7"> Lab 7: Circular Motion<br>
-                        <input type="checkbox" name="gp" value="gp-8"> Lab 8: Gravity<br>
-                        <input type="checkbox" name="gp" value="gp-9"> Lab 9: Conservation of Energy<br>
-                        <input type="checkbox" name="gp" value="gp-10"> Lab 10: Conservation of Momentum<br>
-                        <input type="checkbox" name="gp" value="gp-11"> Lab 11: Torque and Static Equilibrium<br>
-                        <input type="checkbox" name="gp" value="gp-12"> Lab 12: Buoyant Force and Archimedes
-                        Principle<br>
-                        <input type="checkbox" name="gp" value="gp-13"> Lab 13: Simple Harmonic Motion<br>
-                        <input type="checkbox" name="gp" value="gp-14"> Lab 14: Properties of Waves<br>
-                        <input type="checkbox" name="gp" value="gp-15"> Lab 15: Ideal Gas Law<br>
-                        <input type="checkbox" name="gp" value="gp-16"> Lab 16: First Law of Thermodynamics<br>
-                        <input type="checkbox" name="gp" value="gp-17"> Lab 17: Second Law of Thermodynamics and
-                        Entropy<br>
-                        <input type="checkbox" name="gp" value="gp-18"> Lab 18: Electric Charge and Coulomb’s Law<br>
-                        <input type="checkbox" name="gp" value="gp-19"> Lab 19: Electric Field and Potential<br>
-                        <input type="checkbox" name="gp" value="gp-20"> Lab 20: Gauss’s Law<br>
-                        <input type="checkbox" name="gp" value="gp-21"> Lab 21: Capacitance<br>
-                        <input type="checkbox" name="gp" value="gp-22"> Lab 22: Resistivity and Ohm’s Law<br>
-                        <input type="checkbox" name="gp" value="gp-23"> Lab 23: Kirchhoff’s Laws<br>
-                        <input type="checkbox" name="gp" value="gp-24"> Lab 24: Magnetic Forces and Fields<br>
-                        <input type="checkbox" name="gp" value="gp-25"> Lab 25: Faraday’s Law<br>
-                        <input type="checkbox" name="gp" value="gp-26"> Lab 26: Snell’s Law and Total Internal
-                        Reflection<br>
-                        <input type="checkbox" name="gp" value="gp-27"> Lab 27: Interference<br>
-                        <input type="checkbox" name="gp" value="gp-28"> Lab 28: Geometric Optics, Ray Tracing, and Image
-                        Formation<br>
+                        <div class="subjects_list">
+                            <h2 <button class="collapsible"><span class='icon-up'></span> General Physics
+                                </button></h2>
 
+                            <div class="content">
+
+                                <input name="gp" type="checkbox" id="gp-v1" value="gp-v1" onclick="kitVersion(this)">
+                                <label for="checkgbox">Version 1</label><br>
+                                <input name="gp" type="checkbox" id="gp-v2" value="gp-v2" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 2</label><br>
+                                <input name="gp" type="checkbox" id="gp-v3" value="gp-v3" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 3</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+                                <div class="content">
+                                    <input type="checkbox" name="gp" id="gp-1" value="gp-1"> Lab 1: Introduction to
+                                    Science<br>
+                                    <input type="checkbox" name="gp" id="gp-2" value="gp-2"> Lab 2: General Lab
+                                    Safety<br>
+                                    <input type="checkbox" name="gp" id="gp-3" value="gp-3"> Lab 3: Measurements and
+                                    Uncertainty<br>
+                                    <input type="checkbox" name="gp" id="gp-4" value="gp-4"> Lab 4: 1-D Kinematics<br>
+                                    <input type="checkbox" name="gp" id="gp-5" value="gp-5"> Lab 5: 2-D Kinematics and
+                                    Projectile
+                                    Motion<br>
+                                    <input type="checkbox" name="gp" id="gp-6" value="gp-6"> Lab 6: Newton’s Laws<br>
+                                    <input type="checkbox" name="gp" id="gp-7" value="gp-7"> Lab 7: Circular Motion<br>
+                                    <input type="checkbox" name="gp" id="gp-8" value="gp-8"> Lab 8: Gravity<br>
+                                    <input type="checkbox" name="gp" id="gp-9" value="gp-9"> Lab 9: Conservation of
+                                    Energy<br>
+                                    <input type="checkbox" name="gp" id="gp-10" value="gp-10"> Lab 10: Conservation of
+                                    Momentum<br>
+                                    <input type="checkbox" name="gp" id="gp-11" value="gp-11"> Lab 11: Torque and Static
+                                    Equilibrium<br>
+                                    <input type="checkbox" name="gp" id="gp-12" value="gp-12"> Lab 12: Buoyant Force and
+                                    Archimedes
+                                    Principle<br>
+                                    <input type="checkbox" name="gp" id="gp-13" value="gp-13"> Lab 13: Simple Harmonic
+                                    Motion<br>
+                                    <input type="checkbox" name="gp" id="gp-14" value="gp-14"> Lab 14: Properties of
+                                    Waves<br>
+                                    <input type="checkbox" name="gp" id="gp-15" value="gp-15"> Lab 15: Ideal Gas Law<br>
+                                    <input type="checkbox" name="gp" id="gp-16" value="gp-16"> Lab 16: First Law of
+                                    Thermodynamics<br>
+                                    <input type="checkbox" name="gp" id="gp-17" value="gp-17"> Lab 17: Second Law of
+                                    Thermodynamics
+                                    and
+                                    Entropy<br>
+                                    <input type="checkbox" name="gp" id="gp-18" value="gp-18"> Lab 18: Electric Charge
+                                    and
+                                    Coulomb’s
+                                    Law<br>
+                                    <input type="checkbox" name="gp" id="gp-19" value="gp-19"> Lab 19: Electric Field
+                                    and
+                                    Potential<br>
+                                    <input type="checkbox" name="gp" id="gp-20" value="gp-20"> Lab 20: Gauss’s Law<br>
+                                    <input type="checkbox" name="gp" id="gp-21" value="gp-21"> Lab 21: Capacitance<br>
+                                    <input type="checkbox" name="gp" id="gp-22" value="gp-22"> Lab 22: Resistivity and
+                                    Ohm’s
+                                    Law<br>
+                                    <input type="checkbox" name="gp" id="gp-23" value="gp-23"> Lab 23: Kirchhoff’s
+                                    Laws<br>
+                                    <input type="checkbox" name="gp" id="gp-24" value="gp-24"> Lab 24: Magnetic Forces
+                                    and
+                                    Fields<br>
+                                    <input type="checkbox" name="gp" id="gp-25" value="gp-25"> Lab 25: Faraday’s Law<br>
+                                    <input type="checkbox" name="gp" id="gp-26" value="gp-26"> Lab 26: Snell’s Law and
+                                    Total
+                                    Internal
+                                    Reflection<br>
+                                    <input type="checkbox" name="gp" id="gp-27" value="gp-27"> Lab 27: Interference<br>
+                                    <input type="checkbox" name="gp" id="gp-28" value="gp-28"> Lab 28: Geometric Optics,
+                                    Ray
+                                    Tracing,
+                                    and
+                                    Image
+                                    Formation<br>
+                                </div>
+                                <br>
+
+
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 2E Intro. Physics
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="ip" type="checkbox" id="ip-v1" value="ip-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+                                <input name="ip" type="checkbox" id="ip-v2" value="ip-v2" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 2</label><br>
+                                <input name="ip" type="checkbox" id="ip-v3" value="ip-v3" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 3</label><br>
+                                <input name="ip" type="checkbox" id="ip-v4" value="ip-v4" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 4</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+                                <div class="content">
+                                    <input type="checkbox" name="ip" id="ip-1" value="ip-1"> Lab 1: Introduction to
+                                    Science<br>
+                                    <input type="checkbox" name="ip" id="ip-2" value="ip-2"> Lab 2: General Lab
+                                    Safety<br>
+                                    <input type="checkbox" name="ip" id="ip-3" value="ip-3"> Lab 3: Measurements and
+                                    Uncertainty<br>
+                                    <input type="checkbox" name="ip" id="ip-4" value="ip-4"> Lab 4: 1-D Kinematics<br>
+                                    <input type="checkbox" name="ip" id="ip-5" value="ip-5"> Lab 5: 2-D Kinematics and
+                                    Projectile
+                                    Motion<br>
+                                    <input type="checkbox" name="ip" id="ip-6" value="ip-6"> Lab 6: Newton’s Laws<br>
+                                    <input type="checkbox" name="ip" id="ip-7" value="ip-7"> Lab 7: Friction<br>
+                                    <input type="checkbox" name="ip" id="ip-8" value="ip-8"> Lab 8: Circular Motion<br>
+                                    <input type="checkbox" name="ip" id="ip-9" value="ip-9"> Lab 9: Gravity<br>
+                                    <input type="checkbox" name="ip" id="ip-10" value="ip-10"> Lab 10: Conservation of
+                                    Energy<br>
+                                    <input type="checkbox" name="ip" id="ip-11" value="ip-11"> Lab 11: Conservation of
+                                    Momentum<br>
+                                    <input type="checkbox" name="ip" id="ip-12" value="ip-12"> Lab 12: Center of
+                                    Mass<br>
+                                    <input type="checkbox" name="ip" id="ip-13" value="ip-13"> Lab 13: Buoyant Force and
+                                    Archimedes
+                                    Principle<br>
+                                    <input type="checkbox" name="ip" id="ip-14" value="ip-14"> Lab 14: Properties of
+                                    Waves<br>
+                                    <input type="checkbox" name="ip" id="ip-15" value="ip-15"> Lab 15: Ideal Gas Law<br>
+                                    <input type="checkbox" name="ip" id="ip-16" value="ip-16"> Lab 16: Latent Heat and
+                                    Specific
+                                    Heat<br>
+                                    <input type="checkbox" name="ip" id="ip-17" value="ip-17"> Lab 17: First Law of
+                                    Thermodynamics<br>
+                                    <input type="checkbox" name="ip" id="ip-18" value="ip-18"> Lab 18: Second Law of
+                                    Thermodynamics
+                                    and
+                                    Entropy<br>
+                                    <input type="checkbox" name="ip" id="ip-19" value="ip-19"> Lab 19: Electric Charge
+                                    and
+                                    Coulomb’s
+                                    Law<br>
+                                    <input type="checkbox" name="ip" id="ip-20" value="ip-20"> Lab 20: Electric Field
+                                    and
+                                    Potential<br>
+                                    <input type="checkbox" name="ip" id="ip-21" value="ip-21"> Lab 21: Capacitance<br>
+                                    <input type="checkbox" name="ip" id="ip-22" value="ip-22"> Lab 22: Resistivity and
+                                    Ohm’s
+                                    Law<br>
+                                    <input type="checkbox" name="ip" id="ip-23" value="ip-23"> Lab 23: Magnetic Forces
+                                    and
+                                    Fields<br>
+                                    <input type="checkbox" name="ip" id="ip-24" value="ip-24"> Lab 24: Snell’s Law and
+                                    Total
+                                    Internal
+                                    Reflection<br>
+                                    <input type="checkbox" name="ip" id="ip-25" value="ip-25"> Lab 25: Interference<br>
+                                    <input type="checkbox" name="ip" id="ip-26" value="ip-26"> Lab 26: Geometric Optics,
+                                    Ray
+                                    Tracing,
+                                    and
+                                    Image
+                                    Formation<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 2E General Biology
+
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="gb" type="checkbox" id="gb-v1" value="gb-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+                                <input name="gb" type="checkbox" id="gb-v2" value="gb-v2" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 2</label><br>
+                                <input name="gb" type="checkbox" id="gb-v3" value="gb-v3" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 3</label><br>
+                                <p>&nbsp;</p>
+                                <input name="gb" type="checkbox" id="gb-d1" value="gb-d1"><label for="checkbox">Remove
+                                    Dissection</label><br>
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="gb" id="gb-1" value="gb-1"> Lab 1: Introduction to
+                                    Science<br>
+                                    <input type="checkbox" name="gb" id="gb-2" value="gb-2"> Lab 2: General Lab
+                                    Safety<br>
+                                    <input type="checkbox" name="gb" id="gb-3" value="gb-3"> Lab 3: Chemical Bonding
+                                    Fundamentals<br>
+                                    <input type="checkbox" name="gb" id="gb-4" value="gb-4"> Lab 4: Introduction to the
+                                    Microscope<br>
+                                    <input type="checkbox" name="gb" id="gb-5" value="gb-5"> Lab 5: The Chemistry of
+                                    Life<br>
+                                    <input type="checkbox" name="gb" id="gb-6" value="gb-6"> Lab 6: Diffusion and
+                                    Osmosis<br>
+                                    <input type="checkbox" name="gb" id="gb-7" value="gb-7"> Lab 7: Enzyme Catalysis<br>
+                                    <input type="checkbox" name="gb" id="gb-8" value="gb-8"> Lab 8: Metabolism<br>
+                                    <input type="checkbox" name="gb" id="gb-9" value="gb-9"> Lab 9: Hierarchies of
+                                    Life<br>
+                                    <input type="checkbox" name="gb" id="gb-10" value="gb-10"> Lab 10: Unicellular
+                                    Organisms<br>
+                                    <input type="checkbox" name="gb" id="gb-11" value="gb-11"> Lab 11: Mitosis and
+                                    Meiosis<br>
+                                    <input type="checkbox" name="gb" id="gb-12" value="gb-12"> Lab 12: Transcription and
+                                    Translation<br>
+                                    <input type="checkbox" name="gb" id="gb-13" value="gb-13"> Lab 13: Genetics of
+                                    Organisms<br>
+                                    <input type="checkbox" name="gb" id="gb-14" value="gb-14"> Lab 14: Biomolecular
+                                    Techniques<br>
+                                    <input type="checkbox" name="gb" id="gb-15" value="gb-15"> Lab 15: Plant Pigments
+                                    and
+                                    Photosynthesis<br>
+                                    <input type="checkbox" name="gb" id="gb-16" value="gb-16"> Lab 16: Plant
+                                    Transpiration<br>
+                                    <input type="checkbox" name="gb" id="gb-17" value="gb-17"> Lab 17: Plant
+                                    Reproduction<br>
+                                    <input type="checkbox" name="gb" id="gb-18" value="gb-18"> Lab 18: Mammalian
+                                    Homeostasis<br>
+                                    <input type="checkbox" name="gb" id="gb-19" value="gb-19"> Lab 19: Invertebrates<br>
+                                    <input type="checkbox" name="gb" id="gb-20" value="gb-20"> Lab 20: Vertebrates<br>
+                                    <input type="checkbox" name="gb" id="gb-21" value="gb-21"> Lab 21: Animal Behavior
+                                    and
+                                    Zoology<br>
+                                    <input type="checkbox" name="gb" id="gb-22" value="gb-22"> Lab 22: Ecology of
+                                    Organisms<br>
+                                    <input type="checkbox" name="gb" id="gb-23" value="gb-23"> Lab 23: Ecological
+                                    Interactions<br>
+                                    <input type="checkbox" name="gb" id="gb-24" value="gb-24"> Lab 24: Environmental
+                                    Succession<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 2E Intro. Biology
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="ib" type="checkbox" id="ib-v1" value="ib-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+                                <input name="ib" type="checkbox" id="ib-v2" value="ib-v2" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 2</label><br>
+                                <input name="ib" type="checkbox" id="ib-v3" value="ib-v3" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 3</label><br>
+                                <input name="ib" type="checkbox" id="ib-v4" value="ib-v4" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 4</label><br>
+                                <p>&nbsp;</p>
+                                <input name="ib" type="checkbox" id="ib-d1" value="ib-d1"><label for="checkbox">Remove
+                                    Dissection</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+                                <div class="content">
+                                    <input type="checkbox" name="ib" id="ib-1" value="ib-1"> Lab 1: Introduction to
+                                    Science<br>
+                                    <input type="checkbox" name="ib" id="ib-2" value="ib-2"> Lab 2: General Lab
+                                    Safety<br>
+                                    <input type="checkbox" name="ib" id="ib-3" value="ib-3"> Lab 3: Chemical Bonding
+                                    Fundamentals<br>
+                                    <input type="checkbox" name="ib" id="ib-4" value="ib-4"> Lab 4: Introduction to the
+                                    Microscope<br>
+                                    <input type="checkbox" name="ib" id="ib-5" value="ib-5"> Lab 5: The Chemistry of
+                                    Life<br>
+                                    <input type="checkbox" name="ib" id="ib-6" value="ib-6"> Lab 6: Diffusion<br>
+                                    <input type="checkbox" name="ib" id="ib-7" value="ib-7"> Lab 7: Osmosis<br>
+                                    <input type="checkbox" name="ib" id="ib-8" value="ib-8"> Lab 8: Enzymes<br>
+                                    <input type="checkbox" name="ib" id="ib-9" value="ib-9"> Lab 9: Cellular
+                                    Respiration<br>
+                                    <input type="checkbox" name="ib" id="ib-10" value="ib-10"> Lab 10: Cell Structure
+                                    and
+                                    Function<br>
+                                    <input type="checkbox" name="ib" id="ib-11" value="ib-11"> Lab 11: Mitosis<br>
+                                    <input type="checkbox" name="ib" id="ib-12" value="ib-12"> Lab 12: Meiosis<br>
+                                    <input type="checkbox" name="ib" id="ib-13" value="ib-13"> Lab 13: DNA and RNA<br>
+                                    <input type="checkbox" name="ib" id="ib-14" value="ib-14"> Lab 14: Mendelian
+                                    Genetics<br>
+                                    <input type="checkbox" name="ib" id="ib-15" value="ib-15"> Lab 15: Population
+                                    Genetics<br>
+                                    <input type="checkbox" name="ib" id="ib-16" value="ib-16"> Lab 16: Taxonomy<br>
+                                    <input type="checkbox" name="ib" id="ib-17" value="ib-17"> Lab 17: Bacteria and
+                                    Archaea<br>
+                                    <input type="checkbox" name="ib" id="ib-18" value="ib-18"> Lab 18: Protista<br>
+                                    <input type="checkbox" name="ib" id="ib-19" value="ib-19"> Lab 19: Fungi<br>
+                                    <input type="checkbox" name="ib" id="ib-20" value="ib-20"> Lab 20: Energy and
+                                    Photosynthesis<br>
+                                    <input type="checkbox" name="ib" id="ib-21" value="ib-21"> Lab 21: Plant
+                                    Circulation<br>
+                                    <input type="checkbox" name="ib" id="ib-22" value="ib-22"> Lab 22: Plant
+                                    Reproduction<br>
+                                    <input type="checkbox" name="ib" id="ib-23" value="ib-23"> Lab 23: Invertebrates and
+                                    Vertebrates<br>
+                                    <input type="checkbox" name="ib" id="ib-24" value="ib-24"> Lab 24: Animal
+                                    Structure<br>
+                                    <input type="checkbox" name="ib" id="ib-25" value="ib-25"> Lab 25: The Circulatory
+                                    and
+                                    Respiratory
+                                    Systems<br>
+                                    <input type="checkbox" name="ib" id="ib-26" value="ib-26"> Lab 26: The Sensory and
+                                    Nervous
+                                    Systems<br>
+                                    <input type="checkbox" name="ib" id="ib-27" value="ib-27"> Lab 27: Ecology of
+                                    Organisms<br>
+                                    <input type="checkbox" name="ib" id="ib-28" value="ib-28"> Lab 28: Ecological
+                                    Interactions<br>
+                                </div>
+
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 2E Human Biology
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="hb" type="checkbox" id="hb-v1" value="hb-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+                                <p>&nbsp;</p>
+                                <input name="hb" type="checkbox" id="hb-d1" value="hb-d1"><label for="checkbox">Remove
+                                    Dissection</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="hb" id="hb-1" value="hb-1"> Lab 1: Introduction to
+                                    Science<br>
+                                    <input type="checkbox" name="hb" id="hb-2" value="hb-2"> Lab 2: Basic
+                                    Biochemistry<br>
+                                    <input type="checkbox" name="hb" id="hb-3" value="hb-3"> Lab 3: Cellular Anatomy and
+                                    Physiology<br>
+                                    <input type="checkbox" name="hb" id="hb-4" value="hb-4"> Lab 4: Metabolism<br>
+                                    <input type="checkbox" name="hb" id="hb-5" value="hb-5"> Lab 5: Cellular
+                                    Reproduction<br>
+                                    <input type="checkbox" name="hb" id="hb-6" value="hb-6"> Lab 6: Human Molecular
+                                    Genetics<br>
+                                    <input type="checkbox" name="hb" id="hb-7" value="hb-7"> Lab 7: Population Genetics
+                                    and
+                                    Evolution<br>
+                                    <input type="checkbox" name="hb" id="hb-8" value="hb-8"> Lab 8: Anatomical
+                                    Orientation<br>
+                                    <input type="checkbox" name="hb" id="hb-9" value="hb-9"> Lab 9: Developmental
+                                    Biology<br>
+                                    <input type="checkbox" name="hb" id="hb-10" value="hb-10"> Lab 10: Sensory and The
+                                    Nervous
+                                    System<br>
+                                    <input type="checkbox" name="hb" id="hb-11" value="hb-11"> Lab 11: The
+                                    Musculoskeletal
+                                    System<br>
+                                    <input type="checkbox" name="hb" id="hb-12" value="hb-12"> Lab 12: The
+                                    Cardiovascular
+                                    System<br>
+                                    <input type="checkbox" name="hb" id="hb-13" value="hb-13"> Lab 13: The Excretory
+                                    System<br>
+                                    <input type="checkbox" name="hb" id="hb-14" value="hb-14"> Lab 14: Nutrition<br>
+                                    <input type="checkbox" name="hb" id="hb-15" value="hb-15"> Lab 15: Immunology<br>
+                                    <input type="checkbox" name="hb" id="hb-16" value="hb-16"> Lab 16: Aging and
+                                    Disease<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 2E Anatomy & Physiology
+                                </button></h2>
+
+                            <div class="content">
+                                <input name="ap" type="checkbox" id="ap-v1" value="ap-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+                                <input name="ap" type="checkbox" id="ap-v2" value="ap-v2" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 2</label><br>
+                                <input name="ap" type="checkbox" id="ap-v3" value="ap-v3" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 3</label><br>
+                                <p>&nbsp;</p>
+                                <input name="ap" type="checkbox" id="ap-d1" value="ap-d1"><label for="checkbox">Remove
+                                    Dissection</label><br>
+                                <input name="ap" type="checkbox" id="ap-d2" value="ap-d2"><label for="checkbox">Remove
+                                    Pig</label><br>
+                                <input name="ap" type="checkbox" id="ap-d3" value="ap-d3"><label for="checkbox">Add
+                                    Kidney</label><br>
+                                <input name="ap" type="checkbox" id="ap-d4" value="ap-d4"><label for="checkbox">Add
+                                    Rat</label><br>
+                                <input name="ap" type="checkbox" id="ap-d5" value="ap-d5"><label for="checkbox">Add
+                                    Rabbit</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="ap" id="ap-1" value="ap-1"> Lab 1: Introduction to
+                                    Science<br>
+                                    <input type="checkbox" name="ap" id="ap-2" value="ap-2"> Lab 2: Cell Structure and
+                                    Function<br>
+                                    <input type="checkbox" name="ap" id="ap-3" value="ap-3"> Lab 3: Mitosis and
+                                    Meiosis<br>
+                                    <input type="checkbox" name="ap" id="ap-4" value="ap-4"> Lab 4: Diffusion and
+                                    Osmosis<br>
+                                    <input type="checkbox" name="ap" id="ap-5" value="ap-5"> Lab 5: Tissues and Skin<br>
+                                    <input type="checkbox" name="ap" id="ap-6" value="ap-6"> Lab 6: The Skeletal
+                                    System<br>
+                                    <input type="checkbox" name="ap" id="ap-7" value="ap-7"> Lab 7: The Muscular
+                                    System<br>
+                                    <input type="checkbox" name="ap" id="ap-8" value="ap-8"> Lab 8: The Nervous
+                                    System<br>
+                                    <input type="checkbox" name="ap" id="ap-9" value="ap-9"> Lab 9: The Endocrine
+                                    System<br>
+                                    <input type="checkbox" name="ap" id="ap-10" value="ap-10"> Lab 10: Blood and the
+                                    Heart<br>
+                                    <input type="checkbox" name="ap" id="ap-11" value="ap-11"> Lab 11: The Circulatory
+                                    System<br>
+                                    <input type="checkbox" name="ap" id="ap-12" value="ap-12"> Lab 12: The Lymphatic
+                                    System and
+                                    Immunity<br>
+                                    <input type="checkbox" name="ap" id="ap-13" value="ap-13"> Lab 13: The Respiratory
+                                    System<br>
+                                    <input type="checkbox" name="ap" id="ap-14" value="ap-14"> Lab 14: The Urinary
+                                    System<br>
+                                    <input type="checkbox" name="ap" id="ap-15" value="ap-15"> Lab 15: Electrolytes,
+                                    Water, Acids &
+                                    Bases<br>
+                                    <input type="checkbox" name="ap" id="ap-16" value="ap-16"> Lab 16: The Digestive
+                                    System<br>
+                                    <input type="checkbox" name="ap" id="ap-17" value="ap-17"> Lab 17: Nutrition<br>
+                                    <input type="checkbox" name="ap" id="ap-18" value="ap-18"> Lab 18: The Reproductive
+                                    System<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 2E General Chemistry
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="gc" type="checkbox" id="gc-v1" value="gc-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+                                <input name="gc" type="checkbox" id="gc-v2" value="gc-v2" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 2</label><br>
+                                <input name="gc" type="checkbox" id="gc-v3" value="gc-v3" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 3</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="gc" id="gc-1" value="gc-1"> Lab 1: Introduction to
+                                    Science<br>
+                                    <input type="checkbox" name="gc" id="gc-2" value="gc-2"> Lab 2: General Chemistry
+                                    Lab
+                                    Safety<br>
+                                    <input type="checkbox" name="gc" id="gc-3" value="gc-3"> Lab 3: Chemical
+                                    Nomenclature<br>
+                                    <input type="checkbox" name="gc" id="gc-4" value="gc-4"> Lab 4: Compound
+                                    Formulas<br>
+                                    <input type="checkbox" name="gc" id="gc-5" value="gc-5"> Lab 5: Qualitative Analysis
+                                    of
+                                    Reactions<br>
+                                    <input type="checkbox" name="gc" id="gc-6" value="gc-6"> Lab 6: Electron
+                                    Configuration<br>
+                                    <input type="checkbox" name="gc" id="gc-7" value="gc-7"> Lab 7: Chemical Bonding<br>
+                                    <input type="checkbox" name="gc" id="gc-8" value="gc-8"> Lab 8: Gas Laws<br>
+                                    <input type="checkbox" name="gc" id="gc-9" value="gc-9"> Lab 9: Enthalpy and
+                                    Specific Heat<br>
+                                    <input type="checkbox" name="gc" id="gc-10" value="gc-10"> Lab 10: Acid-Base
+                                    Titrations<br>
+                                    <input type="checkbox" name="gc" id="gc-11" value="gc-11"> Lab 11: Gravimetric
+                                    Analysis<br>
+                                    <input type="checkbox" name="gc" id="gc-12" value="gc-12"> Lab 12: Molar Mass and
+                                    Freezing
+                                    Point
+                                    Depression<br>
+                                    <input type="checkbox" name="gc" id="gc-13" value="gc-13"> Lab 13: Molar Volume of
+                                    Gases<br>
+                                    <input type="checkbox" name="gc" id="gc-14" value="gc-14"> Lab 14: Molar Mass and
+                                    Vapor
+                                    Density<br>
+                                    <input type="checkbox" name="gc" id="gc-15" value="gc-15"> Lab 15: Nuclear
+                                    Chemistry<br>
+                                    <input type="checkbox" name="gc" id="gc-16" value="gc-16"> Lab 16: Reaction
+                                    Rates<br>
+                                    <input type="checkbox" name="gc" id="gc-17" value="gc-17"> Lab 17: Equilibrium
+                                    Constants<br>
+                                    <input type="checkbox" name="gc" id="gc-18" value="gc-18"> Lab 18: Preparation of
+                                    Buffer
+                                    Solutions<br>
+                                    <input type="checkbox" name="gc" id="gc-19" value="gc-19"> Lab 19: Standardization
+                                    of a
+                                    Solution<br>
+                                    <input type="checkbox" name="gc" id="gc-20" value="gc-20"> Lab 20: Titration
+                                    Indicators<br>
+                                    <input type="checkbox" name="gc" id="gc-21" value="gc-21"> Lab 21:
+                                    Oxidation-Reduction
+                                    Reactions<br>
+                                    <input type="checkbox" name="gc" id="gc-22" value="gc-22"> Lab 22: Separation by
+                                    Chromatography<br>
+                                    <input type="checkbox" name="gc" id="gc-23" value="gc-23"> Lab 23: Electrochemical
+                                    Series<br>
+                                    <input type="checkbox" name="gc" id="gc-24" value="gc-24"> Lab 24: Electrochemical
+                                    Cells<br>
+                                    <input type="checkbox" name="gc" id="gc-25" value="gc-25"> Lab 25: Organic
+                                    Compounds<br>
+                                    <input type="checkbox" name="gc" id="gc-26" value="gc-26"> Lab 26: Coordination
+                                    Compounds and
+                                    Isomers<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 2E Intro. Chemistry
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="ic" type="checkbox" id="ic-v1" value="ic-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+                                <input name="ic" type="checkbox" id="ic-v2" value="ic-v2" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 2</label><br>
+                                <input name="ic" type="checkbox" id="ic-v3" value="ic-v3" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 3</label><br>
+                                <input name="ic" type="checkbox" id="ic-v4" value="ic-v4" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 4</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="ic" id="ic-1" value="ic-1"> Lab 1: Laboratory Safety
+                                    and
+                                    Procedures<br>
+                                    <input type="checkbox" name="ic" id="ic-2" value="ic-2"> Lab 2: Thinking Like a
+                                    Chemist: The
+                                    Scientific
+                                    Method<br>
+                                    <input type="checkbox" name="ic" id="ic-3" value="ic-3"> Lab 3: Data Analysis and
+                                    Graphing<br>
+                                    <input type="checkbox" name="ic" id="ic-4" value="ic-4"> Lab 4: Types of Matter<br>
+                                    <input type="checkbox" name="ic" id="ic-5" value="ic-5"> Lab 5: Exploring
+                                    Solubility<br>
+                                    <input type="checkbox" name="ic" id="ic-6" value="ic-6"> Lab 6: Examination of
+                                    Physical and
+                                    Chemical
+                                    Properties<br>
+                                    <input type="checkbox" name="ic" id="ic-7" value="ic-7"> Lab 7: Measuring Heats of
+                                    Reactions<br>
+                                    <input type="checkbox" name="ic" id="ic-8" value="ic-8"> Lab 8: Distinguishing
+                                    Between
+                                    Endothermic
+                                    and
+                                    Exothermic Reactions<br>
+                                    <input type="checkbox" name="ic" id="ic-9" value="ic-9"> Lab 9: Electron
+                                    Configuration<br>
+                                    <input type="checkbox" name="ic" id="ic-10" value="ic-10"> Lab 10: Electromagnetic
+                                    Radiation<br>
+                                    <input type="checkbox" name="ic" id="ic-11" value="ic-11"> Lab 11: Molecular
+                                    Geometry: The
+                                    VSEPR
+                                    Mode<br>
+                                    <input type="checkbox" name="ic" id="ic-12" value="ic-12"> Lab 12: Types of Chemical
+                                    Bonds<br>
+                                    <input type="checkbox" name="ic" id="ic-13" value="ic-13"> Lab 13: Bond Polarity and
+                                    Dipole
+                                    Moments<br>
+                                    <input type="checkbox" name="ic" id="ic-14" value="ic-14"> Lab 14: Evaluating
+                                    Precipitation
+                                    Reactions<br>
+                                    <input type="checkbox" name="ic" id="ic-15" value="ic-15"> Lab 15: Types of Chemical
+                                    Reactions<br>
+                                    <input type="checkbox" name="ic" id="ic-16" value="ic-16"> Lab 16:
+                                    Oxidation-Reduction
+                                    Reactions<br>
+                                    <input type="checkbox" name="ic" id="ic-17" value="ic-17"> Lab 17: Molar Mass<br>
+                                    <input type="checkbox" name="ic" id="ic-18" value="ic-18"> Lab 18: Periodic Trends
+                                    in Atomic
+                                    Properties<br>
+                                    <input type="checkbox" name="ic" id="ic-19" value="ic-19"> Lab 19: Stoichiometric
+                                    Calculations:Reactants
+                                    and Products<br>
+                                    <input type="checkbox" name="ic" id="ic-20" value="ic-20"> Lab 20: Using the Ideal
+                                    Gas Law<br>
+                                    <input type="checkbox" name="ic" id="ic-21" value="ic-21"> Lab 21: Exploring
+                                    Reaction Rates<br>
+                                    <input type="checkbox" name="ic" id="ic-22" value="ic-22"> Lab 22: Chemical Kinetics
+                                    and
+                                    Catalysis<br>
+                                    <input type="checkbox" name="ic" id="ic-23" value="ic-23"> Lab 23: The Nature of
+                                    Acids and
+                                    Bases:Exploring
+                                    the pH Scale<br>
+                                    <input type="checkbox" name="ic" id="ic-24" value="ic-24"> Lab 24: Titrations and
+                                    Equivalence
+                                    Points<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> Astronomy
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="as" type="checkbox" id="as-v1" value="as-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="as" id="as-1" value="as-1"> Lab 1: The Scientific
+                                    Method<br>
+                                    <input type="checkbox" name="as" id="as-2" value="as-2"> Lab 2: Units and Signifcant
+                                    Figures<br>
+                                    <input type="checkbox" name="as" id="as-3" value="as-3"> Lab 3: Observing the Night
+                                    Sky<br>
+                                    <input type="checkbox" name="as" id="as-4" value="as-4"> Lab 4: The Scale of the
+                                    Solar
+                                    System<br>
+                                    <input type="checkbox" name="as" id="as-5" value="as-5"> Lab 5: Our Place in the
+                                    Universe<br>
+                                    <input type="checkbox" name="as" id="as-6" value="as-6"> Lab 6: The Sun and The
+                                    Moon<br>
+                                    <input type="checkbox" name="as" id="as-7" value="as-7"> Lab 7: Parallax<br>
+                                    <input type="checkbox" name="as" id="as-8" value="as-8"> Lab 8: Orbital Motion<br>
+                                    <input type="checkbox" name="as" id="as-9" value="as-9"> Lab 9: Planetary
+                                    Rotation<br>
+                                    <input type="checkbox" name="as" id="as-10" value="as-10"> Lab 10: Gravity<br>
+                                    <input type="checkbox" name="as" id="as-11" value="as-11"> Lab 11: The
+                                    Electromagnetic
+                                    Spectrum<br>
+                                    <input type="checkbox" name="as" id="as-12" value="as-12"> Lab 12: The Doppler
+                                    Effect<br>
+                                </div>
+
+                            </div>
+
+                            <!-- </div>
+                                activate this section if they need 3 columns
+                        <div class="column"> -->
+
+                        </div>
                     </div>
 
-                    <h2 <button class="collapsible">2nd Edition Introductory Physics
-                        <input name="kitVersion" type="checkbox" value="ip-v1" onclick="kitVersion(this)"> Version 1
-                        <input name="kitVersion" type="checkbox" value="ip-v2" onclick="kitVersion(this)"> Version 2
-                        <input name="kitVersion" type="checkbox" value="ip-v3" onclick="kitVersion(this)"> Version 3
-                        <input name="kitVersion" type="checkbox" value="ip-v4" onclick="kitVersion(this)"> Version 4
-                        </button></h2>
+                    <div class="column2">
+                        <div class="subjects_list">
 
-                    <div class="content">
-                        <input type="checkbox" name="ip" value="ip-1"> Lab 1: Introduction to Science<br>
-                        <input type="checkbox" name="ip" value="ip-2"> Lab 2: General Lab Safety<br>
-                        <input type="checkbox" name="ip" value="ip-3"> Lab 3: Measurements and Uncertainty<br>
-                        <input type="checkbox" name="ip" value="ip-4"> Lab 4: 1-D Kinematics<br>
-                        <input type="checkbox" name="ip" value="ip-5"> Lab 5: 2-D Kinematics and Projectile Motion<br>
-                        <input type="checkbox" name="ip" value="ip-6"> Lab 6: Newton’s Laws<br>
-                        <input type="checkbox" name="ip" value="ip-7"> Lab 7: Friction<br>
-                        <input type="checkbox" name="ip" value="ip-8"> Lab 8: Circular Motion<br>
-                        <input type="checkbox" name="ip" value="ip-9"> Lab 9: Gravity<br>
-                        <input type="checkbox" name="ip" value="ip-10"> Lab 10: Conservation of Energy<br>
-                        <input type="checkbox" name="ip" value="ip-11"> Lab 11: Conservation of Momentum<br>
-                        <input type="checkbox" name="ip" value="ip-12"> Lab 12: Center of Mass<br>
-                        <input type="checkbox" name="ip" value="ip-13"> Lab 13: Buoyant Force and Archimedes
-                        Principle<br>
-                        <input type="checkbox" name="ip" value="ip-14"> Lab 14: Properties of Waves<br>
-                        <input type="checkbox" name="ip" value="ip-15"> Lab 15: Ideal Gas Law<br>
-                        <input type="checkbox" name="ip" value="ip-16"> Lab 16: Latent Heat and Specific Heat<br>
-                        <input type="checkbox" name="ip" value="ip-17"> Lab 17: First Law of Thermodynamics<br>
-                        <input type="checkbox" name="ip" value="ip-18"> Lab 18: Second Law of Thermodynamics and
-                        Entropy<br>
-                        <input type="checkbox" name="ip" value="ip-19"> Lab 19: Electric Charge and Coulomb’s Law<br>
-                        <input type="checkbox" name="ip" value="ip-20"> Lab 20: Electric Field and Potential<br>
-                        <input type="checkbox" name="ip" value="ip-21"> Lab 21: Capacitance<br>
-                        <input type="checkbox" name="ip" value="ip-22"> Lab 22: Resistivity and Ohm’s Law<br>
-                        <input type="checkbox" name="ip" value="ip-23"> Lab 23: Magnetic Forces and Fields<br>
-                        <input type="checkbox" name="ip" value="ip-24"> Lab 24: Snell’s Law and Total Internal
-                        Reflection<br>
-                        <input type="checkbox" name="ip" value="ip-25"> Lab 25: Interference<br>
-                        <input type="checkbox" name="ip" value="ip-26"> Lab 26: Geometric Optics, Ray Tracing, and Image
-                        Formation<br>
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 3E Environmental Science
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="es" type="checkbox" id="es-v1" value="es-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="es" id="es-1" value="es-1"> Lab 1: Introduction to
+                                    Science<br>
+                                    <input type="checkbox" name="es" id="es-2" value="es-2"> Lab 2: Scientific
+                                    Measurements<br>
+                                    <input type="checkbox" name="es" id="es-3" value="es-3"> Lab 3: Ecosystems<br>
+                                    <input type="checkbox" name="es" id="es-4" value="es-4"> Lab 4: Ecology of
+                                    Organisms<br>
+                                    <input type="checkbox" name="es" id="es-5" value="es-5"> Lab 5: Biodiversity<br>
+                                    <input type="checkbox" name="es" id="es-6" value="es-6"> Lab 6: Population
+                                    Biology<br>
+                                    <input type="checkbox" name="es" id="es-7" value="es-7"> Lab 7: Rock and Mineral
+                                    Resources<br>
+                                    <input type="checkbox" name="es" id="es-8" value="es-8"> Lab 8: Soil Quality and
+                                    Contamination<br>
+                                    <input type="checkbox" name="es" id="es-9" value="es-9"> Lab 9: Oceans and
+                                    Coasts<br>
+                                    <input type="checkbox" name="es" id="es-10" value="es-10"> Lab 10: Water Quality and
+                                    Contamination<br>
+                                    <input type="checkbox" name="es" id="es-11" value="es-11"> Lab 11: Weather and The
+                                    Atmosphere<br>
+                                    <input type="checkbox" name="es" id="es-12" value="es-12"> Lab 12: Air Quality and
+                                    Contamination<br>
+                                    <input type="checkbox" name="es" id="es-13" value="es-13"> Lab 13: Climate
+                                    Change<br>
+                                    <input type="checkbox" name="es" id="es-14" value="es-14"> Lab 14: Energy
+                                    Resources<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> Historical Geology
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="hg" type="checkbox" id="hg-v1" value="hg-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="hg" id="hg-1" value="hg-1"> Lab 1: Introduction to
+                                    Science<br>
+                                    <input type="checkbox" name="hg" id="hg-2" value="hg-2"> Lab 2: Geologic Time and
+                                    the Solar
+                                    System<br>
+                                    <input type="checkbox" name="hg" id="hg-3" value="hg-3"> Lab 3: Geologic Dating:
+                                    Absolute and
+                                    Relative<br>
+                                    <input type="checkbox" name="hg" id="hg-4" value="hg-4"> Lab 4: Earth Materials and
+                                    Sedimentary
+                                    Rocks<br>
+                                    <input type="checkbox" name="hg" id="hg-5" value="hg-5"> Lab 5: Weathering and
+                                    Sediment
+                                    Formation<br>
+                                    <input type="checkbox" name="hg" id="hg-6" value="hg-6"> Lab 6: Environments of
+                                    Deposition<br>
+                                    <input type="checkbox" name="hg" id="hg-7" value="hg-7"> Lab 7: Stratigraphic
+                                    Correlations<br>
+                                    <input type="checkbox" name="hg" id="hg-8" value="hg-8"> Lab 8: Fossilization<br>
+                                    <input type="checkbox" name="hg" id="hg-9" value="hg-9"> Lab 9: Fossil
+                                    Identification<br>
+                                    <input type="checkbox" name="hg" id="hg-10" value="hg-10"> Lab 10: Map Reading<br>
+                                    <input type="checkbox" name="hg" id="hg-11" value="hg-11"> Lab 11: Geologic Maps<br>
+                                    <input type="checkbox" name="hg" id="hg-12" value="hg-12"> Lab 12: Plate
+                                    Tectonics<br>
+                                    <input type="checkbox" name="hg" id="hg-13" value="hg-13"> Lab 13: Evolution<br>
+                                    <input type="checkbox" name="hg" id="hg-14" value="hg-14"> Lab 14: Fossil Fuels<br>
+                                    <input type="checkbox" name="hg" id="hg-15" value="hg-15"> Lab 15: Transgressions
+                                    and
+                                    Regressions<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 2E Physical Geology Standard
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="sg" type="checkbox" id="sg-v1" value="sg-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="sg" id="sg-1" value="sg-1"> Lab 1: Building a
+                                    Planet<br>
+                                    <input type="checkbox" name="sg" id="sg-2" value="sg-2"> Lab 2: Plate Tectonics and
+                                    Earthquakes<br>
+                                    <input type="checkbox" name="sg" id="sg-3" value="sg-3"> Lab 3: Minerals<br>
+                                    <input type="checkbox" name="sg" id="sg-4" value="sg-4"> Lab 4: Igneous Rocks<br>
+                                    <input type="checkbox" name="sg" id="sg-5" value="sg-5"> Lab 5: Sedimentary
+                                    Rocks<br>
+                                    <input type="checkbox" name="sg" id="sg-6" value="sg-6"> Lab 6: Metamorphic
+                                    Rocks<br>
+                                    <input type="checkbox" name="sg" id="sg-7" value="sg-7"> Lab 7: Geologic Dating and
+                                    Fossilization<br>
+                                    <input type="checkbox" name="sg" id="sg-8" value="sg-8"> Lab 8: Weathering and
+                                    Erosion<br>
+                                    <input type="checkbox" name="sg" id="sg-9" value="sg-9"> Lab 9: Groundwater<br>
+                                    <input type="checkbox" name="sg" id="sg-10" value="sg-10"> Lab 10: Fluvial Processes
+                                    and
+                                    Landforms<br>
+                                    <input type="checkbox" name="sg" id="sg-11" value="sg-11"> Lab 11: Wind Processes
+                                    and
+                                    Landforms<br>
+                                    <input type="checkbox" name="sg" id="sg-12" value="sg-12"> Lab 12: Glacial Processes
+                                    and
+                                    Landforms<br>
+                                    <input type="checkbox" name="sg" id="sg-13" value="sg-13"> Lab 13: Topographic
+                                    Maps<br>
+                                    <input type="checkbox" name="sg" id="sg-14" value="sg-14"> Lab 14: Geologic Maps<br>
+                                    <input type="checkbox" name="sg" id="sg-15" value="sg-15"> Lab 15: Earth’s Mineral
+                                    and Energy
+                                    Resources<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 2E Physical Geology Basic
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="bg" type="checkbox" id="bg-v1" value="bg-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="bg" id="bg-1" value="bg-1"> Lab 1: Plate Tectonics and
+                                    Earthquakes<br>
+                                    <input type="checkbox" name="bg" id="bg-2" value="bg-2"> Lab 2: Minerals<br>
+                                    <input type="checkbox" name="bg" id="bg-3" value="bg-3"> Lab 3: Igneous Rocks<br>
+                                    <input type="checkbox" name="bg" id="bg-4" value="bg-4"> Lab 4: Sedimentary
+                                    Rocks<br>
+                                    <input type="checkbox" name="bg" id="bg-5" value="bg-5"> Lab 5: Metamorphic
+                                    Rocks<br>
+                                    <input type="checkbox" name="bg" id="bg-6" value="bg-6"> Lab 6: Weathering and
+                                    Erosion<br>
+                                    <input type="checkbox" name="bg" id="bg-7" value="bg-7"> Lab 7: Geologic Dating<br>
+                                    <input type="checkbox" name="bg" id="bg-8" value="bg-8"> Lab 8: Mapping<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 2E Physical Geology Rocks &
+                                Mineral
+                                </button></h2>
+
+                            <div class="content">
+                                <input name="rm" type="checkbox" id="rm-v1" value="rm-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="rm" id="rm-1" value="rm-1"> Lab 1: Plate Tectonics and
+                                    Earthquakes<br>
+                                    <input type="checkbox" name="rm" id="rm-2" value="rm-2"> Lab 2: Minerals<br>
+                                    <input type="checkbox" name="rm" id="rm-3" value="rm-3"> Lab 3: Igneous Rocks<br>
+                                    <input type="checkbox" name="rm" id="rm-4" value="rm-4"> Lab 4: Sedimentary
+                                    Rocks<br>
+                                    <input type="checkbox" name="rm" id="rm-5" value="rm-5"> Lab 5: Metamorphic
+                                    Rocks<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> 2E Microbiology
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="mb" type="checkbox" id="mb-v1" value="mb-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="mb" id="mb-1" value="mb-1"> Lab 1: Introduction to
+                                    Science<br>
+                                    <input type="checkbox" name="mb" id="mb-2" value="mb-2"> Lab 2: Microbiology Lab
+                                    Safety<br>
+                                    <input type="checkbox" name="mb" id="mb-3" value="mb-3"> Lab 3: Introduction to the
+                                    Microscope<br>
+                                    <input type="checkbox" name="mb" id="mb-4" value="mb-4"> Lab 4: Introduction to
+                                    Culturing and
+                                    Aseptic
+                                    Technique<br>
+                                    <input type="checkbox" name="mb" id="mb-5" value="mb-5"> Lab 5: Structure and
+                                    Microscopy<br>
+                                    <input type="checkbox" name="mb" id="mb-6" value="mb-6"> Lab 6: Growth of
+                                    Microorganisms<br>
+                                    <input type="checkbox" name="mb" id="mb-7" value="mb-7"> Lab 7: Quantitation of
+                                    Cultured
+                                    Microorganisms<br>
+                                    <input type="checkbox" name="mb" id="mb-8" value="mb-8"> Lab 8: Selective Media and
+                                    Agar<br>
+                                    <input type="checkbox" name="mb" id="mb-9" value="mb-9"> Lab 9: Differential and
+                                    Biochemical
+                                    Tests<br>
+                                    <input type="checkbox" name="mb" id="mb-10" value="mb-10"> Lab 10: Eukaryotic
+                                    Microbes,Parasitology,
+                                    and
+                                    Viruses<br>
+                                    <input type="checkbox" name="mb" id="mb-11" value="mb-11"> Lab 11: Food
+                                    Microbiology<br>
+                                    <input type="checkbox" name="mb" id="mb-12" value="mb-12"> Lab 12: Environmental
+                                    Microbiology
+                                    and
+                                    Water
+                                    Quality<br>
+                                    <input type="checkbox" name="mb" id="mb-13" value="mb-13"> Lab 13: Microbial
+                                    Genetics and
+                                    Genetic
+                                    Engineering<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> Forensics
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="fs" type="checkbox" id="fs-v1" value="fs-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="fs" id="fs-1" value="fs-1"> Lab 1: Evidence and Crime
+                                    Scenes<br>
+                                    <input type="checkbox" name="fs" id="fs-2" value="fs-2"> Lab 2: Fingerprinting<br>
+                                    <input type="checkbox" name="fs" id="fs-3" value="fs-3"> Lab 3: DNA<br>
+                                    <input type="checkbox" name="fs" id="fs-4" value="fs-4"> Lab 4: Blood<br>
+                                    <input type="checkbox" name="fs" id="fs-5" value="fs-5"> Lab 5: Fiber and Hair<br>
+                                    <input type="checkbox" name="fs" id="fs-6" value="fs-6"> Lab 6: Impression Evidence:
+                                    Shoes,
+                                    Tires,
+                                    Tools<br>
+                                    <input type="checkbox" name="fs" id="fs-7" value="fs-7"> Lab 7: Fractography and
+                                    Glass<br>
+                                    <input type="checkbox" name="fs" id="fs-8" value="fs-8"> Lab 8: Autopsy and Time of
+                                    Death<br>
+                                    <input type="checkbox" name="fs" id="fs-9" value="fs-9"> Lab 9: Body
+                                    Identification<br>
+                                    <input type="checkbox" name="fs" id="fs-10" value="fs-10"> Lab 10: Questioned
+                                    Documents<br>
+                                    <input type="checkbox" name="fs" id="fs-11" value="fs-11"> Lab 11: Arson<br>
+                                    <input type="checkbox" name="fs" id="fs-12" value="fs-12"> Lab 12: Toxicology<br>
+                                    <input type="checkbox" name="fs" id="fs-13" value="fs-13"> Lab 13: Firearms<br>
+                                </div>
+
+                            </div>
+
+                            <h2 <button class="collapsible"><span class='icon-up'></span> Pharmacy Technician
+                                </button></h2>
+
+                            <div class="content">
+
+                                <input name="pt" type="checkbox" id="pt-v1" value="pt-v1" onclick="kitVersion(this)">
+                                <label for="checkbox">Version 1</label><br>
+
+                                <h2 <button class="collapsible"><span class='icon-up'></span> Custom
+                                    </button></h2>
+
+                                <div class="content">
+                                    <input type="checkbox" name="pt" id="pt-1" value="pt-1"> Lab 1: Measurement<br>
+                                    <input type="checkbox" name="pt" id="pt-2" value="pt-2"> Lab 2: Equipment
+                                    Practice<br>
+                                    <input type="checkbox" name="pt" id="pt-3" value="pt-3"> Lab 3: Compounding<br>
+                                    <input type="checkbox" name="pt" id="pt-4" value="pt-4"> Lab 4: Emulsions and
+                                    Elixirs<br>
+                                    <input type="checkbox" name="pt" id="pt-5" value="pt-5"> Lab 5: Labeling and
+                                    Packing<br>
+                                    <input type="checkbox" name="pt" id="pt-6" value="pt-6"> Lab 6: Preparing
+                                    Investigational
+                                    Drugs<br>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
 
-                    <h2 <button class="collapsible">2nd Edition General Biology
-                        <input name="kitVersion" type="checkbox" value="gb-v1" onclick="kitVersion(this)"> Version 1
-                        <input name="kitVersion" type="checkbox" value="gb-v2" onclick="kitVersion(this)"> Version 2
-                        <input name="kitVersion" type="checkbox" value="gb-v3" onclick="kitVersion(this)"> Version 3
 
-                        <input name="gb-d1" type="checkbox" > REMOVE DISSECTION
-                        </button></h2>
+                    <div class="column3">
+                        <h2 class="cart_title">Cart:
+                            <div class="price_projected_2--value"></div>
+                            <div class="hypen">-</div>
+                            <div class="price_projected_1--value"></div>
+                        </h2>
+                        <div class="cart_list">
 
-                    <div class="content">
-                        <input type="checkbox" name="gb" value="gb-1"> Lab 1: Introduction to Science<br>
-                        <input type="checkbox" name="gb" value="gb-2"> Lab 2: General Lab Safety<br>
-                        <input type="checkbox" name="gb" value="gb-3"> Lab 3: Chemical Bonding Fundamentals<br>
-                        <input type="checkbox" name="gb" value="gb-4"> Lab 4: Introduction to the Microscope<br>
-                        <input type="checkbox" name="gb" value="gb-5"> Lab 5: The Chemistry of Life<br>
-                        <input type="checkbox" name="gb" value="gb-6"> Lab 6: Diffusion and Osmosis<br>
-                        <input type="checkbox" name="gb" value="gb-7"> Lab 7: Enzyme Catalysis<br>
-                        <input type="checkbox" name="gb" value="gb-8"> Lab 8: Metabolism<br>
-                        <input type="checkbox" name="gb" value="gb-9"> Lab 9: Hierarchies of Life<br>
-                        <input type="checkbox" name="gb" value="gb-10"> Lab 10: Unicellular Organisms<br>
-                        <input type="checkbox" name="gb" value="gb-11"> Lab 11: Mitosis and Meiosis<br>
-                        <input type="checkbox" name="gb" value="gb-12"> Lab 12: Transcription and Translation<br>
-                        <input type="checkbox" name="gb" value="gb-13"> Lab 13: Genetics of Organisms<br>
-                        <input type="checkbox" name="gb" value="gb-14"> Lab 14: Biomolecular Techniques<br>
-                        <input type="checkbox" name="gb" value="gb-15"> Lab 15: Plant Pigments and Photosynthesis<br>
-                        <input type="checkbox" name="gb" value="gb-16"> Lab 16: Plant Transpiration<br>
-                        <input type="checkbox" name="gb" value="gb-17"> Lab 17: Plant Reproduction<br>
-                        <input type="checkbox" name="gb" value="gb-18"> Lab 18: Mammalian Homeostasis<br>
-                        <input type="checkbox" name="gb" value="gb-19"> Lab 19: Invertebrates<br>
-                        <input type="checkbox" name="gb" value="gb-20"> Lab 20: Vertebrates<br>
-                        <input type="checkbox" name="gb" value="gb-21"> Lab 21: Animal Behavior and Zoology<br>
-                        <input type="checkbox" name="gb" value="gb-22"> Lab 22: Ecology of Organisms<br>
-                        <input type="checkbox" name="gb" value="gb-23"> Lab 23: Ecological Interactions<br>
-                        <input type="checkbox" name="gb" value="gb-24"> Lab 24: Environmental Succession<br>
-                    </div>
 
-                    <h2 <button class="collapsible">2nd Edition Introductory Biology
-                        <input name="kitVersion" type="checkbox" value="ib-v1" onclick="kitVersion(this)"> Version 1
-                        <input name="kitVersion" type="checkbox" value="ib-v2" onclick="kitVersion(this)"> Version 2
-                        <input name="kitVersion" type="checkbox" value="ib-v3" onclick="kitVersion(this)"> Version 3
-                        <input name="kitVersion" type="checkbox" value="ib-v4" onclick="kitVersion(this)"> Version 4
 
-                        <input name="ib-d1" type="checkbox" > REMOVE DISSECTION
-                        </button></h2>
+                            <!-- <h2 <button class="collapsible"><span class="icon-up"></span> Forensics
+                                </button></h2>
 
-                    <div class="content">
-                        <input type="checkbox" name="ib" value="ib-1"> Lab 1: Introduction to Science<br>
-                        <input type="checkbox" name="ib" value="ib-2"> Lab 2: General Lab Safety<br>
-                        <input type="checkbox" name="ib" value="ib-3"> Lab 3: Chemical Bonding Fundamentals<br>
-                        <input type="checkbox" name="ib" value="ib-4"> Lab 4: Introduction to the Microscope<br>
-                        <input type="checkbox" name="ib" value="ib-5"> Lab 5: The Chemistry of Life<br>
-                        <input type="checkbox" name="ib" value="ib-6"> Lab 6: Diffusion<br>
-                        <input type="checkbox" name="ib" value="ib-7"> Lab 7: Osmosis<br>
-                        <input type="checkbox" name="ib" value="ib-8"> Lab 8: Enzymes<br>
-                        <input type="checkbox" name="ib" value="ib-9"> Lab 9: Cellular Respiration<br>
-                        <input type="checkbox" name="ib" value="ib-10"> Lab 10: Cell Structure and Function<br>
-                        <input type="checkbox" name="ib" value="ib-11"> Lab 11: Mitosis<br>
-                        <input type="checkbox" name="ib" value="ib-12"> Lab 12: Meiosis<br>
-                        <input type="checkbox" name="ib" value="ib-13"> Lab 13: DNA and RNA<br>
-                        <input type="checkbox" name="ib" value="ib-14"> Lab 14: Mendelian Genetics<br>
-                        <input type="checkbox" name="ib" value="ib-15"> Lab 15: Population Genetics<br>
-                        <input type="checkbox" name="ib" value="ib-16"> Lab 16: Taxonomy<br>
-                        <input type="checkbox" name="ib" value="ib-17"> Lab 17: Bacteria and Archaea<br>
-                        <input type="checkbox" name="ib" value="ib-18"> Lab 18: Protista<br>
-                        <input type="checkbox" name="ib" value="ib-19"> Lab 19: Fungi<br>
-                        <input type="checkbox" name="ib" value="ib-20"> Lab 20: Energy and Photosynthesis<br>
-                        <input type="checkbox" name="ib" value="ib-21"> Lab 21: Plant Circulation<br>
-                        <input type="checkbox" name="ib" value="ib-22"> Lab 22: Plant Reproduction<br>
-                        <input type="checkbox" name="ib" value="ib-23"> Lab 23: Invertebrates and Vertebrates<br>
-                        <input type="checkbox" name="ib" value="ib-24"> Lab 24: Animal Structure<br>
-                        <input type="checkbox" name="ib" value="ib-25"> Lab 25: The Circulatory and Respiratory
-                        Systems<br>
-                        <input type="checkbox" name="ib" value="ib-26"> Lab 26: The Sensory and Nervous Systems<br>
-                        <input type="checkbox" name="ib" value="ib-27"> Lab 27: Ecology of Organisms<br>
-                        <input type="checkbox" name="ib" value="ib-28"> Lab 28: Ecological Interactions<br>
+                            <div class="content">
 
-                    </div>
+                                <div class="lab clearfix" id="gp-6">
+                                    <div class="labName">Lab 6: Newton’s Laws</div>
+                                    <div class="right clearfix">
+                                        <div class="lab_delete">
+                                            <button onclick="labDelete(this)" class="lab_delete--btn">
+                                                <i class="ion-ios-close-outline"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <h2 <button class="collapsible">2nd Edition Human Biology
-                        <input name="kitVersion" type="checkbox" value="hb-v1" onclick="kitVersion(this)"> Version 1
+                            </div> -->
 
-                        <input name="hb-d1" type="checkbox" > REMOVE DISSECTION
-                        </button></h2>
 
-                    <div class="content">
-                        <input type="checkbox" name="hb" value="hb-1"> Lab 1: Introduction to Science<br>
-                        <input type="checkbox" name="hb" value="hb-2"> Lab 2: Basic Biochemistry<br>
-                        <input type="checkbox" name="hb" value="hb-3"> Lab 3: Cellular Anatomy and Physiology<br>
-                        <input type="checkbox" name="hb" value="hb-4"> Lab 4: Metabolism<br>
-                        <input type="checkbox" name="hb" value="hb-5"> Lab 5: Cellular Reproduction<br>
-                        <input type="checkbox" name="hb" value="hb-6"> Lab 6: Human Molecular Genetics<br>
-                        <input type="checkbox" name="hb" value="hb-7"> Lab 7: Population Genetics and Evolution<br>
-                        <input type="checkbox" name="hb" value="hb-8"> Lab 8: Anatomical Orientation<br>
-                        <input type="checkbox" name="hb" value="hb-9"> Lab 9: Developmental Biology<br>
-                        <input type="checkbox" name="hb" value="hb-10"> Lab 10: Sensory and The Nervous System<br>
-                        <input type="checkbox" name="hb" value="hb-11"> Lab 11: The Musculoskeletal System<br>
-                        <input type="checkbox" name="hb" value="hb-12"> Lab 12: The Cardiovascular System<br>
-                        <input type="checkbox" name="hb" value="hb-13"> Lab 13: The Excretory System<br>
-                        <input type="checkbox" name="hb" value="hb-14"> Lab 14: Nutrition<br>
-                        <input type="checkbox" name="hb" value="hb-15"> Lab 15: Immunology<br>
-                        <input type="checkbox" name="hb" value="hb-16"> Lab 16: Aging and Disease<br>
-                    </div>
 
-                    <h2 <button class="collapsible">2nd Edition Anatomy and Physiology
-                        <input name="kitVersion" type="checkbox" value="ap-v1" onclick="kitVersion(this)"> Version 1
-                        <input name="kitVersion" type="checkbox" value="ap-v2" onclick="kitVersion(this)"> Version 2
-                        <input name="kitVersion" type="checkbox" value="ap-v3" onclick="kitVersion(this)"> Version 3
+                        </div>
 
-                        <input name="ap-d1" type="checkbox" > REMOVE DISSECTION
-                        <input name="ap-d2" type="checkbox" > REMOVE PIG
-                        <input name="ap-d3" type="checkbox" > ADD KIDNEY
-                        <input name="ap-d4" type="checkbox" > ADD RAT
-                        <input name="ap-d5" type="checkbox" > ADD RABBIT
-                        
-                        </button></h2>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
 
-                    <div class="content">
-                        <input type="checkbox" name="ap" value="ap-1"> Lab 1: Introduction to Science<br>
-                        <input type="checkbox" name="ap" value="ap-2"> Lab 2: Cell Structure and Function<br>
-                        <input type="checkbox" name="ap" value="ap-3"> Lab 3: Mitosis and Meiosis<br>
-                        <input type="checkbox" name="ap" value="ap-4"> Lab 4: Diffusion and Osmosis<br>
-                        <input type="checkbox" name="ap" value="ap-5"> Lab 5: Tissues and Skin<br>
-                        <input type="checkbox" name="ap" value="ap-6"> Lab 6: The Skeletal System<br>
-                        <input type="checkbox" name="ap" value="ap-7"> Lab 7: The Muscular System<br>
-                        <input type="checkbox" name="ap" value="ap-8"> Lab 8: The Nervous System<br>
-                        <input type="checkbox" name="ap" value="ap-9"> Lab 9: The Endocrine System<br>
-                        <input type="checkbox" name="ap" value="ap-10"> Lab 10: Blood and the Heart<br>
-                        <input type="checkbox" name="ap" value="ap-11"> Lab 11: The Circulatory System<br>
-                        <input type="checkbox" name="ap" value="ap-12"> Lab 12: The Lymphatic System and Immunity<br>
-                        <input type="checkbox" name="ap" value="ap-13"> Lab 13: The Respiratory System<br>
-                        <input type="checkbox" name="ap" value="ap-14"> Lab 14: The Urinary System<br>
-                        <input type="checkbox" name="ap" value="ap-15"> Lab 15: Electrolytes, Water, Acids & Bases<br>
-                        <input type="checkbox" name="ap" value="ap-16"> Lab 16: The Digestive System<br>
-                        <input type="checkbox" name="ap" value="ap-17"> Lab 17: Nutrition<br>
-                        <input type="checkbox" name="ap" value="ap-18"> Lab 18: The Reproductive System<br>
+                        <button type="button" class="calculateButton">Calculate</button>
+                        <button type="button" class="clearButton">Clear</button>
+                        <p>&nbsp;</p>
+                        <button type="button" class="saveDraft">Save Draft</button>
+
+                        <div class="sop">
+
+                            <h2 <button class="collapsible">Sale of Proposal</h2>
+
+                            <div class="content">
+
+                                <h3 class="general_title">General Details:</h3>
+
+                                <!-- <label for="date"><b>Date:</b></label>
+                                        <input type="text" placeholder="Enter date" name="date" id="date"> -->
+
+                                <label for="institution"><b>Institution:</b></label>
+                                <input type="text" placeholder="Enter Institution Name" name="institution"
+                                    id="institution">
+
+                                <label for="instructor"><b>Instructor:</b></label>
+                                <input type="text" placeholder="Enter Instructor Name" name="instructor"
+                                    id="instructor">
+                                <p>&nbsp;</p>
+
+                                <h3 class="pricing_title">Pricing Details:</h3>
+
+                                <label for="pNumber"><b>Product Number:</b></label>
+                                <input type="text" placeholder="Enter Product Number" name="unapNumberme" id="pNumber">
+
+                                <label for="pDescription"><b>Product Description:</b></label>
+                                <input type="text" placeholder="Enter Product Description" name="pDescription"
+                                    id="pDescription">
+
+                                <label for="estimate"><b>Estimated Annual Enrolment:</b></label>
+                                <input type="text" placeholder="Enter Estimated Annual Enrollment" name="estimate"
+                                    id="estimate">
+
+                                <label for="uPrice"><b>Unit Price:</b></label>
+                                <input type="text" placeholder="Enter Unit Price" name="uPrice" id="uPrice">
+
+                                <label for="uShip"><b>Unit Shipping:</b></label>
+                                <input type="text" placeholder="Enter Unit Shipping Price" name="uShip" id="uShip">
+                                <p>&nbsp;</p>
+
+                                <h1 class="notes_title">NOTES:</h1>
+                                <textarea id=notes cols='25' rows='10'></textarea>
+
+                                <p>&nbsp;</p>
+                                <p>&nbsp;</p>
+
+                                <button type="button" onclick="sop(this)" class="generateSOP">Save and Generate
+                                    Proposal</button>
+                                <!-- <button type="button" onclick="window.location='test.docx';" class="generateSOP">Generate SOP</button> -->
+
+
+                            </div>
+                        </div>
 
                     </div>
-
-                    <h2 <button class="collapsible">2nd Edition General Chemistry
-                        <input name="kitVersion" type="checkbox" value="gc-v1" onclick="kitVersion(this)"> Version 1
-                        <input name="kitVersion" type="checkbox" value="gc-v2" onclick="kitVersion(this)"> Version 2
-                        <input name="kitVersion" type="checkbox" value="gc-v3" onclick="kitVersion(this)"> Version 3
-                        </button></h2>
-                    <div class="content">
-
-                        <input type="checkbox" name="gc" value="gc-1"> Lab 1: Introduction to Science<br>
-                        <input type="checkbox" name="gc" value="gc-2"> Lab 2: General Chemistry Lab Safety<br>
-                        <input type="checkbox" name="gc" value="gc-3"> Lab 3: Chemical Nomenclature<br>
-                        <input type="checkbox" name="gc" value="gc-4"> Lab 4: Compound Formulas<br>
-                        <input type="checkbox" name="gc" value="gc-5"> Lab 5: Qualitative Analysis of Reactions<br>
-                        <input type="checkbox" name="gc" value="gc-6"> Lab 6: Electron Configuration<br>
-                        <input type="checkbox" name="gc" value="gc-7"> Lab 7: Chemical Bonding<br>
-                        <input type="checkbox" name="gc" value="gc-8"> Lab 8: Gas Laws<br>
-                        <input type="checkbox" name="gc" value="gc-9"> Lab 9: Enthalpy and Specific Heat<br>
-                        <input type="checkbox" name="gc" value="gc-10"> Lab 10: Acid-Base Titrations<br>
-                        <input type="checkbox" name="gc" value="gc-11"> Lab 11: Gravimetric Analysis<br>
-                        <input type="checkbox" name="gc" value="gc-12"> Lab 12: Molar Mass and Freezing Point
-                        Depression<br>
-                        <input type="checkbox" name="gc" value="gc-13"> Lab 13: Molar Volume of Gases<br>
-                        <input type="checkbox" name="gc" value="gc-14"> Lab 14: Molar Mass and Vapor Density<br>
-                        <input type="checkbox" name="gc" value="gc-15"> Lab 15: Nuclear Chemistry<br>
-                        <input type="checkbox" name="gc" value="gc-16"> Lab 16: Reaction Rates<br>
-                        <input type="checkbox" name="gc" value="gc-17"> Lab 17: Equilibrium Constants<br>
-                        <input type="checkbox" name="gc" value="gc-18"> Lab 18: Preparation of Buffer Solutions<br>
-                        <input type="checkbox" name="gc" value="gc-19"> Lab 19: Standardization of a Solution<br>
-                        <input type="checkbox" name="gc" value="gc-20"> Lab 20: Titration Indicators<br>
-                        <input type="checkbox" name="gc" value="gc-21"> Lab 21: Oxidation-Reduction Reactions<br>
-                        <input type="checkbox" name="gc" value="gc-22"> Lab 22: Separation by Chromatography<br>
-                        <input type="checkbox" name="gc" value="gc-23"> Lab 23: Electrochemical Series<br>
-                        <input type="checkbox" name="gc" value="gc-24"> Lab 24: Electrochemical Cells<br>
-                        <input type="checkbox" name="gc" value="gc-25"> Lab 25: Organic Compounds<br>
-                        <input type="checkbox" name="gc" value="gc-26"> Lab 26: Coordination Compounds and Isomers<br>
-
-                    </div>
-
-                    <h2 <button class="collapsible">2nd Edition Introductory Chemistry
-                        <input name="kitVersion" type="checkbox" value="ic-v1" onclick="kitVersion(this)"> Version 1
-                        <input name="kitVersion" type="checkbox" value="ic-v2" onclick="kitVersion(this)"> Version 2
-                        <input name="kitVersion" type="checkbox" value="ic-v3" onclick="kitVersion(this)"> Version 3
-                        <input name="kitVersion" type="checkbox" value="ic-v4" onclick="kitVersion(this)"> Version 4
-                        </button></h2>
-
-                    <div class="content">
-                        <input type="checkbox" name="ic" value="ic-1"> Lab 1: Laboratory Safety and Procedures<br>
-                        <input type="checkbox" name="ic" value="ic-2"> Lab 2: Thinking Like a Chemist: The Scientific
-                        Method<br>
-                        <input type="checkbox" name="ic" value="ic-3"> Lab 3: Data Analysis and Graphing<br>
-                        <input type="checkbox" name="ic" value="ic-4"> Lab 4: Types of Matter<br>
-                        <input type="checkbox" name="ic" value="ic-5"> Lab 5: Exploring Solubility<br>
-                        <input type="checkbox" name="ic" value="ic-6"> Lab 6: Examination of Physical and Chemical
-                        Properties<br>
-                        <input type="checkbox" name="ic" value="ic-7"> Lab 7: Measuring Heats of Reactions<br>
-                        <input type="checkbox" name="ic" value="ic-8"> Lab 8: Distinguishing Between Endothermic and
-                        Exothermic Reactions<br>
-                        <input type="checkbox" name="ic" value="ic-9"> Lab 9: Electron Configuration<br>
-                        <input type="checkbox" name="ic" value="ic-10"> Lab 10: Electromagnetic Radiation<br>
-                        <input type="checkbox" name="ic" value="ic-11"> Lab 11: Molecular Geometry: The VSEPR Mode<br>
-                        <input type="checkbox" name="ic" value="ic-12"> Lab 12: Types of Chemical Bonds<br>
-                        <input type="checkbox" name="ic" value="ic-13"> Lab 13: Bond Polarity and Dipole Moments<br>
-                        <input type="checkbox" name="ic" value="ic-14"> Lab 14: Evaluating Precipitation Reactions<br>
-                        <input type="checkbox" name="ic" value="ic-15"> Lab 15: Types of Chemical Reactions<br>
-                        <input type="checkbox" name="ic" value="ic-16"> Lab 16: Oxidation-Reduction Reactions<br>
-                        <input type="checkbox" name="ic" value="ic-17"> Lab 17: Molar Mass<br>
-                        <input type="checkbox" name="ic" value="ic-18"> Lab 18: Periodic Trends in Atomic Properties<br>
-                        <input type="checkbox" name="ic" value="ic-19"> Lab 19: Stoichiometric Calculations:Reactants
-                        and Products<br>
-                        <input type="checkbox" name="ic" value="ic-20"> Lab 20: Using the Ideal Gas Law<br>
-                        <input type="checkbox" name="ic" value="ic-21"> Lab 21: Exploring Reaction Rates<br>
-                        <input type="checkbox" name="ic" value="ic-22"> Lab 22: Chemical Kinetics and Catalysis<br>
-                        <input type="checkbox" name="ic" value="ic-23"> Lab 23: The Nature of Acids and Bases:Exploring
-                        the pH Scale<br>
-                        <input type="checkbox" name="ic" value="ic-24"> Lab 24: Titrations and Equivalence Points<br>
-
-                    </div>
-
-                    <h2 <button class="collapsible">2nd Edition Astronomy
-                        <input name="kitVersion" type="checkbox" value="as-v1" onclick="kitVersion(this)"> Version 1
-                        </button></h2>
-
-                    <div class="content">
-                        <input type="checkbox" name="as" value="as-1"> Lab 1: The Scientific Method<br>
-                        <input type="checkbox" name="as" value="as-2"> Lab 2: Units and Signifcant Figures<br>
-                        <input type="checkbox" name="as" value="as-3"> Lab 3: Observing the Night Sky<br>
-                        <input type="checkbox" name="as" value="as-4"> Lab 4: The Scale of the Solar System<br>
-                        <input type="checkbox" name="as" value="as-5"> Lab 5: Our Place in the Universe<br>
-                        <input type="checkbox" name="as" value="as-6"> Lab 6: The Sun and The Moon<br>
-                        <input type="checkbox" name="as" value="as-7"> Lab 7: Parallax<br>
-                        <input type="checkbox" name="as" value="as-8"> Lab 8: Orbital Motion<br>
-                        <input type="checkbox" name="as" value="as-9"> Lab 9: Planetary Rotation<br>
-                        <input type="checkbox" name="as" value="as-10"> Lab 10: Gravity<br>
-                        <input type="checkbox" name="as" value="as-11"> Lab 11: The Electromagnetic Spectrum<br>
-                        <input type="checkbox" name="as" value="as-12"> Lab 12: The Doppler Effect<br>
-                    </div>
-
-                    <h2 <button class="collapsible">3rd Edition Environmental Science
-                        <input name="kitVersion" type="checkbox" value="es-v1" onclick="kitVersion(this)"> Version 1
-                        </button></h2>
-
-                    <div class="content">
-                        <input type="checkbox" name="es" value="es-1"> Lab 1: Introduction to Science<br>
-                        <input type="checkbox" name="es" value="es-2"> Lab 2: Scientific Measurements<br>
-                        <input type="checkbox" name="es" value="es-3"> Lab 3: Ecosystems<br>
-                        <input type="checkbox" name="es" value="es-4"> Lab 4: Ecology of Organisms<br>
-                        <input type="checkbox" name="es" value="es-5"> Lab 5: Biodiversity<br>
-                        <input type="checkbox" name="es" value="es-6"> Lab 6: Population Biology<br>
-                        <input type="checkbox" name="es" value="es-7"> Lab 7: Rock and Mineral Resources<br>
-                        <input type="checkbox" name="es" value="es-8"> Lab 8: Soil Quality and Contamination<br>
-                        <input type="checkbox" name="es" value="es-9"> Lab 9: Oceans and Coasts<br>
-                        <input type="checkbox" name="es" value="es-10"> Lab 10: Water Quality and Contamination<br>
-                        <input type="checkbox" name="es" value="es-11"> Lab 11: Weather and The Atmosphere<br>
-                        <input type="checkbox" name="es" value="es-12"> Lab 12: Air Quality and Contamination<br>
-                        <input type="checkbox" name="es" value="es-13"> Lab 13: Climate Change<br>
-                        <input type="checkbox" name="es" value="es-14"> Lab 14: Energy Resources<br>
-
-                    </div>
-
-                    <h2 <button class="collapsible">2nd Edition Historical Geology
-                        <input name="kitVersion" type="checkbox" value="hg-v1" onclick="kitVersion(this)"> Version 1
-                        </button></h2>
-
-                    <div class="content">
-                        <input type="checkbox" name="hg" value="hg-1"> Lab 1: Introduction to Science<br>
-                        <input type="checkbox" name="hg" value="hg-2"> Lab 2: Geologic Time and the Solar System<br>
-                        <input type="checkbox" name="hg" value="hg-3"> Lab 3: Geologic Dating: Absolute and Relative<br>
-                        <input type="checkbox" name="hg" value="hg-4"> Lab 4: Earth Materials and Sedimentary Rocks<br>
-                        <input type="checkbox" name="hg" value="hg-5"> Lab 5: Weathering and Sediment Formation<br>
-                        <input type="checkbox" name="hg" value="hg-6"> Lab 6: Environments of Deposition<br>
-                        <input type="checkbox" name="hg" value="hg-7"> Lab 7: Stratigraphic Correlations<br>
-                        <input type="checkbox" name="hg" value="hg-8"> Lab 8: Fossilization<br>
-                        <input type="checkbox" name="hg" value="hg-9"> Lab 9: Fossil Identification<br>
-                        <input type="checkbox" name="hg" value="hg-10"> Lab 10: Map Reading<br>
-                        <input type="checkbox" name="hg" value="hg-11"> Lab 11: Geologic Maps<br>
-                        <input type="checkbox" name="hg" value="hg-12"> Lab 12: Plate Tectonics<br>
-                        <input type="checkbox" name="hg" value="hg-13"> Lab 13: Evolution<br>
-                        <input type="checkbox" name="hg" value="hg-14"> Lab 14: Fossil Fuels<br>
-                        <input type="checkbox" name="hg" value="hg-15"> Lab 15: Transgressions and Regressions<br>
-                    </div>
-
-                    <h2 <button class="collapsible">2nd Edition Physical Geology Standard
-                        <input name="kitVersion" type="checkbox" value="sg-v1" onclick="kitVersion(this)"> Version 1
-                        </button></h2>
-
-                    <div class="content">
-                        <input type="checkbox" name="sg" value="sg-1"> Lab 1: Building a Planet<br>
-                        <input type="checkbox" name="sg" value="sg-2"> Lab 2: Plate Tectonics and Earthquakes<br>
-                        <input type="checkbox" name="sg" value="sg-3"> Lab 3: Minerals<br>
-                        <input type="checkbox" name="sg" value="sg-4"> Lab 4: Igneous Rocks<br>
-                        <input type="checkbox" name="sg" value="sg-5"> Lab 5: Sedimentary Rocks<br>
-                        <input type="checkbox" name="sg" value="sg-6"> Lab 6: Metamorphic Rocks<br>
-                        <input type="checkbox" name="sg" value="sg-7"> Lab 7: Geologic Dating and Fossilization<br>
-                        <input type="checkbox" name="sg" value="sg-8"> Lab 8: Weathering and Erosion<br>
-                        <input type="checkbox" name="sg" value="sg-9"> Lab 9: Groundwater<br>
-                        <input type="checkbox" name="sg" value="sg-10"> Lab 10: Fluvial Processes and Landforms<br>
-                        <input type="checkbox" name="sg" value="sg-11"> Lab 11: Wind Processes and Landforms<br>
-                        <input type="checkbox" name="sg" value="sg-12"> Lab 12: Glacial Processes and Landforms<br>
-                        <input type="checkbox" name="sg" value="sg-13"> Lab 13: Topographic Maps<br>
-                        <input type="checkbox" name="sg" value="sg-14"> Lab 14: Geologic Maps<br>
-                        <input type="checkbox" name="sg" value="sg-15"> Lab 15: Earth’s Mineral and Energy Resources<br>
-                    </div>
-
-                    <h2 <button class="collapsible">2nd Edition Physical Geology Basic
-                        <input name="kitVersion" type="checkbox" value="bg-v1" onclick="kitVersion(this)"> Version 1
-                        </button></h2>
-
-                    <div class="content">
-                        <input type="checkbox" name="bg" value="bg-1"> Lab 1: Plate Tectonics and Earthquakes<br>
-                        <input type="checkbox" name="bg" value="bg-2"> Lab 2: Minerals<br>
-                        <input type="checkbox" name="bg" value="bg-3"> Lab 3: Igneous Rocks<br>
-                        <input type="checkbox" name="bg" value="bg-4"> Lab 4: Sedimentary Rocks<br>
-                        <input type="checkbox" name="bg" value="bg-5"> Lab 5: Metamorphic Rocks<br>
-                        <input type="checkbox" name="bg" value="bg-6"> Lab 6: Weathering and Erosion<br>
-                        <input type="checkbox" name="bg" value="bg-7"> Lab 7: Geologic Dating<br>
-                        <input type="checkbox" name="bg" value="bg-8"> Lab 8: Mapping<br>
-                    </div>
-
-                    <h2 <button class="collapsible">2nd Edition Physical Geology Rocks & Mineral
-                        <input name="kitVersion" type="checkbox" value="rm-v1" onclick="kitVersion(this)"> Version 1
-                        </button></h2>
-
-                    <div class="content">
-                        <input type="checkbox" name="rm" value="rm-1"> Lab 1: Plate Tectonics and Earthquakes<br>
-                        <input type="checkbox" name="rm" value="rm-2"> Lab 2: Minerals<br>
-                        <input type="checkbox" name="rm" value="rm-3"> Lab 3: Igneous Rocks<br>
-                        <input type="checkbox" name="rm" value="rm-4"> Lab 4: Sedimentary Rocks<br>
-                        <input type="checkbox" name="rm" value="rm-5"> Lab 5: Metamorphic Rocks<br>
-                    </div>
-
-                    <h2 <button class="collapsible">2nd Edition Microbiology
-                        <input name="kitVersion" type="checkbox" value="mb-v1" onclick="kitVersion(this)"> Version 1
-                        </button></h2>
-
-                    <div class="content">
-                        <input type="checkbox" name="mb" value="mb-1"> Lab 1: Introduction to Science<br>
-                        <input type="checkbox" name="mb" value="mb-2"> Lab 2: Microbiology Lab Safety<br>
-                        <input type="checkbox" name="mb" value="mb-3"> Lab 3: Introduction to the Microscope<br>
-                        <input type="checkbox" name="mb" value="mb-4"> Lab 4: Introduction to Culturing and Aseptic
-                        Technique<br>
-                        <input type="checkbox" name="mb" value="mb-5"> Lab 5: Structure and Microscopy<br>
-                        <input type="checkbox" name="mb" value="mb-6"> Lab 6: Growth of Microorganisms<br>
-                        <input type="checkbox" name="mb" value="mb-7"> Lab 7: Quantitation of Cultured
-                        Microorganisms<br>
-                        <input type="checkbox" name="mb" value="mb-8"> Lab 8: Selective Media and Agar<br>
-                        <input type="checkbox" name="mb" value="mb-9"> Lab 9: Differential and Biochemical Tests<br>
-                        <input type="checkbox" name="mb" value="mb-10"> Lab 10: Eukaryotic Microbes,Parasitology, and
-                        Viruses<br>
-                        <input type="checkbox" name="mb" value="mb-11"> Lab 11: Food Microbiology<br>
-                        <input type="checkbox" name="mb" value="mb-12"> Lab 12: Environmental Microbiology and Water
-                        Quality<br>
-                        <input type="checkbox" name="mb" value="mb-13"> Lab 13: Microbial Genetics and Genetic
-                        Engineering<br>
-
-                    </div>
-
-                    <h2 <button class="collapsible">2nd Edition Forensics
-                        <input name="kitVersion" type="checkbox" value="fs-v1" onclick="kitVersion(this)"> Version 1
-                        </button></h2>
-
-                    <div class="content">
-                        <input type="checkbox" name="fs" value="fs-1"> Lab 1: Evidence and Crime Scenes<br>
-                        <input type="checkbox" name="fs" value="fs-2"> Lab 2: Fingerprinting<br>
-                        <input type="checkbox" name="fs" value="fs-3"> Lab 3: DNA<br>
-                        <input type="checkbox" name="fs" value="fs-4"> Lab 4: Blood<br>
-                        <input type="checkbox" name="fs" value="fs-5"> Lab 5: Fiber and Hair<br>
-                        <input type="checkbox" name="fs" value="fs-6"> Lab 6: Impression Evidence: Shoes, Tires,
-                        Tools<br>
-                        <input type="checkbox" name="fs" value="fs-7"> Lab 7: Fractography and Glass<br>
-                        <input type="checkbox" name="fs" value="fs-8"> Lab 8: Autopsy and Time of Death<br>
-                        <input type="checkbox" name="fs" value="fs-9"> Lab 9: Body Identification<br>
-                        <input type="checkbox" name="fs" value="fs-10"> Lab 10: Questioned Documents<br>
-                        <input type="checkbox" name="fs" value="fs-11"> Lab 11: Arson<br>
-                        <input type="checkbox" name="fs" value="fs-12"> Lab 12: Toxicology<br>
-                        <input type="checkbox" name="fs" value="fs-13"> Lab 13: Firearms<br>
-
-                    </div>
-
-                    <h2 <button class="collapsible">2nd Edition Pharmacy Technician
-                        <input name="kitVersion" type="checkbox" value="pt-v1" onclick="kitVersion(this)"> Version 1
-                        </button></h2>
-
-                    <div class="content">
-                        <input type="checkbox" name="pt" value="pt-1"> Lab 1: Measurement<br>
-                        <input type="checkbox" name="pt" value="pt-2"> Lab 2: Equipment Practice<br>
-                        <input type="checkbox" name="pt" value="pt-3"> Lab 3: Compounding<br>
-                        <input type="checkbox" name="pt" value="pt-4"> Lab 4: Emulsions and Elixirs<br>
-                        <input type="checkbox" name="pt" value="pt-5"> Lab 5: Labeling and Packing<br>
-                        <input type="checkbox" name="pt" value="pt-6"> Lab 6: Preparing Investigational Drugs<br>
-                    </div>
-
-                    <h1 class="notes_title">NOTES:</h1>
-                    <textarea id = notes cols='150' rows='25'></textarea>
 
                 </div>
 
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <button type="button" class="calculateButton">Calculate</button>
-                <button type="button" class="clearButton">Clear</button>
-                <!-- <button type="button" class="updateCost">Update Cost</button> -->
-                <button type="button" class="saveDraft">Save Draft</button>
-                <button type="button" onclick="checkAllBoxes()" class="checkAllBoxes">check all box</button>
-
             </div>
         </div>
 
     </div>
 
-    <div class="container2 clearfix">
-
-        <div class="sop">
-
-            <h2 <button class="collapsible">Sale of Proposal</h2>
-
-            <div class="content">
-
-                <h3 class="general_title">General Details:</h3>
-
-                <!-- <label for="date"><b>Date:</b></label>
-                    <input type="text" placeholder="Enter date" name="date" id="date"> -->
-
-                <label for="institution"><b>Institution:</b></label>
-                <input type="text" placeholder="Enter Institution Name" name="institution" id="institution">
-
-                <label for="instructor"><b>Instructor:</b></label>
-                <input type="text" placeholder="Enter Instructor Name" name="instructor" id="instructor">
-                <p>&nbsp;</p>
-
-                <h3 class="pricing_title">Pricing Details:</h3>
-
-                <label for="pNumber"><b>Product Number:</b></label>
-                <input type="text" placeholder="Enter Product Number" name="unapNumberme" id="pNumber">
-
-                <label for="pDescription"><b>Product Description:</b></label>
-                <input type="text" placeholder="Enter Product Description" name="pDescription" id="pDescription">
-
-                <label for="estimate"><b>Estimated Annual Enrolment:</b></label>
-                <input type="text" placeholder="Enter Estimated Annual Enrollment" name="estimate" id="estimate">
-
-                <label for="uPrice"><b>Unit Price:</b></label>
-                <input type="text" placeholder="Enter Unit Price" name="uPrice" id="uPrice">
-
-                <label for="uShip"><b>Unit Shipping:</b></label>
-                <input type="text" placeholder="Enter Unit Shipping Price" name="uShip" id="uShip">
-                <p>&nbsp;</p>
-
-
-                <button type="button" onclick="sop(this)" class="generateSOP">Save and Generate Proposal</button>
-                <!-- <button type="button" onclick="window.location='test.docx';" class="generateSOP">Generate SOP</button> -->
-
-
-            </div>
-        </div>
-    </div>
-
-    </div>
 
     <script src="js/indexCalculator.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
