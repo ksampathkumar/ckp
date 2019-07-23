@@ -3087,149 +3087,196 @@ async function ckpFunc(req) {
       let subject = await ids[i].split("-");
 
       switch (subject[0]) {
+
+        // no dissection kits
         case 'gp':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+          if (subject.length == 2 && !subject[1].startsWith('v') && !subject[1].startsWith('d')) {
             gp.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
           } else {
             console.log('somethings wrong in ckpProcessor:', subject);
           }
           break;
+
         case 'gc':
           if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
             gc.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
           } else {
             console.log('somethings wrong in ckpProcessor:', subject);
           }
           break;
+
+        case 'mb':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            mb.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
+        case 'ic':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            ic.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
+        case 'as':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            ast.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
+        case 'es':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            es.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
+        case 'fs':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            fs.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
+        case 'ip':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            ip.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
+        case 'hg':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            hg.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
+        case 'sg':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            sg.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
+        case 'bg':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            bg.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
+        case 'rm':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            rm.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
+        case 'pt':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            pt.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
+
+        // Dissection kits
         case 'ib':
           if (subject.length > 2 && !subject[2].startsWith('v') && !subject[2].startsWith('d')) {
             ib.push(-subject[2]);
           } else if (subject.length == 2 && !subject[1].startsWith('v') && !subject[1].startsWith('d')) {
             ib.push(subject[1]);
-          } else if (subject.length > 2 && subject[2].startsWith('v') && subject[2].startsWith('d')) {
+          } else if (subject.length > 2 && (subject[2].startsWith('v') || subject[2].startsWith('d'))) {
             // do nothing for this version or dissection entity
-          } else if (subject.length == 2 && subject[1].startsWith('v') && subject[1].startsWith('d')) {
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
             // do nothing for this version or dissection entity
           } else {
             console.log('somethings wrong in ckpProcessor:', subject);
           }
           break;
+
         case 'ap':
           if (subject.length > 2 && !subject[2].startsWith('v') && !subject[2].startsWith('d')) {
             ap.push(-subject[2]);
           } else if (subject.length == 2 && !subject[1].startsWith('v') && !subject[1].startsWith('d')) {
             ap.push(subject[1]);
-          } else if (subject.length > 2 && subject[2].startsWith('v') && subject[2].startsWith('d')) {
+          } else if (subject.length > 2 && (subject[2].startsWith('v') || subject[2].startsWith('d'))) {
             // do nothing for this version or dissection entity
-          } else if (subject.length == 2 && subject[1].startsWith('v') && subject[1].startsWith('d')) {
-            // do nothing for this version or dissection entity
-          } else {
-            console.log('somethings wrong in ckpProcessor:', subject);
-          }
-          break;
-        case 'mb':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            mb.push(subject[1]);
-          } else {
-            console.log('somethings wrong in ckpProcessor:', subject);
-          }
-          break;
-        case 'ic':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            ic.push(subject[1]);
-          } else {
-            console.log('somethings wrong in ckpProcessor:', subject);
-          }
-          break;
-        case 'as':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            ast.push(subject[1]);
-          } else {
-            console.log('somethings wrong in ckpProcessor:', subject);
-          }
-          break;
-        case 'gb':
-          if (subject.length > 2 && !subject[2].startsWith('v') && !subject[2].startsWith('d')) {
-            gb.push(-subject[2]);
-          } else if (subject.length == 2 && !subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            gb.push(subject[1]);
-          } else if (subject.length > 2 && subject[2].startsWith('v') && subject[2].startsWith('d')) {
-            // do nothing for this version or dissection entity
-          } else if (subject.length == 2 && subject[1].startsWith('v') && subject[1].startsWith('d')) {
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
             // do nothing for this version or dissection entity
           } else {
             console.log('somethings wrong in ckpProcessor:', subject);
           }
           break;
-        case 'es':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            es.push(subject[1]);
-          } else {
-            console.log('somethings wrong in ckpProcessor:', subject);
-          }
-          break;
-        case 'fs':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            fs.push(subject[1]);
-          } else {
-            console.log('somethings wrong in ckpProcessor:', subject);
-          }
-          break;
-        case 'ip':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            ip.push(subject[1]);
-          } else {
-            console.log('somethings wrong in ckpProcessor:', subject);
-          }
-          break;
+
         case 'hb':
           if (subject.length > 2 && !subject[2].startsWith('v') && !subject[2].startsWith('d')) {
             hb.push(-subject[2]);
           } else if (subject.length == 2 && !subject[1].startsWith('v') && !subject[1].startsWith('d')) {
             hb.push(subject[1]);
-          } else if (subject.length > 2 && subject[2].startsWith('v') && subject[2].startsWith('d')) {
+          } else if (subject.length > 2 && (subject[2].startsWith('v') || subject[2].startsWith('d'))) {
             // do nothing for this version or dissection entity
-          } else if (subject.length == 2 && subject[1].startsWith('v') && subject[1].startsWith('d')) {
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
             // do nothing for this version or dissection entity
           } else {
             console.log('somethings wrong in ckpProcessor:', subject);
           }
           break;
-        case 'hg':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            hg.push(subject[1]);
+
+        case 'gb':
+          if (subject.length > 2 && !subject[2].startsWith('v') && !subject[2].startsWith('d')) {
+            gb.push(-subject[2]);
+          } else if (subject.length == 2 && !subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            gb.push(subject[1]);
+          } else if (subject.length > 2 && (subject[2].startsWith('v') || subject[2].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
           } else {
             console.log('somethings wrong in ckpProcessor:', subject);
           }
           break;
-        case 'sg':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            sg.push(subject[1]);
-          } else {
-            console.log('somethings wrong in ckpProcessor:', subject);
-          }
-          break;
-        case 'bg':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            bg.push(subject[1]);
-          } else {
-            console.log('somethings wrong in ckpProcessor:', subject);
-          }
-          break;
-        case 'rm':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            rm.push(subject[1]);
-          } else {
-            console.log('somethings wrong in ckpProcessor:', subject);
-          }
-          break;
-        case 'pt':
-          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
-            pt.push(subject[1]);
-          } else {
-            console.log('somethings wrong in ckpProcessor:', subject);
-          }
-          break;
+
         default:
           console.log("ERROR@ckpProcessor2:", ids[i]);
           break;

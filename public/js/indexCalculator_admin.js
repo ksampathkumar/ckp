@@ -561,7 +561,7 @@ function dispPrice(BOM, dependencyTree, serverSum) {
     // htmlChildProto = '<div class="item clearfix" id="cost-%childCount%"><div class="memItem">%memItem%</div><div class="memDisplayName">%memDisplayName%</div><div class="memQuantity">%memQuantity%</div><div class="right clearfix"><div class="item_value">%item_value%</div><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
     // htmlParentProto2 = '<h2 <button class="collapsible3"><div class="item clearfix" id="cost-%bagCount%"><div class="idName">%memBag%</div><div class="displayName">%memBagDisplayName%</div><div class="qty">%qty%</div><div class="right clearfix"><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div></h2><div class="content">';
 
-    htmlParentProto = '<h2 <button class="collapsible2"><div class="item clearfix" id="cost-%itemCount%"><div class="idName">%idName%</div><div class="displayName">%displayName%</div><div class="lab">%lab%</div><div class="qty">%qty%</div><div class="right clearfix"><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div></h2>';
+    htmlParentProto = '<h2 <button class="collapsible2"><div class="item clearfix" id="cost-%itemCount%"><div class="idName">%idName%</div><div class="displayName">%displayName%</div><div class="costLab">%lab%</div><div class="qty">%qty%</div><div class="right clearfix"><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div></h2>';
     htmlChildProto = '<div class="item clearfix" id="cost-%childCount%"><div class="memItem">%memItem%</div><div class="memDisplayName">%memDisplayName%</div><div class="memQuantity">%memQuantity%</div><div class="right clearfix"><div class="item_value">%item_value%</div><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
     htmlParentProto2 = '<h2 <button class="collapsible3"><div class="item clearfix" id="cost-%bagCount%"><div class="idName">%memBag%</div><div class="displayName">%memBagDisplayName%</div><div class="qty">%qty%</div><div class="right clearfix"><div class="item_delete"><button onclick="itemDelete(this)" class="item_delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div></h2>';
 
@@ -3142,6 +3142,9 @@ function moveLabToCart() {
       cartArray.push(checkbox[v].value);
     }
   }
+
+  document.querySelector('.labCounts--value').textContent = `${cartArray.length} Labs`;
+
 
   // console.log('cartArray:', cartArray);
 

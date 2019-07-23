@@ -1739,6 +1739,8 @@ function moveLabToCart() {
     }
   }
 
+  document.querySelector('.labCounts--value').textContent = `${cartArray.length} Labs`;
+
   // console.log('cartArray:', cartArray);
 
   cartArray.forEach(lab => {

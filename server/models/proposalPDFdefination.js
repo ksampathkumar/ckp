@@ -360,7 +360,7 @@ module.exports = {
 
 
             let labs = prop.txt.split(' ');
-            let labCount = 1;
+            // let labCount = 1; // lab cont index
 
             labs.forEach(element => {
                 if (element.split('-').length === 2 && parseInt(element.split('-')[1]) < 1000) {
@@ -374,7 +374,7 @@ module.exports = {
                         fontSize: 14
                     };
                     let obj3 = {
-                        text: labCount,
+                        text: element.split('-')[1],
                         fontSize: 14
                     };
 
@@ -385,7 +385,7 @@ module.exports = {
 
                     formatDataArray.push(eachLabArray);
 
-                    labCount++;
+                    // labCount++; // lab cont index
                 }
             });
 
