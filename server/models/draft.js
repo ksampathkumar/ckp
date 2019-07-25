@@ -76,6 +76,10 @@ let DraftSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
+    notes: {
+        type: String,
+        trim: true,
+    },
     costContents: {
         type: String,
         trim: true,
@@ -84,16 +88,11 @@ let DraftSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
-    isFresh: {
-        type: String,
-        trim: true,
-    },
-    notes: {
-        type: String,
-        trim: true,
+    isPending: {
+        type: Boolean,
     }
 });
 
 let Draft = mongoose.model('Draft', DraftSchema);
-
+// console.log('exportDraft:', DraftSchema);
 module.exports = { Draft }

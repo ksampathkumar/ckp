@@ -933,6 +933,12 @@ document.querySelector('.saveDraft').addEventListener('click', () => {
 // save Draft Function
 function saveDraft(docName) {
 
+  // check if the draft is sent for pricing and if yes, make sure there is some notes.
+  if (document.getElementById('isPending').checked && document.getElementById("notes").value.length === 0) {
+    alert("Please fill in Appropriate notes as the Draft is being sent for Pricing. Explain what pricing is to be Done.");
+    return;
+  }
+
   // let isFresh = '1!1';
   // if (window.globalData !== undefined) {
   //   isFresh = `0!${window.globalData.data.name}`;
@@ -965,6 +971,10 @@ function saveDraft(docName) {
   draftArray.push(txt);
   draftArray.push(notes);
 
+  // Send Draft for Pricing
+  let isPending = document.getElementById('isPending').checked;
+  draftArray.push(isPending);
+
   // console.log("sArray:", draftArray);
 
   var requestDraft = new XMLHttpRequest();
@@ -979,6 +989,7 @@ function saveDraft(docName) {
       alert("Draft was saved");
     } else {
       console.log('error:', this.response);
+      alert('ERROR:', requestDraft.status);
     }
 
   }
@@ -1008,6 +1019,9 @@ function showPD(data) {
     document.getElementById("uPrice").value = data.uPrice;
     document.getElementById("uShip").value = data.uShip;
     document.getElementById("notes").value = data.notes;
+
+    // isPending
+    document.getElementById('isPending').checked = data.isPending;
 
     // to select the check boxes from txt
     if (data.txt.length !== 0) {
@@ -1390,26 +1404,28 @@ let m;
 for (m = 0; m < checkbox.length; m++) {
   checkbox[m].addEventListener('change', function (event) {
     // console.log(this.value);
-    if (this.value.split('-')[1].startsWith('v')) {
-      // console.log('version');
-      document.querySelector('.price_projected_1--value').textContent = "";
-      document.querySelector('.price_projected_2--value').textContent = "";
-      if (this.checked) {
+    if (this.value.split('-').length > 1) {
+      if (this.value.split('-')[1].startsWith('v')) {
+        // console.log('version');
+        document.querySelector('.price_projected_1--value').textContent = "";
+        document.querySelector('.price_projected_2--value').textContent = "";
+        if (this.checked) {
 
+          // function to move the lab to the cart
+          moveLabToCart();
+
+        } else {
+          document.querySelector('.cart_list').textContent = '';
+          clearCheckBoxes();
+        }
+      } else {
+        // console.log('plain');
+        document.querySelector('.price_projected_1--value').textContent = "";
+        document.querySelector('.price_projected_2--value').textContent = "";
         // function to move the lab to the cart
         moveLabToCart();
 
-      } else {
-        document.querySelector('.cart_list').textContent = '';
-        clearCheckBoxes();
       }
-    } else {
-      // console.log('plain');
-      document.querySelector('.price_projected_1--value').textContent = "";
-      document.querySelector('.price_projected_2--value').textContent = "";
-      // function to move the lab to the cart
-      moveLabToCart();
-
     }
   });
 }
@@ -1734,12 +1750,14 @@ function moveLabToCart() {
   let cartLabs = new Map();
   let v;
   for (v = 0; v < checkbox.length; v++) {
-    if (checkbox[v].checked && !checkbox[v].value.split('-')[1].startsWith('v') && !checkbox[v].value.split('-')[1].startsWith('d')) {
-      cartArray.push(checkbox[v].value);
+    if (checkbox[v].value.split('-').length > 1) {
+      if (checkbox[v].checked && !checkbox[v].value.split('-')[1].startsWith('v') && !checkbox[v].value.split('-')[1].startsWith('d')) {
+        cartArray.push(checkbox[v].value);
+      }
     }
   }
 
-  document.querySelector('.labCounts--value').textContent = `${cartArray.length} Labs`;
+  document.querySelector('.labCounts--value').textContent = `${cartArray.length}`;
 
   // console.log('cartArray:', cartArray);
 

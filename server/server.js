@@ -3810,7 +3810,7 @@ app.post('/ckp1/savePartial', authenticate, async (req, res) => {
 
 });
 
-// 2 // route 5 - Sales - for saving the proposal --- COMPLETE  ------------------------------------------------------------------------------------------
+// 2 // route 5 - Sales - for saving the proposal  ------------------------------------------------------------------------------------------
 app.post('/ckp2/save', authenticate, async (req, res) => {
 
   // call the ckpFunc() from this endpoint, get the results. Process the results to generate the proposal pdf, bom, packing list and save it in mongoDB.
@@ -4147,7 +4147,7 @@ app.post('/ckp1/draft', authenticate, async (req, res) => {
 
 });
 
-// 2 // route 7 - Sales - for saving the draft --- COMPLETE  ---------------------------------------------------------------------------------------------
+// 2 // route 7 - Sales - for saving the draft  ---------------------------------------------------------------------------------------------
 app.post('/ckp2/draft', authenticate, async (req, res) => {
 
   let cdata = req.body;
@@ -4159,6 +4159,8 @@ app.post('/ckp2/draft', authenticate, async (req, res) => {
   // console.log("\nremoved:", cdata.drCost);
 
   let sop = JSON.parse(cdata.dSOP);
+
+  // console.log("\nsop:", sop);
 
   let timestamp = new Date().toLocaleString();
   timestamp = timestamp.split('/').join('-');
@@ -4190,11 +4192,15 @@ app.post('/ckp2/draft', authenticate, async (req, res) => {
     uShip: sop[9],
     txt: sop[10],
     notes: sop[11],
+    isPending: sop[12]
   });
+
+  // console.log("\ndraft:", draft);
 
   // save the draft - MULTIPLE DRAFT ONE USER
   draft.save().then((doc) => {
     res.status(200).send("The details were saved successfully");
+    // console.log('saved doc:', doc);
   }, (e) => {
     res.status(400).send(e);
   });
