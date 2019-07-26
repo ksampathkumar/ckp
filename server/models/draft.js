@@ -90,6 +90,10 @@ let DraftSchema = new mongoose.Schema({
     },
     isPending: {
         type: Boolean,
+    },
+    linkageProposal: {
+        type: String,
+        trim: true,
     }
 });
 

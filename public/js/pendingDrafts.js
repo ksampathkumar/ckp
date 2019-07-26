@@ -110,8 +110,8 @@ pendingDraftRequest.onload = function () {
 
             // cell4
             cell4.innerHTML = element.notes;
-            // cell5
-            cell5.innerHTML = '<select class="%id%"><option value="true">True</option><option value="false">False</option></select>'.replace('%id%', element._id+element._id);
+            // cell5 'status' prefix is added to document_.id as id is used up in the cell1 hyperlink
+            cell5.innerHTML = '<select id="%id%"><option value="true">True</option><option value="false">False</option></select>'.replace('%id%', `status-${element._id}`);
 
             cell6.innerHTML = '<button type="button" onclick="update(this)" value="%id%" class="update">Update</button>'.replace('%id%', element._id);
 
@@ -127,9 +127,41 @@ pendingDraftRequest.onload = function () {
 pendingDraftRequest.send();
 
 function update(draft) {
-    console.log('value:', draft.value);
-    let status = document.getElementsByClassName(draft.value);
-    console.log('status:', status);
+    let status = document.getElementById(`status-${draft.value}`);
+    // console.log('status:', status.value);
+
+    if (status.value === 'false') {
+        // send a request to server to change the status of the draft
+        // reload the page on success
+
+        linkageProposal = prompt("Please Enter Corresponding Proposal Name for Current Draft");
+
+        let updatePendingDraftRequest = new XMLHttpRequest();
+        updatePendingDraftRequest.open('get', `/ckp/updatePendingDraft/${linkageProposal}`, true);
+        let token = localStorage.getItem('x-auth_token');
+        updatePendingDraftRequest.setRequestHeader('x-auth', token);
+
+        updatePendingDraftRequest.onload = function () {
+            // if (updatePendingDraftRequest.status === 200) {
+            //     userDets = JSON.parse(this.response);
+            //     if (userDets.role !== 0) {
+            //         alert('Please Change Your Role to Access the Page');
+            //         location.href = 'indexCalculator_admin.html';
+            //     } else {
+            //         document.getElementById('username').innerHTML = `${userDets.fName} ${userDets.lName}`;
+            //     }
+            // } else if (updatePendingDraftRequest.status === 401) {
+            //     alert('Please Login to Proceed');
+            //     location.href = 'index.html';
+            // }
+        }
+
+        updatePendingDraftRequest.send();
+
+
+
+    }
+
 }
 
 // display the details of clicked proposal or draft

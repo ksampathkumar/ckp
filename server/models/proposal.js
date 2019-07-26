@@ -103,6 +103,10 @@ let ProposalSchema = new mongoose.Schema({
     notes: {
         type: String,
         trim: true,
+    },
+    linked2Draft: {
+        type: String,
+        trim: true,
     }
 });
 

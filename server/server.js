@@ -457,7 +457,7 @@ app.get('/ckp/save', authenticate, async (req, res) => {
 
 });
 
-// 0 // GET PENDING DRAFTS - Admin & Sales - for getting the draft - OTHERS Route
+// 0 // GET PENDING DRAFTS - SuperAdmin - for getting the pending draft
 app.get('/ckp/pendingDraft', authenticate, async (req, res) => {
   // RBAC
   if (req.user.role !== 0) {
@@ -486,6 +486,41 @@ app.get('/ckp/pendingDraft', authenticate, async (req, res) => {
   }, (e) => {
     res.status(500).send(e);
   });
+
+});
+
+// 0 // UPDATE PENDING DRAFTS STATUS - SuperAdmin - for updating the pending drafts status to FALSE
+app.get('/ckp/updatePendingDraft/:proposalName', authenticate, async (req, res) => {
+  // RBAC
+  if (req.user.role !== 0) {
+    res.status(418).send();
+    return;
+  }
+
+  let proposalName = req.params.proposalName;
+  console.log("proposalName:", proposalName);
+
+  // Draft.find().then((dup) => {
+  //   let pending = [];
+
+  //   if (dup.length > 0) {
+  //     dup.forEach(currentDraft => {
+  //       if (currentDraft.isPending === true) {
+  //         pending.push(currentDraft);
+  //       }
+  //     });
+  //   }
+
+  //   if (pending.length > 0) {
+  //     // let dupArray = [];
+  //     // dupArray.push(dup);
+  //     res.status(200).send(pending);
+  //   } else {
+  //     res.status(204).send();
+  //   }
+  // }, (e) => {
+  //   res.status(500).send(e);
+  // });
 
 });
 
