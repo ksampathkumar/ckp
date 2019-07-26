@@ -490,37 +490,56 @@ app.get('/ckp/pendingDraft', authenticate, async (req, res) => {
 });
 
 // 0 // UPDATE PENDING DRAFTS STATUS - SuperAdmin - for updating the pending drafts status to FALSE
-app.get('/ckp/updatePendingDraft/:proposalName', authenticate, async (req, res) => {
+app.get('/ckp/updatePendingDraft/:dets', authenticate, async (req, res) => {
   // RBAC
   if (req.user.role !== 0) {
     res.status(418).send();
     return;
   }
 
-  let proposalName = req.params.proposalName;
+  let dets = req.params.dets.split('$');
+  let proposalName = dets[0];
+  let draftName = dets[1]
   console.log("proposalName:", proposalName);
 
-  // Draft.find().then((dup) => {
-  //   let pending = [];
+  Proposal.find().then((prop) => {
 
-  //   if (dup.length > 0) {
-  //     dup.forEach(currentDraft => {
-  //       if (currentDraft.isPending === true) {
-  //         pending.push(currentDraft);
-  //       }
-  //     });
-  //   }
+    if (prop.length > 0) {
+      prop.forEach(currentProp => {
+        if (currentProp.name.split('---')[0] === proposalName) {
 
-  //   if (pending.length > 0) {
-  //     // let dupArray = [];
-  //     // dupArray.push(dup);
-  //     res.status(200).send(pending);
-  //   } else {
-  //     res.status(204).send();
-  //   }
-  // }, (e) => {
-  //   res.status(500).send(e);
-  // });
+          Draft.find().then((dup) => {
+            let pending = [];
+
+            if (dup.length > 0) {
+              dup.forEach(currentDraft => {
+                if (currentDraft.isPending === true) {
+                  pending.push(currentDraft);
+                }
+              });
+            } else {
+              res.status(204).send();
+            }
+
+            if (pending.length > 0) {
+              // let dupArray = [];
+              // dupArray.push(dup);
+              res.status(200).send(pending);
+            } else {
+              res.status(204).send();
+            }
+          }, (e) => {
+            res.status(500).send(e);
+          });
+
+        }
+      });
+    } else {
+      res.status(204).send();
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
 
 });
 
