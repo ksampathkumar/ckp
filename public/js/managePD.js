@@ -60,6 +60,7 @@ function logout() {
 // make 4 calls to server to get the drafts and proposals
 // let token = localStorage.getItem('x-auth_token');
 let globalArray = [];
+let selfDrafts = [];
 let html4all = '<a id="%id%" href="#" onclick="displayRequired(this);">%docName%</a><br/>';
 // DRAFT CALL FOR SELF
 
@@ -79,6 +80,7 @@ draftRequest1.onload = function () {
         let typeHtml = '';
         draftData1.forEach(element => {
             globalArray.push(element);
+            selfDrafts.push(element);
             let htmlTemp = html4all.replace('%id%', element._id);
             htmlTemp = htmlTemp.replace('%docName%', element.name);
             typeHtml = typeHtml + htmlTemp;
@@ -202,6 +204,53 @@ proposalRequest2.send();
 // PROPOSAL CALL FOR OTHERS
 
 // make 4 calls to server to get the drafts and proposals
+
+function sleep(ms) {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms)
+    })
+}
+
+async function displayPending() {
+    await sleep(1000);
+
+    selfDrafts.forEach(myDraft => {
+        // console.log('myDraft:', myDraft);
+
+        if (myDraft.isPending === true || myDraft.isPending === false) {
+
+            let pendingTable = document.getElementById("adminPriced");
+            let row = pendingTable.insertRow(-1);
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+
+            // cell1
+            let htmlTemp = html4all.replace('%id%', myDraft._id);
+            htmlTemp = htmlTemp.replace('%docName%', myDraft.name);
+            cell1.innerHTML = htmlTemp;
+            // console.log('htmlTemp:', htmlTemp);
+
+            if (myDraft.linkageProposal !== undefined){
+                let result = globalArray.find(obj => {
+                    return obj._id === myDraft.linkageProposal;
+                });
+                // console.log('result:', result)
+                // cell2
+                let htmlTemp2 = html4all.replace('%id%', result._id);
+                htmlTemp2 = htmlTemp2.replace('%docName%', result.name);
+                cell2.innerHTML = htmlTemp2;
+            }
+            
+
+        }
+
+    })
+}
+
+displayPending();
+
+
+
 
 // display the details of clicked proposal or draft
 function displayRequired(item) {

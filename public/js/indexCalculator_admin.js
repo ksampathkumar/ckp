@@ -1556,7 +1556,7 @@ document.querySelector('.saveDraft').addEventListener('click', () => {
 
   let docName = '';
 
-  if (window.globalData === undefined || window.globalData.data.type === 'PROPOSAL') {
+  if (window.globalData === undefined || window.globalData.data.type === 'PROPOSAL' || window.globalData.data.isPending !== undefined) {
     docName = prompt("Enter Draft Name!");
     if (docName === null) {
       alert('Draft Name Cannot be Empty, please enter a Valid Name');
@@ -1759,7 +1759,7 @@ function sop() {
 
     let docName = '';
 
-    if (window.globalData === undefined || window.globalData.data.type === 'DRAFT') {
+    if (window.globalData === undefined || window.globalData.data.type === 'DRAFT' || window.globalData.data.linked2Draft !== undefined) {
       docName = prompt("Enter Proposal Name!");
       if (docName === null) {
         alert('Proposal Name Cannot be Empty, please enter a Valid Name');

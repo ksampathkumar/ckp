@@ -137,23 +137,17 @@ function update(draft) {
         linkageProposal = prompt("Please Enter Corresponding Proposal Name for Current Draft");
 
         let updatePendingDraftRequest = new XMLHttpRequest();
-        updatePendingDraftRequest.open('get', `/ckp/updatePendingDraft/${linkageProposal}`, true);
+        updatePendingDraftRequest.open('get', `/ckp/updatePendingDraft/${linkageProposal}$${draft.value}`, true);
         let token = localStorage.getItem('x-auth_token');
         updatePendingDraftRequest.setRequestHeader('x-auth', token);
 
         updatePendingDraftRequest.onload = function () {
-            // if (updatePendingDraftRequest.status === 200) {
-            //     userDets = JSON.parse(this.response);
-            //     if (userDets.role !== 0) {
-            //         alert('Please Change Your Role to Access the Page');
-            //         location.href = 'indexCalculator_admin.html';
-            //     } else {
-            //         document.getElementById('username').innerHTML = `${userDets.fName} ${userDets.lName}`;
-            //     }
-            // } else if (updatePendingDraftRequest.status === 401) {
-            //     alert('Please Login to Proceed');
-            //     location.href = 'index.html';
-            // }
+            if (updatePendingDraftRequest.status === 200) {
+                location.reload();
+            } else {
+                alert('Unable to Process the Request');
+                location.reload();
+            }
         }
 
         updatePendingDraftRequest.send();

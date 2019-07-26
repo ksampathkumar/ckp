@@ -500,42 +500,59 @@ app.get('/ckp/updatePendingDraft/:dets', authenticate, async (req, res) => {
   let dets = req.params.dets.split('$');
   let proposalName = dets[0];
   let draftName = dets[1]
-  console.log("proposalName:", proposalName);
+  // console.log("proposalName:", proposalName);
+  // console.log("draftName:", draftName);
 
   Proposal.find().then((prop) => {
 
     if (prop.length > 0) {
+      let found = 0;
       prop.forEach(currentProp => {
         if (currentProp.name.split('---')[0] === proposalName) {
+          found = 1;
+          const updateDraft = {
+            linkageProposal: currentProp._id,
+            isPending: false
+          };
 
-          Draft.find().then((dup) => {
-            let pending = [];
-
-            if (dup.length > 0) {
-              dup.forEach(currentDraft => {
-                if (currentDraft.isPending === true) {
-                  pending.push(currentDraft);
+          Draft.findByIdAndUpdate(draftName, {
+            $set: updateDraft
+          }).then((pendingDraft) => {
+            // console.log('pendingDraft:', pendingDraft);
+            if (!pendingDraft) {
+              return res.status(404).send();
+            } else {
+              const updateProposal = {
+                linked2Draft: draftName
+              };
+              // update the proposal also and carry out versioning for this proposal
+              Proposal.findByIdAndUpdate(currentProp._id, {
+                $set: updateProposal
+              
+              }).then((pendingProp) => {
+                // console.log('pendingDraft:', pendingDraft);
+                if (!pendingProp) {
+                  return res.status(404).send();
+                } else {
+                  res.status(200).send();
                 }
+              }).catch((e) => {
+                console.log(e);
+                res.status(500).send(e);
               });
-            } else {
-              res.status(204).send();
             }
-
-            if (pending.length > 0) {
-              // let dupArray = [];
-              // dupArray.push(dup);
-              res.status(200).send(pending);
-            } else {
-              res.status(204).send();
-            }
-          }, (e) => {
+          }).catch((e) => {
+            console.log(e);
             res.status(500).send(e);
           });
-
         }
       });
+
+      if (found === 0) {
+        res.status(404).send();
+      }
     } else {
-      res.status(204).send();
+      res.status(404).send();
     }
   }, (e) => {
     res.status(500).send(e);
@@ -4263,23 +4280,43 @@ app.post('/ckp2/draft', authenticate, async (req, res) => {
     sDocName = `${sop[0]}---${req.user.fName}@${timestamp}`;
   }
 
-  let draft = new Draft({
-    userID: req.user._id,
-    name: sDocName,
-    type: 'DRAFT',
-    bLower: sop[1],
-    bUpper: sop[2],
-    institution: sop[3],
-    instructor: sop[4],
-    pNumber: sop[5],
-    pDescription: sop[6],
-    estimate: sop[7],
-    uPrice: sop[8],
-    uShip: sop[9],
-    txt: sop[10],
-    notes: sop[11],
-    isPending: sop[12]
-  });
+  let draft;
+  if (sop.length === 13) {
+    draft = new Draft({
+      userID: req.user._id,
+      name: sDocName,
+      type: 'DRAFT',
+      bLower: sop[1],
+      bUpper: sop[2],
+      institution: sop[3],
+      instructor: sop[4],
+      pNumber: sop[5],
+      pDescription: sop[6],
+      estimate: sop[7],
+      uPrice: sop[8],
+      uShip: sop[9],
+      txt: sop[10],
+      notes: sop[11],
+      isPending: sop[12]
+    });
+  } else {
+    draft = new Draft({
+      userID: req.user._id,
+      name: sDocName,
+      type: 'DRAFT',
+      bLower: sop[1],
+      bUpper: sop[2],
+      institution: sop[3],
+      instructor: sop[4],
+      pNumber: sop[5],
+      pDescription: sop[6],
+      estimate: sop[7],
+      uPrice: sop[8],
+      uShip: sop[9],
+      txt: sop[10],
+      notes: sop[11],
+    });
+  }
 
   // console.log("\ndraft:", draft);
 
