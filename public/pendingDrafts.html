@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600" rel="stylesheet" type="text/css">
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+    <link type="text/css" rel="stylesheet" href="css/pendingDrafts.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <title>Proposal & Draft</title>
+</head>
+
+<body>
+
+    <button type="button" onclick="logout()" class="logout">Logout</button>
+    <label id="username"></label>
+    <button type="button" onclick="ckpTab()" class="ckp">CKP</button>
+    <button type="button" onclick="window.location='adminPage.html';" class="admin">Admin</button>
+
+    <div class="title">
+        <br>Pending Drafts for Pricing<br />
+        <br>eScience Labs LLC<br /><span class="title"></span>
+    </div>
+
+    <div class="list">
+
+        <div class="container clearfix">
+
+            <div class="pending_list">
+
+                <!-- <div class="row">
+                    <h2 class="self_title">Drafts</h2>
+
+                    <div class="column1">
+                        <h3 class="self_proposal">User</h3>
+                        <div class="selfProp_list">
+                            <a id="sp1" href="#" onclick="displayRequired(this);">link text1</a><br />
+                            <a id="sp2" href="#" onclick="displayRequired(this);">link text2</a><br />
+                            <a id="sp3" href="#" onclick="displayRequired(this);">link text3</a><br />
+                            <a id="sp4" href="#" onclick="displayRequired(this);">link text4</a><br />
+                        </div>
+                    </div>
+                    <div class="column6">
+                        <h3 class="self_drafts">Status</h3>
+                        <div class="selfDraft_list">
+                            <a id="sd1" href="#" onclick="displayRequired(this);">link text1</a><br />
+                            <a id="sd2" href="#" onclick="displayRequired(this);">link text2</a><br />
+                            <a id="sd3" href="#" onclick="displayRequired(this);">link text3</a><br />
+                            <a id="sd4" href="#" onclick="displayRequired(this);">link text4</a><br />
+                        </div>
+                    </div>
+                    <div class="column5">
+                        <h3 class="self_drafts">Notes</h3>
+                        <div class="selfDraft_list">
+                            <a id="sd1" href="#" onclick="displayRequired(this);">link text1</a><br />
+                            <a id="sd2" href="#" onclick="displayRequired(this);">link text2</a><br />
+                            <a id="sd3" href="#" onclick="displayRequired(this);">link text3</a><br />
+                            <a id="sd4" href="#" onclick="displayRequired(this);">link text4</a><br />
+                        </div>
+                    </div>
+                    <div class="column4">
+                        <h3 class="self_drafts">Subject</h3>
+                        <div class="selfDraft_list">
+                            <a id="sd1" href="#" onclick="displayRequired(this);">link text1</a><br />
+                            <a id="sd2" href="#" onclick="displayRequired(this);">link text2</a><br />
+                            <a id="sd3" href="#" onclick="displayRequired(this);">link text3</a><br />
+                            <a id="sd4" href="#" onclick="displayRequired(this);">link text4</a><br />
+                        </div>
+                    </div>
+                    <div class="column3">
+                        <h3 class="self_drafts">Previous Price</h3>
+                        <div class="selfDraft_list">
+                            <a id="sd1" href="#" onclick="displayRequired(this);">link text1</a><br />
+                            <a id="sd2" href="#" onclick="displayRequired(this);">link text2</a><br />
+                            <a id="sd3" href="#" onclick="displayRequired(this);">link text3</a><br />
+                            <a id="sd4" href="#" onclick="displayRequired(this);">link text4</a><br />
+                        </div>
+                    </div>
+                    <div class="column2">
+                        <h3 class="self_drafts">Draft</h3>
+                        <div class="selfDraft_list">
+                            <a id="sd1" href="#" onclick="displayRequired(this);">link text1</a><br />
+                            <a id="sd2" href="#" onclick="displayRequired(this);">link text2</a><br />
+                            <a id="sd3" href="#" onclick="displayRequired(this);">link text3</a><br />
+                            <a id="sd4" href="#" onclick="displayRequired(this);">link text4</a><br />
+                        </div>
+                    </div>
+
+                </div> -->
+
+                <table id="pending">
+
+                    <tr>
+                        <th>Draft</th>
+                        <th>Previous Price</th>
+                        <th>Subject</th>
+                        <th>Notes</th>
+                        <th>Status</th>
+                        <th>Update</th>
+                    </tr>
+                    <!-- <tr>
+                        <td>Maria Anders</td>
+                        <td>Germany</td>
+                        <td>Alfreds Futterkiste</td>
+                        <td>Maria Anders Maria Anders Maria Anders Maria Anders Maria Anders</td>
+                        <td>True</td>
+                    </tr> -->
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- <footer>&copy; Copyright 2018 HTML.am</footer> -->
+
+    <script src="js/pendingDrafts.js"></script>
+
+</body>
+
+</html>

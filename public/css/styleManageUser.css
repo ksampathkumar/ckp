@@ -17,7 +17,7 @@
 body {
     /* color: #555; */
     background-image: url("images/leaves-pattern.png");
-    font-family: Open Sans;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     position: relative;
     height: 100vh;
@@ -138,7 +138,7 @@ input[type=text] {
     display: inline-block;
     cursor: pointer;
     color: #666666;
-    font-family: Arial;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
     font-weight: bold;
     padding: 10px 24px;
@@ -181,7 +181,7 @@ input[type=text] {
     border: 5px solid brown;
     cursor: pointer;
     color: #666666;
-    font-family: Arial;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
     font-weight: bold;
     padding: 10px 24px;
@@ -225,7 +225,7 @@ input[type=text] {
     border: 5px solid brown;
     cursor: pointer;
     color: #666666;
-    font-family: Arial;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
     font-weight: bold;
     padding: 10px 24px;

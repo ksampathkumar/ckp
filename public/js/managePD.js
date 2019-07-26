@@ -15,8 +15,8 @@ validateRequest.onload = function () {
     if (validateRequest.status === 200) {
         userDets = JSON.parse(this.response);
         // console.log(userDets);
-        if (userDets.role !== 0) {
-            var sAdmin = document.getElementsByClassName("admin");
+        if (userDets.currentRole !== 1) {
+            let sAdmin = document.getElementsByClassName("admin");
             while (sAdmin.length > 0) {
                 sAdmin[0].parentNode.removeChild(sAdmin[0]);
             }
@@ -36,7 +36,7 @@ validateRequest.send();
 function logout() {
     let token = localStorage.getItem('x-auth_token');
 
-    var request = new XMLHttpRequest();
+    let request = new XMLHttpRequest();
 
     request.open('delete', `/logout`, true);
     request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -222,7 +222,7 @@ function displayRequired(item) {
 
     if (result.type === 'PROPOSAL') {
 
-        var getProposalPDF = new XMLHttpRequest();
+        let getProposalPDF = new XMLHttpRequest();
         getProposalPDF.open('get', `/ckpPDF/${item.id}`, true);
         let token = localStorage.getItem('x-auth_token');
         getProposalPDF.setRequestHeader('x-auth', token);
@@ -238,10 +238,10 @@ function displayRequired(item) {
 
                 let pdfName = getProposalPDF.getResponseHeader('content-disposition');
 
-                var file = new Blob([new Uint8Array(pdfData.data)], {
+                let file = new Blob([new Uint8Array(pdfData.data)], {
                     type: 'application/pdf'
                 });
-                var fileURL = URL.createObjectURL(file);
+                let fileURL = URL.createObjectURL(file);
                 window.open(fileURL, pdfName);
 
             } else {

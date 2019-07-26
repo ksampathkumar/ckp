@@ -457,6 +457,38 @@ app.get('/ckp/save', authenticate, async (req, res) => {
 
 });
 
+// 0 // GET PENDING DRAFTS - Admin & Sales - for getting the draft - OTHERS Route
+app.get('/ckp/pendingDraft', authenticate, async (req, res) => {
+  // RBAC
+  if (req.user.role !== 0) {
+    res.status(418).send();
+    return;
+  }
+
+  Draft.find().then((dup) => {
+    let pending = [];
+
+    if (dup.length > 0) {
+      dup.forEach(currentDraft => {
+        if (currentDraft.isPending === true) {
+          pending.push(currentDraft);
+        }
+      });
+    }
+
+    if (pending.length > 0) {
+      // let dupArray = [];
+      // dupArray.push(dup);
+      res.status(200).send(pending);
+    } else {
+      res.status(204).send();
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
 // 0 // GET BOM - SuperAdmin - for downloading BOM
 app.get('/ckpBOM/:id', authenticate, async (req, res) => {
   // RBAC
@@ -4458,7 +4490,7 @@ app.get('/ckp/verifyDraft/:name', authenticate, async (req, res) => {
 
 });
 
-// 0,1,2 // route 16 - Admin & Sales - for verifying the legitimacy of the draft name
+// 0,1,2 // route 17 - Admin & Sales - for verifying the legitimacy of the draft name
 app.get('/switch', authenticate, async (req, res) => {
 
   // RBAC

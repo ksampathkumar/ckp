@@ -149,7 +149,7 @@ body {
     border: 1px solid #e7e7e7;
     background-color: #fff;
     color: inherit;
-    font-family: inherit;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
     padding: 12px 15px;
     margin-right: 10px;
@@ -523,7 +523,6 @@ img.esl {
     padding: 2px 16px;
 }
 
-
 input[type=checkbox] {
     padding: 12px 20px;
     margin: 5px 5px;
@@ -828,7 +827,6 @@ input[type=checkbox]:hover {
     position: relative;
     top: 1px;
 } */
-
 
 .collapsible {
     background-color: #003A5D;
