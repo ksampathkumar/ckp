@@ -1,4 +1,6 @@
 # Don't track content of these folders
 node_modules/
-server/fileServer/
+server/fileServer/bomFiles/
+server/fileServer/packingFiles/
+server/fileServer/proposalFiles/
 server/pdfmake/

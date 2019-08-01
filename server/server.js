@@ -528,7 +528,7 @@ app.get('/ckp/updatePendingDraft/:dets', authenticate, async (req, res) => {
               // update the proposal also and carry out versioning for this proposal
               Proposal.findByIdAndUpdate(currentProp._id, {
                 $set: updateProposal
-              
+
               }).then((pendingProp) => {
                 // console.log('pendingDraft:', pendingDraft);
                 if (!pendingProp) {
@@ -3742,7 +3742,7 @@ app.post('/ckp1/save', authenticate, async (req, res) => {
   let bomArray = JSON.parse(data.split('???')[1]);
   let packingListArray = JSON.parse(data.split('???')[2]);
 
-  let timestamp = new Date().toLocaleString();
+  let timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Denver' });
   timestamp = timestamp.split('/').join('-');
   timestamp = timestamp.split(' ').join('');
   timestamp = timestamp.split(',').join('-');
@@ -3924,7 +3924,7 @@ app.post('/ckp2/save', authenticate, async (req, res) => {
   let pageArray = JSON.parse(cdata.sSOP);
   // console.log("\nsop:", pageArray);
 
-  let timestamp = new Date().toLocaleString();
+  let timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Denver' });
   timestamp = timestamp.split('/').join('-');
   timestamp = timestamp.split(' ').join('');
   timestamp = timestamp.split(',').join('-');
@@ -4174,7 +4174,7 @@ app.post('/ckp1/draft', authenticate, async (req, res) => {
   let cost = JSON.parse(cdata.dCost);
   let removed = JSON.parse(cdata.drCost);
 
-  let timestamp = new Date().toLocaleString();
+  let timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Denver' });
   timestamp = timestamp.split('/').join('-');
   timestamp = timestamp.split(' ').join('');
   timestamp = timestamp.split(',').join('-');
@@ -4265,7 +4265,7 @@ app.post('/ckp2/draft', authenticate, async (req, res) => {
 
   // console.log("\nsop:", sop);
 
-  let timestamp = new Date().toLocaleString();
+  let timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Denver' });
   timestamp = timestamp.split('/').join('-');
   timestamp = timestamp.split(' ').join('');
   timestamp = timestamp.split(',').join('-');
@@ -4331,15 +4331,24 @@ app.post('/ckp2/draft', authenticate, async (req, res) => {
 });
 
 // 0,1,2 // route 8 - Admin & Sales - for getting the proposals - SELF Route
-app.get('/ckp/selfSave', authenticate, async (req, res) => {
+app.get('/ckp/selfSave/:timeFrame', authenticate, async (req, res) => {
+
+  let timeFrame = req.params.timeFrame.split('-');
 
   Proposal.find({
     userID: req.user._id
   }).then((dup) => {
     if (dup.length > 0) {
-      // let dupArray = [];
-      // dupArray.push(dup);
-      res.status(200).send(dup);
+      let dupArray = [];
+
+      dup.forEach(e => {
+        var d = new Date(e._id.getTimestamp());
+        var n = d.getTime();
+        if (n >= parseInt(timeFrame[0]) && n <= parseInt(timeFrame[1])) {
+          dupArray.push(e);
+        }
+      });
+      res.status(200).send(dupArray);
     } else {
       res.status(204).send();
     }
@@ -4350,15 +4359,24 @@ app.get('/ckp/selfSave', authenticate, async (req, res) => {
 });
 
 // 0,1,2 // route 9 - Admin & Sales - for getting the draft - SELF Route
-app.get('/ckp/selfDraft', authenticate, async (req, res) => {
+app.get('/ckp/selfDraft/:timeFrame', authenticate, async (req, res) => {
+
+  let timeFrame = req.params.timeFrame.split('-');
 
   Draft.find({
     userID: req.user._id
   }).then((dup) => {
     if (dup.length > 0) {
-      // let dupArray = [];
-      // dupArray.push(dup);
-      res.status(200).send(dup);
+      let dupArray = [];
+
+      dup.forEach(e => {
+        var d = new Date(e._id.getTimestamp());
+        var n = d.getTime();
+        if (n >= parseInt(timeFrame[0]) && n <= parseInt(timeFrame[1])) {
+          dupArray.push(e);
+        }
+      });
+      res.status(200).send(dupArray);
     } else {
       res.status(204).send();
     }
@@ -4369,7 +4387,9 @@ app.get('/ckp/selfDraft', authenticate, async (req, res) => {
 });
 
 // 0,1,2 // route 10 - Admin & Sales - for getting the proposals - OTHERS Route
-app.get('/ckp/otherSave', authenticate, async (req, res) => {
+app.get('/ckp/otherSave/:timeFrame', authenticate, async (req, res) => {
+
+  let timeFrame = req.params.timeFrame.split('-');
 
   Proposal.find({
     userID: {
@@ -4377,9 +4397,16 @@ app.get('/ckp/otherSave', authenticate, async (req, res) => {
     }
   }).then((dup) => {
     if (dup.length > 0) {
-      // let dupArray = [];
-      // dupArray.push(dup);
-      res.status(200).send(dup);
+      let dupArray = [];
+
+      dup.forEach(e => {
+        var d = new Date(e._id.getTimestamp());
+        var n = d.getTime();
+        if (n >= parseInt(timeFrame[0]) && n <= parseInt(timeFrame[1])) {
+          dupArray.push(e);
+        }
+      });
+      res.status(200).send(dupArray);
     } else {
       res.status(204).send();
     }
@@ -4390,7 +4417,9 @@ app.get('/ckp/otherSave', authenticate, async (req, res) => {
 });
 
 // 0,1,2 // route 11 - Admin & Sales - for getting the draft - OTHERS Route
-app.get('/ckp/otherDraft', authenticate, async (req, res) => {
+app.get('/ckp/otherDraft/:timeFrame', authenticate, async (req, res) => {
+
+  let timeFrame = req.params.timeFrame.split('-');
 
   Draft.find({
     userID: {
@@ -4398,9 +4427,16 @@ app.get('/ckp/otherDraft', authenticate, async (req, res) => {
     }
   }).then((dup) => {
     if (dup.length > 0) {
-      // let dupArray = [];
-      // dupArray.push(dup);
-      res.status(200).send(dup);
+      let dupArray = [];
+
+      dup.forEach(e => {
+        var d = new Date(e._id.getTimestamp());
+        var n = d.getTime();
+        if (n >= parseInt(timeFrame[0]) && n <= parseInt(timeFrame[1])) {
+          dupArray.push(e);
+        }
+      });
+      res.status(200).send(dupArray);
     } else {
       res.status(204).send();
     }

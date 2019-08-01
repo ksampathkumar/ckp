@@ -32,7 +32,6 @@ validateRequest.send();
 
 // ******** Static to Dynamic page ******* //
 
-// Logout
 function logout() {
     let token = localStorage.getItem('x-auth_token');
 
@@ -57,153 +56,184 @@ function logout() {
     request.send();
 }
 
-// make 4 calls to server to get the drafts and proposals
 // let token = localStorage.getItem('x-auth_token');
 let globalArray = [];
 let selfDrafts = [];
 let html4all = '<a id="%id%" href="#" onclick="displayRequired(this);">%docName%</a><br/>';
-// DRAFT CALL FOR SELF
+async function populate4() {
+    // async-await is used as it takes 100ms for the datepicker library to load the date
+    await sleep(100);
+    // get the time in unix timestamp format and send it to server
+    let range = document.getElementById('reportrange').childNodes[3].innerHTML.split('-');
+    // console.log('range:', range);
+    let from = new Date(range[0].trim()).toLocaleString('en-US', { timeZone: 'America/Denver' });
+    let to = new Date(range[1].trim());
+    to.setHours(23, 59, 59, 999);
+    let toEOD = to.toLocaleString('en-US', { timeZone: 'America/Denver' });
 
-let draftRequest1 = new XMLHttpRequest();
-draftRequest1.open('get', '/ckp/selfDraft', true);
-draftRequest1.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    let fromUnixT = new Date(from).getTime();
+    let toUnixT = new Date(toEOD).getTime();
 
-draftRequest1.setRequestHeader('x-auth', token);
+    // console.log(`${range}: ${fromUnixT} - ${toUnixT}`);
 
-draftRequest1.onload = function () {
+    // make 4 calls to server to get the drafts and proposals
+    // DRAFT CALL FOR SELF
 
-    if (draftRequest1.status === 200) {
+    // clear all list (4) and arrays(2) before making calls to server
+    document.querySelector('.selfDraft_list').textContent = '';
+    document.querySelector('.selfProp_list').textContent = '';
+    document.querySelector('.othersDraft_list').textContent = '';
+    document.querySelector('.othersProp_list').textContent = '';
+    globalArray = [];
+    selfDrafts = [];
 
-        let draftData1 = JSON.parse(this.response);
-        // console.log('draftData1:', draftData1);
+    let draftRequest1 = new XMLHttpRequest();
+    draftRequest1.open('get', `/ckp/selfDraft/${fromUnixT}-${toUnixT}`, true);
+    draftRequest1.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-        let typeHtml = '';
-        draftData1.forEach(element => {
-            globalArray.push(element);
-            selfDrafts.push(element);
-            let htmlTemp = html4all.replace('%id%', element._id);
-            htmlTemp = htmlTemp.replace('%docName%', element.name);
-            typeHtml = typeHtml + htmlTemp;
-        });
-        document.querySelector('.selfDraft_list').insertAdjacentHTML('beforeend', typeHtml);
+    draftRequest1.setRequestHeader('x-auth', token);
 
-    } else if (draftRequest1.status === 204) {
+    draftRequest1.onload = function () {
 
-    } else {
-        console.log('somethings wrong:', draftRequest1.status);
+        if (draftRequest1.status === 200) {
+
+            let draftData1 = JSON.parse(this.response);
+            // console.log('draftData1:', draftData1);
+
+            let typeHtml = '';
+            draftData1.forEach(element => {
+                globalArray.push(element);
+                selfDrafts.push(element);
+                let htmlTemp = html4all.replace('%id%', element._id);
+                htmlTemp = htmlTemp.replace('%docName%', element.name);
+                typeHtml = typeHtml + htmlTemp;
+
+                // console.log('element:', element);
+            });
+            document.querySelector('.selfDraft_list').insertAdjacentHTML('beforeend', typeHtml);
+
+        } else if (draftRequest1.status === 204) {
+
+        } else {
+            console.log('somethings wrong:', draftRequest1.status);
+        }
     }
+
+    draftRequest1.send();
+
+    // DRAFT CALL FOR SELF
+
+    // PROPOSAL CALL FOR SELF
+
+    let proposalRequest1 = new XMLHttpRequest();
+    proposalRequest1.open('get', `/ckp/selfSave/${fromUnixT}-${toUnixT}`, true);
+    proposalRequest1.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    proposalRequest1.setRequestHeader('x-auth', token);
+
+    proposalRequest1.onload = function () {
+
+        if (proposalRequest1.status === 200) {
+
+            let proposalData1 = JSON.parse(this.response);
+            // console.log('proposalData1:', proposalData1);
+
+            let typeHtml = '';
+            proposalData1.forEach(element => {
+                globalArray.push(element);
+                let htmlTemp = html4all.replace('%id%', element._id);
+                htmlTemp = htmlTemp.replace('%docName%', element.name);
+                typeHtml = typeHtml + htmlTemp;
+            });
+            document.querySelector('.selfProp_list').insertAdjacentHTML('beforeend', typeHtml);
+
+        } else if (proposalRequest1.status === 204) {
+
+        } else {
+            console.log('somethings wrong:', proposalRequest1.status);
+        }
+    }
+
+    proposalRequest1.send();
+
+    // PROPOSAL CALL FOR SELF
+
+    // DRAFT CALL FOR OTHERS
+
+    let draftRequest2 = new XMLHttpRequest();
+    draftRequest2.open('get', `/ckp/otherDraft/${fromUnixT}-${toUnixT}`, true);
+    draftRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    draftRequest2.setRequestHeader('x-auth', token);
+
+    draftRequest2.onload = function () {
+
+        if (draftRequest2.status === 200) {
+
+            let draftData2 = JSON.parse(this.response);
+            // console.log('draftData2:', draftData2);
+
+            let typeHtml = '';
+            draftData2.forEach(element => {
+                globalArray.push(element);
+                let htmlTemp = html4all.replace('%id%', element._id);
+                htmlTemp = htmlTemp.replace('%docName%', element.name);
+                typeHtml = typeHtml + htmlTemp;
+            });
+            document.querySelector('.othersDraft_list').insertAdjacentHTML('beforeend', typeHtml);
+
+        } else if (draftRequest2.status === 204) {
+
+        } else {
+            console.log('somethings wrong:', draftRequest2.status);
+        }
+    }
+
+    draftRequest2.send();
+
+    // DRAFT CALL FOR OTHERS
+
+    // PROPOSAL CALL FOR OTHERS
+
+    let proposalRequest2 = new XMLHttpRequest();
+    proposalRequest2.open('get', `/ckp/otherSave/${fromUnixT}-${toUnixT}`, true);
+    proposalRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    proposalRequest2.setRequestHeader('x-auth', token);
+
+    proposalRequest2.onload = function () {
+
+        if (proposalRequest2.status === 200) {
+
+            let proposalData2 = JSON.parse(this.response);
+            // console.log('proposalData2:', proposalData2);
+
+            let typeHtml = '';
+            proposalData2.forEach(element => {
+                globalArray.push(element);
+                let htmlTemp = html4all.replace('%id%', element._id);
+                htmlTemp = htmlTemp.replace('%docName%', element.name);
+                typeHtml = typeHtml + htmlTemp;
+            });
+            document.querySelector('.othersProp_list').insertAdjacentHTML('beforeend', typeHtml);
+
+        } else if (proposalRequest2.status === 204) {
+
+        } else {
+            console.log('somethings wrong:', proposalRequest2.status);
+        }
+    }
+
+    proposalRequest2.send();
+
+    // PROPOSAL CALL FOR OTHERS
+    // make 4 calls to server to get the drafts and proposals
+
+    displayPending();
+
 }
 
-draftRequest1.send();
-
-// DRAFT CALL FOR SELF
-
-// PROPOSAL CALL FOR SELF
-
-let proposalRequest1 = new XMLHttpRequest();
-proposalRequest1.open('get', '/ckp/selfSave', true);
-proposalRequest1.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-proposalRequest1.setRequestHeader('x-auth', token);
-
-proposalRequest1.onload = function () {
-
-    if (proposalRequest1.status === 200) {
-
-        let proposalData1 = JSON.parse(this.response);
-        // console.log('proposalData1:', proposalData1);
-
-        let typeHtml = '';
-        proposalData1.forEach(element => {
-            globalArray.push(element);
-            let htmlTemp = html4all.replace('%id%', element._id);
-            htmlTemp = htmlTemp.replace('%docName%', element.name);
-            typeHtml = typeHtml + htmlTemp;
-        });
-        document.querySelector('.selfProp_list').insertAdjacentHTML('beforeend', typeHtml);
-
-    } else if (proposalRequest1.status === 204) {
-
-    } else {
-        console.log('somethings wrong:', proposalRequest1.status);
-    }
-}
-
-proposalRequest1.send();
-
-// PROPOSAL CALL FOR SELF
-
-// DRAFT CALL FOR OTHERS
-
-let draftRequest2 = new XMLHttpRequest();
-draftRequest2.open('get', '/ckp/otherDraft', true);
-draftRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-draftRequest2.setRequestHeader('x-auth', token);
-
-draftRequest2.onload = function () {
-
-    if (draftRequest2.status === 200) {
-
-        let draftData2 = JSON.parse(this.response);
-        // console.log('draftData2:', draftData2);
-
-        let typeHtml = '';
-        draftData2.forEach(element => {
-            globalArray.push(element);
-            let htmlTemp = html4all.replace('%id%', element._id);
-            htmlTemp = htmlTemp.replace('%docName%', element.name);
-            typeHtml = typeHtml + htmlTemp;
-        });
-        document.querySelector('.othersDraft_list').insertAdjacentHTML('beforeend', typeHtml);
-
-    } else if (draftRequest2.status === 204) {
-
-    } else {
-        console.log('somethings wrong:', draftRequest2.status);
-    }
-}
-
-draftRequest2.send();
-
-// DRAFT CALL FOR OTHERS
-
-// PROPOSAL CALL FOR OTHERS
-
-let proposalRequest2 = new XMLHttpRequest();
-proposalRequest2.open('get', '/ckp/otherSave', true);
-proposalRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-proposalRequest2.setRequestHeader('x-auth', token);
-
-proposalRequest2.onload = function () {
-
-    if (proposalRequest2.status === 200) {
-
-        let proposalData2 = JSON.parse(this.response);
-        // console.log('proposalData2:', proposalData2);
-
-        let typeHtml = '';
-        proposalData2.forEach(element => {
-            globalArray.push(element);
-            let htmlTemp = html4all.replace('%id%', element._id);
-            htmlTemp = htmlTemp.replace('%docName%', element.name);
-            typeHtml = typeHtml + htmlTemp;
-        });
-        document.querySelector('.othersProp_list').insertAdjacentHTML('beforeend', typeHtml);
-
-    } else if (proposalRequest2.status === 204) {
-
-    } else {
-        console.log('somethings wrong:', proposalRequest2.status);
-    }
-}
-
-proposalRequest2.send();
-
-// PROPOSAL CALL FOR OTHERS
-
-// make 4 calls to server to get the drafts and proposals
+populate4();
 
 function sleep(ms) {
     return new Promise(resolve => {
@@ -214,12 +244,18 @@ function sleep(ms) {
 async function displayPending() {
     await sleep(1000);
 
+    let pendingTable = document.getElementById("adminPriced");
+    // clear the table leaving the 1st row
+    var rowCount = pendingTable.rows.length;
+    for (var i = rowCount - 1; i > 0; i--) {
+        pendingTable.deleteRow(i);
+    }
+
     selfDrafts.forEach(myDraft => {
         // console.log('myDraft:', myDraft);
 
         if (myDraft.isPending === true || myDraft.isPending === false) {
 
-            let pendingTable = document.getElementById("adminPriced");
             let row = pendingTable.insertRow(-1);
             let cell1 = row.insertCell(0);
             let cell2 = row.insertCell(1);
@@ -230,7 +266,7 @@ async function displayPending() {
             cell1.innerHTML = htmlTemp;
             // console.log('htmlTemp:', htmlTemp);
 
-            if (myDraft.linkageProposal !== undefined){
+            if (myDraft.linkageProposal !== undefined) {
                 let result = globalArray.find(obj => {
                     return obj._id === myDraft.linkageProposal;
                 });
@@ -240,17 +276,9 @@ async function displayPending() {
                 htmlTemp2 = htmlTemp2.replace('%docName%', result.name);
                 cell2.innerHTML = htmlTemp2;
             }
-            
-
         }
-
-    })
+    });
 }
-
-displayPending();
-
-
-
 
 // display the details of clicked proposal or draft
 function displayRequired(item) {
@@ -311,6 +339,37 @@ function ckpTab() {
     }
 
 }
+
+$(function () {
+
+    var start = moment().subtract(6, 'days');
+    var end = moment();
+
+    function cb(start, end) {
+        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+
+    $('#reportrange').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+            'All': ['07-01-2019', moment()],
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb);
+
+    cb(start, end);
+
+});
+
+$('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+    populate4();
+});
 
 /* --------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------ $$                    manageProposal.js                      $$-------------------------------------

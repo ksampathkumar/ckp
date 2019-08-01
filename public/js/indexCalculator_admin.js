@@ -413,6 +413,7 @@ document.querySelector('.clearButton').addEventListener('click', () => {
   document.getElementById("searchText").value = '';
 
   document.getElementById("notes").value = '';
+  document.querySelector('.labCounts--value').textContent = '';
 });
 
 // Clear Check Boxes //

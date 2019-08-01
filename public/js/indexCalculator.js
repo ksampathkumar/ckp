@@ -402,6 +402,7 @@ document.querySelector('.clearButton').addEventListener('click', () => {
   document.getElementById("uShip").value = '';
 
   document.getElementById("notes").value = '';
+  document.querySelector('.labCounts--value').textContent = '';
 
 });
 
@@ -1172,6 +1173,8 @@ function sop() {
     let token = localStorage.getItem('x-auth_token');
     check.setRequestHeader('x-auth', token);
     check.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    // console.log('docName:', docName);
+    // console.log(check);
     check.send();
     check.onload = function () {
 
@@ -1210,6 +1213,8 @@ function sop() {
               let token = localStorage.getItem('x-auth_token');
               check2.setRequestHeader('x-auth', token);
               check2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+              // console.log('docName:', docName);
+              // console.log(check);
               check2.send();
               check2.onload = function () {
 
@@ -1759,7 +1764,7 @@ function moveLabToCart() {
     }
   }
 
-  document.querySelector('.labCounts--value').textContent = `${cartArray.length}`;
+  document.querySelector('.labCounts--value').textContent = `${cartArray.length} Labs`;
 
   // console.log('cartArray:', cartArray);
 
