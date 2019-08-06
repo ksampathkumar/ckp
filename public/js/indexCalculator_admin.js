@@ -385,8 +385,8 @@ document.querySelector('.calculateButton').addEventListener('click', () => {
 });
 
 // Clear Button Event //
-document.querySelector('.clearButton').addEventListener('click', () => {
-
+function clearAll() {
+  window.globalData = undefined;
   document.querySelector('.cost_list').textContent = '';
   document.querySelector('.removed_list').textContent = '';
   document.querySelector('.cart_list').textContent = '';
@@ -414,11 +414,11 @@ document.querySelector('.clearButton').addEventListener('click', () => {
 
   document.getElementById("notes").value = '';
   document.querySelector('.labCounts--value').textContent = '';
-});
+}
 
 // Clear Check Boxes //
 function clearCheckBoxes() {
-
+  document.querySelector('.labCounts--value').textContent = '';
   // clearing the checkboxes //
 
   let subs = [];
@@ -1752,10 +1752,10 @@ function sop() {
 
   if (txt.length === 0) {
     alert('No Lab Selection Made, Please Select Labs, Calculate Cost and then Save Proposal');
-  // } else if (institution === '' || instructor === '' || pNumber === '' || pDescription === '' || estimate === '' || uPrice === '' || uShip === '') {
-  //   alert("Please Enter All The SOP Details !!!");
-  // } else if (bLower == '' || bUpper == '') {
-  //   alert("Please calculate the Kit price before saving !!!");
+    // } else if (institution === '' || instructor === '' || pNumber === '' || pDescription === '' || estimate === '' || uPrice === '' || uShip === '') {
+    //   alert("Please Enter All The SOP Details !!!");
+    // } else if (bLower == '' || bUpper == '') {
+    //   alert("Please calculate the Kit price before saving !!!");
   } else {
 
     let docName = '';
@@ -2082,7 +2082,7 @@ function sop() {
                         partialRequest.onload = function () {
 
                           if (partialRequest.status === 200) {
-                            location.reload(); // to avoid saving the same doc
+
                             // console.log("data:", this.response);
                             let pdfData = JSON.parse(this.response);
                             // console.log('downloadType:', typeof(pdfData));
@@ -2110,10 +2110,21 @@ function sop() {
                             var file = new Blob([new Uint8Array(pdfData.data)], {
                               type: 'application/pdf'
                             });
-                            var fileURL = URL.createObjectURL(file);
-                            window.open(fileURL, pdfName);
+                            // let fileURL = URL.createObjectURL(file);
+                            // let proposalWindow = window.open(fileURL, pdfName);
+                            // proposalWindow.document.title = pdfName;
 
-                            alert('SOP was saved');
+                            // var newWindow = window.open(newdata, "_blank");
+                            // newWindow.document.title = "Some title";
+
+                            const data = window.URL.createObjectURL(file);
+                            var link = document.createElement('a');
+                            link.href = data;
+                            link.download = pdfName;
+                            link.click();
+
+                            // alert('SOP was saved');
+                            clearAll(); // to avoid saving the same doc
 
                           } else {
                             console.log('Somethings worng 1:', partialRequest.status);
@@ -2378,7 +2389,7 @@ function sop() {
                   partialRequest.onload = function () {
 
                     if (partialRequest.status === 200) {
-                      location.reload(); // to avoid saving the same doc
+
                       // console.log("data:", this.response);
                       let pdfData = JSON.parse(this.response);
                       // console.log('downloadType:', typeof(pdfData));
@@ -2406,10 +2417,21 @@ function sop() {
                       var file = new Blob([new Uint8Array(pdfData.data)], {
                         type: 'application/pdf'
                       });
-                      var fileURL = URL.createObjectURL(file);
-                      window.open(fileURL, pdfName);
+                      // let fileURL = URL.createObjectURL(file);
+                      // let proposalWindow = window.open(fileURL, pdfName);
+                      // proposalWindow.document.title = pdfName;
 
-                      alert('SOP was saved');
+                      // var newWindow = window.open(newdata, "_blank");
+                      // newWindow.document.title = "Some title";
+
+                      const data = window.URL.createObjectURL(file);
+                      var link = document.createElement('a');
+                      link.href = data;
+                      link.download = pdfName;
+                      link.click();
+
+                      // alert('SOP was saved');
+                      clearAll(); // to avoid saving the same doc
 
                     } else {
                       console.log('Somethings worng 1:', partialRequest.status);
@@ -2670,7 +2692,7 @@ function sop() {
                 partialRequest.onload = function () {
 
                   if (partialRequest.status === 200) {
-                    location.reload(); // to avoid saving the same doc
+
                     // console.log("data:", this.response);
                     let pdfData = JSON.parse(this.response);
                     // console.log('downloadType:', typeof(pdfData));
@@ -2698,10 +2720,21 @@ function sop() {
                     var file = new Blob([new Uint8Array(pdfData.data)], {
                       type: 'application/pdf'
                     });
-                    var fileURL = URL.createObjectURL(file);
-                    window.open(fileURL, pdfName);
+                    // let fileURL = URL.createObjectURL(file);
+                    // let proposalWindow = window.open(fileURL, pdfName);
+                    // proposalWindow.document.title = pdfName;
 
-                    alert('SOP was saved');
+                    // var newWindow = window.open(newdata, "_blank");
+                    // newWindow.document.title = "Some title";
+
+                    const data = window.URL.createObjectURL(file);
+                    var link = document.createElement('a');
+                    link.href = data;
+                    link.download = pdfName;
+                    link.click();
+
+                    // alert('SOP was saved');
+                    clearAll(); // to avoid saving the same doc
 
                   } else {
                     console.log('Somethings worng 1:', partialRequest.status);

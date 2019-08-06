@@ -383,8 +383,9 @@ function calcUp() {
 // });
 
 // Clear Button Event //
-document.querySelector('.clearButton').addEventListener('click', () => {
+function clearAll() {
 
+  window.globalData = undefined;
   document.querySelector('.cart_list').textContent = '';
 
   // clearing the checkboxes //
@@ -404,7 +405,7 @@ document.querySelector('.clearButton').addEventListener('click', () => {
   document.getElementById("notes").value = '';
   document.querySelector('.labCounts--value').textContent = '';
 
-});
+}
 
 // Kit Version selection // 
 function kitVersion(element) {
@@ -784,7 +785,7 @@ function kitVersion(element) {
 
 // Clear Check Boxes //
 function clearCheckBoxes() {
-
+  document.querySelector('.labCounts--value').textContent = '';
   // clearing the checkboxes //
 
   let subs = [];
@@ -1258,19 +1259,51 @@ function sop() {
 
                       if (requestSave.status === 200) {
                         // console.log("data:", this.response);
-                        location.reload(); // to avoid saving the same doc
 
-                        let pdfData = JSON.parse(this.response);
+                        let proposalID = JSON.parse(this.response);
 
-                        let pdfName = requestSave.getResponseHeader('content-disposition');
+                        // console.log(proposalID);
 
-                        var file = new Blob([new Uint8Array(pdfData.data)], {
-                          type: 'application/pdf'
-                        });
-                        var fileURL = URL.createObjectURL(file);
-                        window.open(fileURL, pdfName);
+                        let getProposalPDF = new XMLHttpRequest();
+                        getProposalPDF.open('get', `/ckpPDF/${proposalID}`, true);
+                        getProposalPDF.setRequestHeader('x-auth', token);
+                        getProposalPDF.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-                        alert('SOP was saved');
+                        getProposalPDF.send();
+                        getProposalPDF.onload = function () {
+
+                          if (getProposalPDF.status === 200) {
+
+                            // console.log('data:', JSON.parse(this.response));
+                            let pdfData = JSON.parse(this.response);
+
+                            let pdfName = getProposalPDF.getResponseHeader('content-disposition');
+
+                            let file = new Blob([new Uint8Array(pdfData.data)], {
+                              type: 'application/pdf'
+                            });
+                            // let fileURL = URL.createObjectURL(file);
+                            // let proposalWindow = window.open(fileURL, pdfName);
+                            // proposalWindow.document.title = pdfName;
+
+                            // var newWindow = window.open(newdata, "_blank");
+                            // newWindow.document.title = "Some title";
+
+                            const data = window.URL.createObjectURL(file);
+                            var link = document.createElement('a');
+                            link.href = data;
+                            link.download = pdfName;
+                            link.click();
+
+                            // alert('SOP was saved');
+                            clearAll(); // to avoid saving the same doc
+
+                          } else {
+                            console.log('Somethings worng @getProposalPDF:', getProposalPDF.status);
+                          }
+
+                        }
+
                       } else {
                         console.log('Somethings worng 2:', requestSave.status);
                       }
@@ -1317,19 +1350,50 @@ function sop() {
 
                 if (requestSave.status === 200) {
                   // console.log("data:", this.response);
-                  location.reload(); // to avoid saving the same doc
 
-                  let pdfData = JSON.parse(this.response);
+                  let proposalID = JSON.parse(this.response);
 
-                  let pdfName = requestSave.getResponseHeader('content-disposition');
+                  // console.log(proposalID);
 
-                  var file = new Blob([new Uint8Array(pdfData.data)], {
-                    type: 'application/pdf'
-                  });
-                  var fileURL = URL.createObjectURL(file);
-                  window.open(fileURL, pdfName);
+                  let getProposalPDF = new XMLHttpRequest();
+                  getProposalPDF.open('get', `/ckpPDF/${proposalID}`, true);
+                  getProposalPDF.setRequestHeader('x-auth', token);
+                  getProposalPDF.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-                  alert('SOP was saved');
+                  getProposalPDF.send();
+                  getProposalPDF.onload = function () {
+
+                    if (getProposalPDF.status === 200) {
+
+                      // console.log('data:', JSON.parse(this.response));
+                      let pdfData = JSON.parse(this.response);
+
+                      let pdfName = getProposalPDF.getResponseHeader('content-disposition');
+
+                      let file = new Blob([new Uint8Array(pdfData.data)], {
+                        type: 'application/pdf'
+                      });
+                      // let fileURL = URL.createObjectURL(file);
+                      // let proposalWindow = window.open(fileURL, pdfName);
+                      // proposalWindow.document.title = pdfName;
+
+                      // var newWindow = window.open(newdata, "_blank");
+                      // newWindow.document.title = "Some title";
+
+                      const data = window.URL.createObjectURL(file);
+                      var link = document.createElement('a');
+                      link.href = data;
+                      link.download = pdfName;
+                      link.click();
+
+                      // alert('SOP was saved');
+                      clearAll(); // to avoid saving the same doc
+
+                    } else {
+                      console.log('Somethings worng @getProposalPDF:', getProposalPDF.status);
+                    }
+
+                  }
                 } else {
                   console.log('Somethings worng 2:', requestSave.status);
                 }
@@ -1338,7 +1402,6 @@ function sop() {
               }
             }
           } else {
-
 
             let pageArray = [];
 
@@ -1372,34 +1435,61 @@ function sop() {
 
               if (requestSave.status === 200) {
                 // console.log("data:", this.response);
-                location.reload(); // to avoid saving the same doc
 
-                let pdfData = JSON.parse(this.response);
+                let proposalID = JSON.parse(this.response);
 
-                let pdfName = requestSave.getResponseHeader('content-disposition');
+                // console.log(proposalID);
 
-                var file = new Blob([new Uint8Array(pdfData.data)], {
-                  type: 'application/pdf'
-                });
-                var fileURL = URL.createObjectURL(file);
-                window.open(fileURL, pdfName);
+                let getProposalPDF = new XMLHttpRequest();
+                getProposalPDF.open('get', `/ckpPDF/${proposalID}`, true);
+                getProposalPDF.setRequestHeader('x-auth', token);
+                getProposalPDF.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-                alert('SOP was saved');
+                getProposalPDF.send();
+                getProposalPDF.onload = function () {
+
+                  if (getProposalPDF.status === 200) {
+
+                    // console.log('data:', JSON.parse(this.response));
+                    let pdfData = JSON.parse(this.response);
+
+                    let pdfName = getProposalPDF.getResponseHeader('Content-Disposition');
+
+                    console.log(pdfName);
+
+                    let file = new Blob([new Uint8Array(pdfData.data)], {
+                      type: 'application/pdf'
+                    });
+                    // let fileURL = URL.createObjectURL(file);
+                    // let proposalWindow = window.open(fileURL, pdfName);
+                    // proposalWindow.document.title = pdfName;
+
+                    // var newWindow = window.open(newdata, "_blank");
+                    // newWindow.document.title = "Some title";
+
+                    const data = window.URL.createObjectURL(file);
+                    var link = document.createElement('a');
+                    link.href = data;
+                    link.download = pdfName;
+                    link.click();
+
+                    // alert('SOP was saved');
+                    clearAll(); // to avoid saving the same doc
+
+                  } else {
+                    console.log('Somethings worng @getProposalPDF:', getProposalPDF.status);
+                  }
+
+                }
               } else {
                 console.log('Somethings worng 2:', requestSave.status);
               }
-
-
             }
           }
         }
-
       }
-
     }
-
   }
-
 }
 
 // below section handles the functionality of the checkbox events. In order to move checked lab into cart

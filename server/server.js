@@ -4130,18 +4130,20 @@ app.post('/ckp2/save', authenticate, async (req, res) => {
     const pdfStatic = `temp2-${prop.proposalDOC}`; //`temp2-${prop.proposalDOC}`
     pdfDocFinal.appendPage(pdfStatic).endPDF();
 
-    let ProposalDOCStream = fs.readFileSync(`${proposalFileServer}${prop.proposalDOC}`, {
-      encoding: 'base64'
-    });
+    // let ProposalDOCStream = fs.readFileSync(`${proposalFileServer}${prop.proposalDOC}`, {
+    //   encoding: 'base64'
+    // });
 
-    const download = Buffer.from(ProposalDOCStream.toString('utf-8'), 'base64');
+    // const download = Buffer.from(ProposalDOCStream.toString('utf-8'), 'base64');
 
-    res.writeHead(200, {
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `${prop.proposalDOC}`
-    });
+    // res.writeHead(200, {
+    //   'Content-Type': 'application/pdf',
+    //   'Content-Disposition': `${prop.proposalDOC}`
+    // });
 
-    res.end(JSON.stringify(download));
+    // res.end(JSON.stringify(download));
+
+    res.status(200).send(JSON.stringify(prop._id));
 
     fs.unlinkSync(`temp1-${prop.proposalDOC}`);
     fs.unlinkSync(`temp2-${prop.proposalDOC}`);
