@@ -1472,6 +1472,7 @@ function showPD(data) {
     document.getElementById("uPrice").value = data.uPrice;
     document.getElementById("uShip").value = data.uShip;
     document.getElementById("notes").value = data.notes;
+    document.getElementById("state").value = data.state;
 
     document.querySelector('.cost_list').innerHTML = data.costContents;
     document.querySelector('.removed_list').innerHTML = data.removedContents;
@@ -1518,6 +1519,7 @@ function showPD(data) {
     document.getElementById("uPrice").value = data.uPrice;
     document.getElementById("uShip").value = data.uShip;
     document.getElementById("notes").value = data.notes;
+    document.getElementById("state").value = data.state;
 
     document.querySelector('.cost_list').innerHTML = data.costContents;
     document.querySelector('.removed_list').innerHTML = data.removedContents;
@@ -1570,7 +1572,7 @@ document.querySelector('.saveDraft').addEventListener('click', () => {
     let oldDocName = window.globalData.data.name;
     // console.log('window.globalData.data:', window.globalData.data);
     if (oldDocName.endsWith('M')) {
-      docName = oldDocName + '#v1';
+      docName = oldDocName + '#v2';
     } else {
       dNameSplit = oldDocName.split('#');
       let oldDocNameVersion = parseInt(dNameSplit[dNameSplit.length - 1].substr(1));
@@ -1666,6 +1668,7 @@ function saveDraft(docName) {
   let fLower = document.getElementsByClassName("UIprice_projected_1--value")[0].innerText;
   let fUpper = document.getElementsByClassName("UIprice_projected_2--value")[0].innerText;
   let searchBox = document.getElementById("searchText").value;
+  let state = document.getElementById("state").value;
   let institution = document.getElementById("institution").value;
   let instructor = document.getElementById("instructor").value;
   let pNumber = document.getElementById("pNumber").value;
@@ -1701,6 +1704,7 @@ function saveDraft(docName) {
   draftArray.push(uShip);
   draftArray.push(txt);
   draftArray.push(notes);
+  draftArray.push(state);
   // draftArray.push(costContents);
   // draftArray.push(removedContents);
 
@@ -1739,6 +1743,7 @@ function sop() {
   let fUpper = document.getElementsByClassName("UIprice_projected_2--value")[0].innerText;
   let searchBox = document.getElementById("searchText").value;
 
+  let state = document.getElementById("state").value;
   let institution = document.getElementById("institution").value;
   let instructor = document.getElementById("instructor").value;
   let pNumber = document.getElementById("pNumber").value;
@@ -1772,7 +1777,7 @@ function sop() {
     } else {
       let oldDocName = window.globalData.data.name;
       if (oldDocName.endsWith('M')) {
-        docName = oldDocName + '#v1';
+        docName = oldDocName + '#v2';
       } else {
         dNameSplit = oldDocName.split('#');
         let oldDocNameVersion = parseInt(dNameSplit[dNameSplit.length - 1].substr(1));
@@ -1803,7 +1808,11 @@ function sop() {
 
           docNameArray = docName.split('#');
           if (docNameArray.length > 1) {
-            docName = docNameArray[0] + `#v${parseInt(data.split('/')[1]) + 1}`;
+            let version = parseInt(data.split('/')[1]);
+            if (version === 0) {
+              version = 1;
+            }
+            docName = docNameArray[0] + `#v${version + 1}`;
           }
 
           if (window.globalData !== undefined) {
@@ -2049,6 +2058,7 @@ function sop() {
                     // push labs
                     pageArray.push(txt);
                     pageArray.push(notes);
+                    pageArray.push(state);
 
                     // push pageArray, BOMarray, packingListArray into saveArray
                     saveArray.push(pageArray);
@@ -2356,6 +2366,7 @@ function sop() {
               // push labs
               pageArray.push(txt);
               pageArray.push(notes);
+              pageArray.push(state);
 
               // push pageArray, BOMarray, packingListArray into saveArray
               saveArray.push(pageArray);
@@ -2659,6 +2670,7 @@ function sop() {
             // push labs
             pageArray.push(txt);
             pageArray.push(notes);
+            pageArray.push(state);
 
             // push pageArray, BOMarray, packingListArray into saveArray
             saveArray.push(pageArray);

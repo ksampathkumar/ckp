@@ -94,6 +94,10 @@ let DraftSchema = new mongoose.Schema({
     linkageProposal: {
         type: String,
         trim: true,
+    },
+    state: {
+        type: String,
+        trim: true,
     }
 });
 

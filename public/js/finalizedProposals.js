@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------------------------------------------------------------------------------
------------------------------------------------- $$                    pendingDrafts.js                      $$-------------------------------------
+------------------------------------------------ $$                    finalizedProposals.js                      $$-------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------*/
 // this is for the managing between sales & admin page
 let userDets;
@@ -55,106 +55,145 @@ function logout() {
     request.send();
 }
 
-// PENDING DRAFT CALL
+// FINALIZED PROPOSAL CALL
 
 let globalArray = [];
 let html4Link = '<a id="%id%" href="#" onclick="displayRequired(this);">%docName%</a><br/>';
 
-let pendingDraftRequest = new XMLHttpRequest();
-pendingDraftRequest.open('get', '/ckp/pendingDraft', true);
-pendingDraftRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+let finalizedProposalRequest = new XMLHttpRequest();
+finalizedProposalRequest.open('get', '/ckp/finalizedProposal', true);
+finalizedProposalRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-pendingDraftRequest.setRequestHeader('x-auth', token);
+finalizedProposalRequest.setRequestHeader('x-auth', token);
 
-pendingDraftRequest.onload = function () {
+finalizedProposalRequest.onload = function () {
 
-    if (pendingDraftRequest.status === 200) {
+    if (finalizedProposalRequest.status === 200) {
 
-        let pendingDrafts = JSON.parse(this.response);
-        // console.log('pendingDrafts:', pendingDrafts);
+        let finalizedProposals = JSON.parse(this.response);
+        // console.log('finalizedProposals:', finalizedProposals);
 
-        pendingDrafts.forEach(element => {
+        finalizedProposals.forEach(element => {
             globalArray.push(element);
 
-            let pendingTable = document.getElementById("pending");
-            let row = pendingTable.insertRow(-1);
+            let finalizedTable = document.getElementById("finalized");
+            let row = finalizedTable.insertRow(-1);
             let cell1 = row.insertCell(0);
             let cell2 = row.insertCell(1);
             let cell3 = row.insertCell(2);
-            let cell4 = row.insertCell(3);
-            let cell5 = row.insertCell(4);
-            let cell6 = row.insertCell(5);
 
             // cell1
             let htmlTemp = html4Link.replace('%id%', element._id);
             htmlTemp = htmlTemp.replace('%docName%', element.name);
             cell1.innerHTML = htmlTemp;
+
             // cell2
-            cell2.innerHTML = `${element.bLower} - ${element.bUpper}`;
+            cell2.innerHTML = '<button type="button" onclick="downloadBOM(this)" value="%id%" class="update">Download BOM</button>'.replace('%id%', element._id);
 
             // cell3
-            // SUBJECT
-            let sub = [];
-            let labSplit = element.txt.split(' ');
-            labSplit.forEach(lab => {
-                sub.push(lab.split('-')[0]);
-            });
-            let distinctSub = [...new Set(sub)];
-            let labTxt = '';
-            distinctSub.forEach(dis => {
-                labTxt = labTxt + dis + ', ';
-            });
-
-            labTxt = labTxt.slice(0, -2);
-            cell3.innerHTML = labTxt.toLocaleUpperCase();
-
-            // cell4
-            cell4.innerHTML = element.notes;
-            // cell5 'status' prefix is added to document_.id as id is used up in the cell1 hyperlink
-            cell5.innerHTML = '<select id="%id%"><option value="true">True</option><option value="false">False</option></select>'.replace('%id%', `status-${element._id}`);
-            // cell6
-            cell6.innerHTML = '<button type="button" onclick="update(this)" value="%id%" class="update">Update</button>'.replace('%id%', element._id);
+            cell3.innerHTML = '<button type="button" onclick="downloadPackingList(this)" value="%id%" class="update">Download Packing List</button>'.replace('%id%', element._id);
 
         });
 
-    } else if (pendingDraftRequest.status === 204) {
+    } else if (finalizedProposalRequest.status === 204) {
 
     } else {
-        console.log('somethings wrong:', pendingDraftRequest.status);
+        console.log('somethings wrong:', finalizedProposalRequest.status);
     }
 }
 
-pendingDraftRequest.send();
+finalizedProposalRequest.send();
 
-function update(draft) {
-    let status = document.getElementById(`status-${draft.value}`);
-    // console.log('status:', status.value);
+// download the BOM of corresponfing proposal
+function downloadBOM(item) {
+    // console.log(item.value);
+    // BOM FILE DOWNLOAD
+    let BOMrequest = new XMLHttpRequest();
+    BOMrequest.open('get', `/ckpBOM/${item.value}`, true);
+    BOMrequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    BOMrequest.setRequestHeader('x-auth', token);
 
-    if (status.value === 'false') {
-        // send a request to server to change the status of the draft
-        // reload the page on success
+    BOMrequest.onload = function () {
 
-        linkageProposal = prompt("Please Enter Corresponding Proposal Name for Current Draft");
+        if (BOMrequest.status === 200) {
 
-        let updatePendingDraftRequest = new XMLHttpRequest();
-        updatePendingDraftRequest.open('get', `/ckp/updatePendingDraft/${linkageProposal}$${draft.value}`, true);
-        let token = localStorage.getItem('x-auth_token');
-        updatePendingDraftRequest.setRequestHeader('x-auth', token);
+            let bArray = [];
+            let bom = BOMrequest.getResponseHeader('content-disposition');
 
-        updatePendingDraftRequest.onload = function () {
-            if (updatePendingDraftRequest.status === 200) {
-                location.reload();
-            } else {
-                alert('Unable to Process the Request');
-                location.reload();
-            }
+            let pb = this.response.split('\n');
+
+            pb.forEach((line) => {
+                bArray.push(line);
+            });
+
+            // BOM
+            let csvContentBOM = "data:text/csv;charset=utf-8,";
+            bArray.forEach(function (row) {
+                csvContentBOM += row + "\r\n";
+            });
+            var encodedUri = encodeURI(csvContentBOM);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", bom);
+            document.body.appendChild(link); // Required for FF
+
+            link.click(); // This will download the data file named "my_data.csv".
+            // BOM
+
+        } else {
+            console.log('somethings wrong:', BOMrequest.status);
         }
-
-        updatePendingDraftRequest.send();
-
-
-
     }
+
+    BOMrequest.send();
+    // BOM FILE DOWNLOAD
+
+}
+
+// download the packing list of corresponfing proposal
+function downloadPackingList(item) {
+
+    // PACKING FILE DOWNLOAD
+    let packingrequest = new XMLHttpRequest();
+    packingrequest.open('get', `/ckpPacking/${item.value}`, true);
+    packingrequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    packingrequest.setRequestHeader('x-auth', token);
+
+    packingrequest.onload = function () {
+
+        if (packingrequest.status === 200) {
+
+            let pArray = [];
+            let packing = packingrequest.getResponseHeader('content-disposition');
+
+            let pb = this.response.split('\n');
+
+            pb.forEach((line) => {
+                pArray.push(line);
+            });
+
+            // Packing List
+            let csvContentPackingList = "data:text/csv;charset=utf-8,";
+            pArray.forEach(function (row) {
+                csvContentPackingList += row.replace('#', 'no.') + "\r\n";
+            });
+
+            var encodedUri = encodeURI(csvContentPackingList);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", packing);
+            document.body.appendChild(link); // Required for FF
+
+            link.click(); // This will download the data file named "my_data.csv".
+            // Packing List
+
+        } else {
+            console.log('somethings wrong:', packingrequest.status);
+        }
+    }
+
+    packingrequest.send();
+    // PACKING FILE DOWNLOAD
 
 }
 
@@ -219,5 +258,5 @@ function ckpTab() {
 }
 
 /* --------------------------------------------------------------------------------------------------------------------------------------------------
------------------------------------------------- $$                    manageProposal.js                      $$-------------------------------------
+------------------------------------------------ $$                    finalizedProposals.js                      $$-------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------*/

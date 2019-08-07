@@ -81,11 +81,20 @@ async function populate4() {
 
     // clear all list (4) and arrays(2) before making calls to server
     document.querySelector('.selfDraft_list').textContent = '';
-    document.querySelector('.selfProp_list').textContent = '';
+
+    // document.querySelector('.selfProp_list').textContent = '';
+    let selfProposalTable = document.getElementById("selfProp_list");
+    // clear the table leaving the 1st row
+    var rowCount = selfProposalTable.rows.length;
+    for (var i = rowCount - 1; i > 0; i--) {
+        selfProposalTable.deleteRow(i);
+    }
+
     document.querySelector('.othersDraft_list').textContent = '';
     document.querySelector('.othersProp_list').textContent = '';
     globalArray = [];
     selfDrafts = [];
+    selfProposals = [];
 
     let draftRequest1 = new XMLHttpRequest();
     draftRequest1.open('get', `/ckp/selfDraft/${fromUnixT}-${toUnixT}`, true);
@@ -141,12 +150,24 @@ async function populate4() {
             let typeHtml = '';
             proposalData1.forEach(element => {
                 globalArray.push(element);
-                let htmlTemp = html4all.replace('%id%', element._id);
-                htmlTemp = htmlTemp.replace('%docName%', element.name);
-                typeHtml = typeHtml + htmlTemp;
-            });
-            document.querySelector('.selfProp_list').insertAdjacentHTML('beforeend', typeHtml);
+                selfProposals.push(element);
+                if (element.isFinal === undefined) {
+                    let row = selfProposalTable.insertRow(-1);
+                    let cell1 = row.insertCell(0);
+                    let cell2 = row.insertCell(1);
+                    let cell3 = row.insertCell(2);
 
+                    // cell1
+                    let htmlTemp = html4all.replace('%id%', element._id);
+                    htmlTemp = htmlTemp.replace('%docName%', element.name);
+                    cell1.innerHTML = htmlTemp;
+
+                    // cell2 'status' prefix is added to document_.id as id is used up in the cell1 hyperlink
+                    cell2.innerHTML = '<select id="%id%"><option value="false">False</option><option value="true">True</option></select>'.replace('%id%', `status-${element._id}`);
+                    // cell3
+                    cell3.innerHTML = '<button type="button" onclick="finalizeProposal(this)" value="%id%" class="update">Update</button>'.replace('%id%', element._id);
+                }
+            });
         } else if (proposalRequest1.status === 204) {
 
         } else {
@@ -229,11 +250,41 @@ async function populate4() {
     // PROPOSAL CALL FOR OTHERS
     // make 4 calls to server to get the drafts and proposals
 
+    displayFinal();
+
     displayPending();
 
 }
 
 populate4();
+
+function finalizeProposal(proposal) {
+    let status = document.getElementById(`status-${proposal.value}`);
+    // console.log('status:', status.value);
+
+    if (status.value === 'true') {
+        // send a request to server to change the status of the Proposal
+        // reload the page on success
+
+        let updateProposalFinalRequest = new XMLHttpRequest();
+        updateProposalFinalRequest.open('get', `/ckp/updateProposalFinal/${proposal.value}`, true);
+        let token = localStorage.getItem('x-auth_token');
+        updateProposalFinalRequest.setRequestHeader('x-auth', token);
+
+        updateProposalFinalRequest.onload = function () {
+            if (updateProposalFinalRequest.status === 200) {
+                location.reload();
+            } else {
+                alert('Unable to Process the Request');
+                location.reload();
+            }
+        }
+
+        updateProposalFinalRequest.send();
+
+    }
+
+}
 
 function sleep(ms) {
     return new Promise(resolve => {
@@ -241,8 +292,36 @@ function sleep(ms) {
     })
 }
 
-async function displayPending() {
+async function displayFinal() {
     await sleep(1000);
+
+    let finalTable = document.getElementById("final");
+    // clear the table leaving the 1st row
+    var rowCount = finalTable.rows.length;
+    for (var i = rowCount - 1; i > 0; i--) {
+        finalTable.deleteRow(i);
+    }
+
+    selfProposals.forEach(myProposal => {
+        // console.log('myProposal:', myProposal);
+
+        if (myProposal.isFinal === true) {
+
+            let row = finalTable.insertRow(-1);
+            let cell1 = row.insertCell(0);
+
+            // cell1
+            let htmlTemp = html4all.replace('%id%', myProposal._id);
+            htmlTemp = htmlTemp.replace('%docName%', myProposal.name);
+            cell1.innerHTML = htmlTemp;
+            // console.log('htmlTemp:', htmlTemp);
+
+        }
+    });
+}
+
+async function displayPending() {
+    await sleep(2000);
 
     let pendingTable = document.getElementById("adminPriced");
     // clear the table leaving the 1st row

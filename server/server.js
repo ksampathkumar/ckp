@@ -489,6 +489,38 @@ app.get('/ckp/pendingDraft', authenticate, async (req, res) => {
 
 });
 
+// 0 // GET FINALIZED PROPOSALS - SuperAdmin - for getting the finalized proposal
+app.get('/ckp/finalizedProposal', authenticate, async (req, res) => {
+  // RBAC
+  if (req.user.role !== 0) {
+    res.status(418).send();
+    return;
+  }
+
+  Proposal.find().then((dup) => {
+    let finalized = [];
+
+    if (dup.length > 0) {
+      dup.forEach(currentProposal => {
+        if (currentProposal.isFinal === true) {
+          finalized.push(currentProposal);
+        }
+      });
+    }
+
+    if (finalized.length > 0) {
+      // let dupArray = [];
+      // dupArray.push(dup);
+      res.status(200).send(finalized);
+    } else {
+      res.status(204).send();
+    }
+  }, (e) => {
+    res.status(500).send(e);
+  });
+
+});
+
 // 0 // UPDATE PENDING DRAFTS STATUS - SuperAdmin - for updating the pending drafts status to FALSE
 app.get('/ckp/updatePendingDraft/:dets', authenticate, async (req, res) => {
   // RBAC
@@ -3777,6 +3809,7 @@ app.post('/ckp1/save', authenticate, async (req, res) => {
     uShip: pageArray[14],
     txt: pageArray[15],
     notes: pageArray[16],
+    state: pageArray[17],
     proposalDOC: `proposal_${sDocName}.pdf`,
     bomCSV: `bom_${sDocName}.csv`,
     packingCSV: `packingList_${sDocName}.csv`
@@ -3954,6 +3987,7 @@ app.post('/ckp2/save', authenticate, async (req, res) => {
     uShip: pageArray[10],
     txt: pageArray[11],
     notes: pageArray[12],
+    state: pageArray[13],
     proposalDOC: `proposal_${sDocName}.pdf`,
     bomCSV: `bom_${sDocName}.csv`,
     packingCSV: `packingList_${sDocName}.csv`
@@ -3969,10 +4003,20 @@ app.post('/ckp2/save', authenticate, async (req, res) => {
       Proposal.find({
         name: refProposal
       }).then((valid) => {
-        const update = {
-          bomCSV: valid[0].bomCSV,
-          packingCSV: valid[0].packingCSV
-        };
+
+        let update;
+        if (isFresh.split('!').length === 3) {
+          update = {
+            bomCSV: valid[0].bomCSV,
+            packingCSV: valid[0].packingCSV,
+            editable: false
+          };
+        } else {
+          const update = {
+            bomCSV: valid[0].bomCSV,
+            packingCSV: valid[0].packingCSV
+          };
+        }
 
         Proposal.findByIdAndUpdate(prop._id, {
           $set: update
@@ -4211,6 +4255,7 @@ app.post('/ckp1/draft', authenticate, async (req, res) => {
     uShip: sop[14],
     txt: sop[15],
     notes: sop[16],
+    state: pageArray[17],
     costContents: cost,
     removedContents: removed
   });
@@ -4283,7 +4328,7 @@ app.post('/ckp2/draft', authenticate, async (req, res) => {
   }
 
   let draft;
-  if (sop.length === 13) {
+  if (sop.length === 14) {
     draft = new Draft({
       userID: req.user._id,
       name: sDocName,
@@ -4299,7 +4344,8 @@ app.post('/ckp2/draft', authenticate, async (req, res) => {
       uShip: sop[9],
       txt: sop[10],
       notes: sop[11],
-      isPending: sop[12]
+      state: sop[12],
+      isPending: sop[13],
     });
   } else {
     draft = new Draft({
@@ -4317,6 +4363,7 @@ app.post('/ckp2/draft', authenticate, async (req, res) => {
       uShip: sop[9],
       txt: sop[10],
       notes: sop[11],
+      state: sop[12],
     });
   }
 
@@ -4650,6 +4697,33 @@ app.get('/switch', authenticate, async (req, res) => {
       res.status(200).send({
         user
       });
+    }).catch((e) => {
+      console.log(e);
+      res.status(500).send(e);
+    });
+
+});
+
+// 0,1,2 // UPDATE PROPOSAL STATUS - for updating the proposal status to FINAL
+app.get('/ckp/updateProposalFinal/:id', authenticate, async (req, res) => {
+
+  let proposal_id = req.params.id;
+
+  // console.log("proposal_id:", proposal_id);
+
+  const update = {
+    isFinal: true
+  };
+
+  Proposal.findByIdAndUpdate(proposal_id, {
+    $set: update
+  }, {
+      new: true
+    }).then((prop) => {
+      if (!prop) {
+        return res.status(404).send();
+      }
+      res.status(200).send();
     }).catch((e) => {
       console.log(e);
       res.status(500).send(e);

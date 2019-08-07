@@ -328,9 +328,9 @@ document.querySelector('.calculateButton').addEventListener('click', () => {
 // Calculate or Update Function
 function calcUp() {
 
-  if (window.globalData !== undefined) {
-    window.globalData = undefined;
-  }
+  // if (window.globalData !== undefined) {
+  //   window.globalData = undefined;
+  // }
 
   let txt = generateLabString();
 
@@ -845,7 +845,7 @@ document.querySelector('.saveDraft').addEventListener('click', () => {
     let oldDocName = window.globalData.data.name;
     // console.log('window.globalData.data:', window.globalData.data);
     if (oldDocName.endsWith('M')) {
-      docName = oldDocName + '#v1';
+      docName = oldDocName + '#v2';
     } else {
       dNameSplit = oldDocName.split('#');
       let oldDocNameVersion = parseInt(dNameSplit[dNameSplit.length - 1].substr(1));
@@ -936,8 +936,12 @@ document.querySelector('.saveDraft').addEventListener('click', () => {
 function saveDraft(docName) {
 
   // check if the draft is sent for pricing and if yes, make sure there is some notes.
-  if (document.getElementById('isPending').checked && document.getElementById("notes").value.length === 0) {
-    alert("Please fill in Appropriate notes as the Draft is being sent for Pricing. Explain what pricing is to be Done.");
+  if (document.getElementById('isPending').checked && (document.getElementById("notes").value.length === 0 ||
+    document.getElementById("state").value.length === 0 || document.getElementById("institution").value.length === 0 ||
+    document.getElementById("instructor").value.length === 0 || document.getElementById("pNumber").value.length === 0 ||
+    document.getElementById("pDescription").value.length === 0 || document.getElementById("estimate").value.length === 0 ||
+    document.getElementById("uPrice").value.length === 0 || document.getElementById("uShip").value.length === 0)) {
+    alert("Please fill in all proposal details as the Draft is being sent for Pricing. Explain what pricing is to be Done in Notes.");
     return;
   }
 
@@ -947,6 +951,7 @@ function saveDraft(docName) {
   // }
   let projected1 = document.getElementsByClassName("price_projected_1--value")[0].innerText;
   let projected2 = document.getElementsByClassName("price_projected_2--value")[0].innerText;
+  let state = document.getElementById("state").value;
   let institution = document.getElementById("institution").value;
   let instructor = document.getElementById("instructor").value;
   let pNumber = document.getElementById("pNumber").value;
@@ -972,6 +977,7 @@ function saveDraft(docName) {
   draftArray.push(uShip);
   draftArray.push(txt);
   draftArray.push(notes);
+  draftArray.push(state);
 
   // Send Draft for Pricing
   let isPending = document.getElementById('isPending').checked;
@@ -1023,6 +1029,7 @@ function showPD(data) {
     document.getElementById("uPrice").value = data.uPrice;
     document.getElementById("uShip").value = data.uShip;
     document.getElementById("notes").value = data.notes;
+    document.getElementById("state").value = data.state;
 
     // isPending
     document.getElementById('isPending').checked = data.isPending;
@@ -1073,6 +1080,7 @@ function showPD(data) {
     document.getElementById("uPrice").value = data.uPrice;
     document.getElementById("uShip").value = data.uShip;
     document.getElementById("notes").value = data.notes;
+    document.getElementById("state").value = data.state;
 
     // to select the check boxes from txt
     if (data.txt.length !== 0) {
@@ -1113,9 +1121,14 @@ function showPD(data) {
 // SOP Function
 function sop() {
 
+  if (window.globalData !== undefined && window.globalData.data.editable === false) {
+    alert('cannot save this Proposal as the pricing has been done by Admin');
+    return;
+  }
+
   let isFresh = '1!1';
-  if (window.globalData !== undefined && window.globalData.data.type == 'PROPOSAL') {
-    isFresh = `0!${window.globalData.data.name}`;
+  if (window.globalData !== undefined && window.globalData.data.type == 'PROPOSAL' && window.globalData.data.linked2Draft !== undefined) {
+    isFresh = `0!${window.globalData.data.name}!${window.globalData.data.linked2Draft}`;
   } else if (window.globalData !== undefined && window.globalData.data.type == 'DRAFT' && (userDets.role == 0 || userDets.role == 1)) {
     alert('This is a Corner Case which exploits and alters the structure of using the Tool. PROBLEM: Saving Proposal from Draft created in differnet UI(Sales/Admin) might result in wrong BOM and Packing List.');
   }
@@ -1124,6 +1137,7 @@ function sop() {
   let bLower = document.getElementsByClassName("price_projected_1--value")[0].innerText;
   let bUpper = document.getElementsByClassName("price_projected_2--value")[0].innerText;
 
+  let state = document.getElementById("state").value;
   let institution = document.getElementById("institution").value;
   let instructor = document.getElementById("instructor").value;
   let pNumber = document.getElementById("pNumber").value;
@@ -1137,7 +1151,7 @@ function sop() {
 
   if (txt.length === 0) {
     alert('No Lab Selection Made, Please Select Labs, Calculate Cost and then Save Proposal');
-  } else if (institution === '' || instructor === '' || pNumber === '' || pDescription === '' || estimate === '' || uPrice === '' || uShip === '') {
+  } else if (institution === '' || instructor === '' || pNumber === '' || pDescription === '' || estimate === '' || uPrice === '' || uShip === '' || state === '') {
     alert("Please Enter All The SOP Details !!!");
   } else if (bLower == '' || bUpper == '') {
     alert("Please calculate the Kit price before saving !!!");
@@ -1157,7 +1171,7 @@ function sop() {
     } else {
       let oldDocName = window.globalData.data.name;
       if (oldDocName.endsWith('M')) {
-        docName = oldDocName + '#v1';
+        docName = oldDocName + '#v2';
       } else {
         dNameSplit = oldDocName.split('#');
         let oldDocNameVersion = parseInt(dNameSplit[dNameSplit.length - 1].substr(1));
@@ -1165,8 +1179,9 @@ function sop() {
           docName += dNameSplit[i];
         }
         docName += `#v${oldDocNameVersion + 1}`;
-
       }
+      // console.log('oldDocName:', oldDocName);
+      // console.log('docName:', docName);
     }
 
     let check = new XMLHttpRequest();
@@ -1190,9 +1205,13 @@ function sop() {
 
           docNameArray = docName.split('#');
           if (docNameArray.length > 1) {
-            docName = docNameArray[0] + `#v${parseInt(data.split('/')[1]) + 1}`;
+            let version = parseInt(data.split('/')[1]);
+            if (version === 0) {
+              version = 1;
+            }
+            docName = docNameArray[0] + `#v${version + 1}`;
           }
-
+          // console.log('docName:', docName);
           if (window.globalData !== undefined) {
 
             if (data.split('/')[2] !== window.globalData.data.userID) {
@@ -1245,6 +1264,7 @@ function sop() {
                     // push labs
                     pageArray.push(txt);
                     pageArray.push(notes);
+                    pageArray.push(state);
 
                     // make a backend call to server to persist all the details. Note that the endpoint is different for admin and sales page.
 
@@ -1336,6 +1356,7 @@ function sop() {
               // push labs
               pageArray.push(txt);
               pageArray.push(notes);
+              pageArray.push(state);
 
               // make a backend call to server to persist all the details. Note that the endpoint is different for admin and sales page.
 
@@ -1345,7 +1366,7 @@ function sop() {
               requestSave.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
               requestSave.send(`sSOP=${encodeURIComponent(JSON.stringify(pageArray))}`);
-
+              // console.log(pageArray);
               requestSave.onload = function () {
 
                 if (requestSave.status === 200) {
@@ -1421,6 +1442,7 @@ function sop() {
             // push labs
             pageArray.push(txt);
             pageArray.push(notes);
+            pageArray.push(state);
 
             // make a backend call to server to persist all the details. Note that the endpoint is different for admin and sales page.
 
@@ -1455,7 +1477,7 @@ function sop() {
 
                     let pdfName = getProposalPDF.getResponseHeader('Content-Disposition');
 
-                    console.log(pdfName);
+                    // console.log(pdfName);
 
                     let file = new Blob([new Uint8Array(pdfData.data)], {
                       type: 'application/pdf'

@@ -107,6 +107,16 @@ let ProposalSchema = new mongoose.Schema({
     linked2Draft: {
         type: String,
         trim: true,
+    },
+    editable: {
+        type: Boolean,
+    },
+    state: {
+        type: String,
+        trim: true,
+    },
+    isFinal: {
+        type: Boolean,
     }
 });
 
