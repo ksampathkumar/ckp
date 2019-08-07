@@ -136,23 +136,25 @@ function update(draft) {
 
         linkageProposal = prompt("Please Enter Corresponding Proposal Name for Current Draft");
 
-        let updatePendingDraftRequest = new XMLHttpRequest();
-        updatePendingDraftRequest.open('get', `/ckp/updatePendingDraft/${linkageProposal}$${draft.value}`, true);
-        let token = localStorage.getItem('x-auth_token');
-        updatePendingDraftRequest.setRequestHeader('x-auth', token);
+        if (linkageProposal.length > 0) {
+            let updatePendingDraftRequest = new XMLHttpRequest();
+            updatePendingDraftRequest.open('get', `/ckp/updatePendingDraft/${linkageProposal}$${draft.value}`, true);
+            let token = localStorage.getItem('x-auth_token');
+            updatePendingDraftRequest.setRequestHeader('x-auth', token);
 
-        updatePendingDraftRequest.onload = function () {
-            if (updatePendingDraftRequest.status === 200) {
-                location.reload();
-            } else {
-                alert('Unable to Process the Request');
-                location.reload();
+            updatePendingDraftRequest.onload = function () {
+                if (updatePendingDraftRequest.status === 200) {
+                    location.reload();
+                } else {
+                    alert('Unable to Process the Request');
+                    location.reload();
+                }
             }
+
+            updatePendingDraftRequest.send();
+        } else {
+            alert('please enter corresponding Proposal Name');
         }
-
-        updatePendingDraftRequest.send();
-
-
 
     }
 
