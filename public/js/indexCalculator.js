@@ -1039,32 +1039,35 @@ function showPD(data) {
       var txt = data.txt.split(' ');
       var i;
       for (i = 0; i < txt.length; i++) {
-        let labCheck = '';
-        if (txt[i].split('-').length == 2 && parseInt(txt[i].split('-')[1]) < 1000) {
-          if (parseInt(txt[i].split('-')[1]) > 100) {
-            labCheck = `${txt[i].split('-')[0]}-${parseInt(txt[i].split('-')[1]) % 100}`;
+        if (txt[i].length > 0) {
+
+          let labCheck = '';
+          if (txt[i].split('-').length == 2 && parseInt(txt[i].split('-')[1]) < 1000) {
+            if (parseInt(txt[i].split('-')[1]) > 100) {
+              labCheck = `${txt[i].split('-')[0]}-${parseInt(txt[i].split('-')[1]) % 100}`;
+            } else {
+              labCheck = txt[i];
+            }
+            document.querySelectorAll(`input[type='checkbox'][value='${labCheck}']`)[0].checked = true;
+            // let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
+            // // inner collapsible
+            // content.previousElementSibling.classList.toggle("active");
+            // content.style.display = "block";
+            // // outer collapsible
+            // content.parentElement.previousElementSibling.classList.toggle("active");
+            // content.parentElement.style.display = "block";
+
+            let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
+            content.previousElementSibling.classList.toggle("active");
+            content.style.display = "block";
+
+          } else if (txt[i].split('-')[1].startsWith('v') || txt[i].split('-')[1].startsWith('d')) {
+            document.getElementById(txt[i]).checked = true;
           } else {
-            labCheck = txt[i];
+            console.log('somethings wrong @showpd:', txt[i])
           }
-          document.querySelectorAll(`input[type='checkbox'][value='${labCheck}']`)[0].checked = true;
-          // let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
-          // // inner collapsible
-          // content.previousElementSibling.classList.toggle("active");
-          // content.style.display = "block";
-          // // outer collapsible
-          // content.parentElement.previousElementSibling.classList.toggle("active");
-          // content.parentElement.style.display = "block";
 
-          let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
-          content.previousElementSibling.classList.toggle("active");
-          content.style.display = "block";
-
-        } else if (txt[i].split('-')[1].startsWith('v') || txt[i].split('-')[1].startsWith('d')) {
-          document.getElementById(txt[i]).checked = true;
-        } else {
-          console.log('somethings wrong @showpd:', txt[i])
         }
-
       }
     }
 
@@ -1086,30 +1089,34 @@ function showPD(data) {
     if (data.txt.length !== 0) {
       var txt = data.txt.split(' ');
       var i;
+
       for (i = 0; i < txt.length; i++) {
-        let labCheck = '';
-        if (txt[i].split('-').length == 2 && parseInt(txt[i].split('-')[1]) < 1000) {
-          if (parseInt(txt[i].split('-')[1]) > 100) {
-            labCheck = `${txt[i].split('-')[0]}-${parseInt(txt[i].split('-')[1]) % 100}`;
+        if (txt[i].length > 0) {
+
+          let labCheck = '';
+          if (txt[i].split('-').length == 2 && parseInt(txt[i].split('-')[1]) < 1000) {
+            if (parseInt(txt[i].split('-')[1]) > 100) {
+              labCheck = `${txt[i].split('-')[0]}-${parseInt(txt[i].split('-')[1]) % 100}`;
+            } else {
+              labCheck = txt[i];
+            }
+            // console.log('labCheck:', labCheck);
+            document.querySelectorAll(`input[type='checkbox'][value='${labCheck}']`)[0].checked = true;
+            // let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
+            // content.previousElementSibling.classList.toggle("active");
+            // content.style.display = "block";
+
+            let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
+            content.previousElementSibling.classList.toggle("active");
+            content.style.display = "block";
+
+          } else if (txt[i].split('-')[1].startsWith('v') || txt[i].split('-')[1].startsWith('d')) {
+            document.getElementById(txt[i]).checked = true;
           } else {
-            labCheck = txt[i];
+            console.log('somethings wrong @showpd:', txt[i])
           }
-          // console.log('labCheck:', labCheck);
-          document.querySelectorAll(`input[type='checkbox'][value='${labCheck}']`)[0].checked = true;
-          // let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
-          // content.previousElementSibling.classList.toggle("active");
-          // content.style.display = "block";
 
-          let content = document.getElementsByName(txt[i].split('-')[0])[0].parentElement;
-          content.previousElementSibling.classList.toggle("active");
-          content.style.display = "block";
-
-        } else if (txt[i].split('-')[1].startsWith('v') || txt[i].split('-')[1].startsWith('d')) {
-          document.getElementById(txt[i]).checked = true;
-        } else {
-          console.log('somethings wrong @showpd:', txt[i])
         }
-
       }
     }
   }

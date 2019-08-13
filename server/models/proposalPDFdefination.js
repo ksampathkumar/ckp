@@ -374,7 +374,7 @@ module.exports = {
                         fontSize: 14
                     };
                     let obj3 = {
-                        text: element.split('-')[1],
+                        text: parseInt(element.split('-')[1]) > 100 ? parseInt(element.split('-')[1]) % 100 : element.split('-')[1],
                         fontSize: 14
                     };
 
