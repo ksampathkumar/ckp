@@ -123,7 +123,7 @@ function generateLabString() {
   let txt = "";
 
   let subs = [];
-  subs.push('ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'sg', 'bg', 'rm', 'pt');
+  subs.push('ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'sg', 'bg', 'rm', 'pt', 'ob');
   let i;
   subs.forEach((sub) => {
     let id = document.getElementsByName(sub);
@@ -362,6 +362,8 @@ function calcUp() {
 
       } else if (request.status === 406) {
         alert(this.response);
+      } else if (request.status === 500) {
+        alert(this.response);
       } else {
         console.log('Error:', request.status);
       }
@@ -394,6 +396,7 @@ function clearAll() {
   document.querySelector('.price_projected_1--value').textContent = "";
   document.querySelector('.price_projected_2--value').textContent = "";
 
+  document.getElementById("state").value = '';
   document.getElementById("institution").value = '';
   document.getElementById("instructor").value = '';
   document.getElementById("pNumber").value = '';
@@ -774,6 +777,16 @@ function kitVersion(element) {
         });
         break;
 
+      case 'ob-v1':
+        var checkbox = document.getElementsByName('ob');
+        checkbox.forEach((e) => {
+          if (!(e.value.split("-")[1].startsWith('v') || e.value.split("-")[1].startsWith('d'))) {
+            e.checked = true;
+          }
+        });
+        break;
+
+
       default:
     }
   } else {
@@ -789,7 +802,7 @@ function clearCheckBoxes() {
   // clearing the checkboxes //
 
   let subs = [];
-  subs.push('kitVersion', 'ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'sg', 'bg', 'rm', 'pt');
+  subs.push('kitVersion', 'ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'sg', 'bg', 'rm', 'pt', 'ob');
   subs.forEach((sub) => {
     let checkbox = document.getElementsByName(sub);
     checkbox.forEach((element) => element.checked = false);
@@ -1168,11 +1181,11 @@ function sop() {
 
     if (window.globalData === undefined || window.globalData.data.type === 'DRAFT' || window.globalData.data.linked2Draft !== undefined) {
       docName = prompt("Enter Proposal Name!");
-      if (docName === null) {
+      if (docName === null || docName.trim().length === 0) {
         alert('Proposal Name Cannot be Empty, please enter a Valid Name');
         return;
       } else if (docName.includes('@') || docName.includes('#')) {
-        alert('Proposal Name cannot include character "@"');
+        alert('Proposal Name cannot include character "@" or "#"');
         return;
       }
     } else {
@@ -1226,11 +1239,11 @@ function sop() {
               if (window.globalData.data.type === 'PROPOSAL') {
 
                 docName = prompt("Enter Proposal Name!");
-                if (docName === null) {
+                if (docName === null || docName.trim().length === 0) {
                   alert('Proposal Name Cannot be Empty, please enter a Valid Name');
                   return;
                 } else if (docName.includes('@') || docName.includes('#')) {
-                  alert('Proposal Name cannot include character "@"');
+                  alert('Proposal Name cannot include character "@" or "#"');
                   return;
                 }
               }
@@ -1516,6 +1529,8 @@ function sop() {
             }
           }
         }
+      } else {
+        alert('something is broken, please contact IT');
       }
     }
   }
@@ -1868,7 +1883,34 @@ function moveLabToCart() {
     ["pt-3", "Pharmacy Technician $$$ Compounding"],
     ["pt-4", "Pharmacy Technician $$$ Emulsions and Elixirs"],
     ["pt-5", "Pharmacy Technician $$$ Labeling and Packing"],
-    ["pt-6", "Pharmacy Technician $$$ Preparing Investigational Drugs"]
+    ["pt-6", "Pharmacy Technician $$$ Preparing Investigational Drugs"],
+
+    ["ob-1", "General, Organic, and Biochemistry $$$ Chemistry Lab Safety"],
+    ["ob-2", "General, Organic, and Biochemistry $$$ Introduction to Sciencee"],
+    ["ob-3", "General, Organic, and Biochemistry $$$ Types of Matter"],
+    ["ob-4", "General, Organic, and Biochemistry $$$ Physical and chemical properties"],
+    ["ob-5", "General, Organic, and Biochemistry $$$ Enthalpy and Specific Heat"],
+    ["ob-6", "General, Organic, and Biochemistry $$$ Molecular Geometry"],
+    ["ob-7", "General, Organic, and Biochemistry $$$ Chemical Bonds"],
+    ["ob-8", "General, Organic, and Biochemistry $$$ Types of Chemical Reactions"],
+    ["ob-9", "General, Organic, and Biochemistry $$$ Molar Mass"],
+    ["ob-10", "General, Organic, and Biochemistry $$$ Stoichiometry"],
+    ["ob-11", "General, Organic, and Biochemistry $$$ The Ideal Gas Law"],
+    ["ob-12", "General, Organic, and Biochemistry $$$ Acids and Bases"],
+    ["ob-13", "General, Organic, and Biochemistry $$$ Reaction Rates"],
+    ["ob-14", "General, Organic, and Biochemistry $$$ Chromatography"],
+    ["ob-15", "General, Organic, and Biochemistry $$$ Diffusion and Osmosis"],
+    ["ob-16", "General, Organic, and Biochemistry $$$ Organic Chemical Nomenclature"],
+    ["ob-17", "General, Organic, and Biochemistry $$$ Hydrocarbons"],
+    ["ob-18", "General, Organic, and Biochemistry $$$ Stereochemistry"],
+    ["ob-19", "General, Organic, and Biochemistry $$$ Esters and Alcohols"],
+    ["ob-20", "General, Organic, and Biochemistry $$$ Aspirin Analysis"],
+    ["ob-21", "General, Organic, and Biochemistry $$$ Saponification"],
+    ["ob-22", "General, Organic, and Biochemistry $$$ Antioxidant Analysis"],
+    ["ob-23", "General, Organic, and Biochemistry $$$ The Chemistry of Life"],
+    ["ob-24", "General, Organic, and Biochemistry $$$ Isoelectric Point Titration"],
+    ["ob-25", "General, Organic, and Biochemistry $$$ Protein Isolation"],
+    ["ob-26", "General, Organic, and Biochemistry $$$ Enzyme Catalysis"],
 
   ]);
 
@@ -1946,7 +1988,7 @@ function labDelete(lab) {
   document.getElementById(labToUncheck).checked = false;
 
   let subs = [];
-  subs.push('kitVersion', 'ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'sg', 'bg', 'rm', 'pt');
+  subs.push('kitVersion', 'ap', 'as', 'es', 'fs', 'gb', 'gc', 'gp', 'hb', 'hg', 'ib', 'ic', 'ip', 'mb', 'sg', 'bg', 'rm', 'pt', 'ob');
   subs.forEach((sub) => {
     let checkbox = document.getElementsByName(sub);
     checkbox.forEach((element) => {

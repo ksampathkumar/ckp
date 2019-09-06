@@ -1,4 +1,15 @@
-/* Add padding to containers */
+body {
+    height: 500vh;
+    color: #003A5D;
+    font-size: 25px;
+    position: relative;
+    height: 100vh;
+    font-weight: 400;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 20;
+    line-height: 1.5;
+    letter-spacing: 1px;
+}
 
 .container {
     padding: 16px;
@@ -37,16 +48,6 @@ span.psw {
     text-align: center;
     margin-bottom: 10px;
     font-weight: 1000;
-}
-
-body {
-    /* color: #555; */
-    /* background-image: url("images/leaves-pattern.png"); */
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 25px;
-    position: relative;
-    height: 100vh;
-    font-weight: 400;
 }
 
 /* .top {
@@ -177,6 +178,7 @@ h6 {
     /* padding: 10px; */
     height: 500px;
     overflow: auto;
+    margin-bottom: 100px;
 }
 
 .column2 {
@@ -185,6 +187,7 @@ h6 {
     /* padding: 10px; */
     height: 500px;
     overflow: auto;
+    margin-bottom: 100px;
 }
 
 .column3 {
@@ -193,6 +196,7 @@ h6 {
     /* padding: 10px; */
     height: 500px;
     overflow: auto;
+    margin-bottom: 100px;
 }
 
 .column4 {
@@ -201,6 +205,7 @@ h6 {
     /* padding: 10px; */
     height: 500px;
     overflow: auto;
+    margin-bottom: 100px;
 }
 
 table {
@@ -239,4 +244,28 @@ td, th {
     padding: 10px 24px;
     text-decoration: none;
     text-shadow: 0px 1px 0px #154682;
+}
+
+.draft_delete {
+    float: left;
+}
+
+.draft_delete--btn {
+    color: rgb(255, 0, 0);
+    font-size: 25px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    line-height: 1;
+    display: block;
+    ;
+}
+
+.draft_delete--btn:focus {
+    outline: none;
+}
+
+.draft_delete--btn:active {
+    transform: translateY(2px);
 }

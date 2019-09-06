@@ -60,6 +60,8 @@ function logout() {
 let globalArray = [];
 let selfDrafts = [];
 let html4all = '<a id="%id%" href="#" onclick="displayRequired(this);">%docName%</a><br/>';
+let html4selfDraft = '<div class="draft_delete"><button id="%id%" onclick="draftDelete(this)" class="draft_delete--btn"><i class="ion-ios-close-outline"></i></button></div><a id="%id%" href="#" onclick="displayRequired(this);">%docName%</a><br/>';
+
 async function populate4() {
     // async-await is used as it takes 100ms for the datepicker library to load the date
     await sleep(100);
@@ -90,8 +92,8 @@ async function populate4() {
         selfProposalTable.deleteRow(i);
     }
 
-    document.querySelector('.othersDraft_list').textContent = '';
-    document.querySelector('.othersProp_list').textContent = '';
+    // document.querySelector('.othersDraft_list').textContent = '';
+    // document.querySelector('.othersProp_list').textContent = '';
     globalArray = [];
     selfDrafts = [];
     selfProposals = [];
@@ -113,11 +115,14 @@ async function populate4() {
             draftData1.forEach(element => {
                 globalArray.push(element);
                 selfDrafts.push(element);
-                let htmlTemp = html4all.replace('%id%', element._id);
-                htmlTemp = htmlTemp.replace('%docName%', element.name);
-                typeHtml = typeHtml + htmlTemp;
+                if (element.isPending === undefined) {
+                    let htmlTemp = html4selfDraft.replace('%id%', element._id);
+                    htmlTemp = htmlTemp.replace('%id%', element._id);
+                    htmlTemp = htmlTemp.replace('%docName%', element.name);
+                    typeHtml = typeHtml + htmlTemp;
 
-                // console.log('element:', element);
+                    // console.log('htmlTemp:', htmlTemp);
+                }
             });
             document.querySelector('.selfDraft_list').insertAdjacentHTML('beforeend', typeHtml);
 
@@ -163,9 +168,9 @@ async function populate4() {
                     cell1.innerHTML = htmlTemp;
 
                     // cell2 'status' prefix is added to document_.id as id is used up in the cell1 hyperlink
-                    cell2.innerHTML = '<select id="%id%"><option value="false">False</option><option value="true">True</option></select>'.replace('%id%', `status-${element._id}`);
+                    cell2.innerHTML = '<select id="%id%"><option value="false">False</option><option value="true">True</option><option value="delete">Delete</option></select>'.replace('%id%', `status-${element._id}`);
                     // cell3
-                    cell3.innerHTML = '<button type="button" onclick="finalizeProposal(this)" value="%id%" class="update">Update</button>'.replace('%id%', element._id);
+                    cell3.innerHTML = '<button type="button" onclick="updateProposal(this)" value="%id%" class="update">Update</button>'.replace('%id%', element._id);
                 }
             });
         } else if (proposalRequest1.status === 204) {
@@ -181,71 +186,71 @@ async function populate4() {
 
     // DRAFT CALL FOR OTHERS
 
-    let draftRequest2 = new XMLHttpRequest();
-    draftRequest2.open('get', `/ckp/otherDraft/${fromUnixT}-${toUnixT}`, true);
-    draftRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    // let draftRequest2 = new XMLHttpRequest();
+    // draftRequest2.open('get', `/ckp/otherDraft/${fromUnixT}-${toUnixT}`, true);
+    // draftRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-    draftRequest2.setRequestHeader('x-auth', token);
+    // draftRequest2.setRequestHeader('x-auth', token);
 
-    draftRequest2.onload = function () {
+    // draftRequest2.onload = function () {
 
-        if (draftRequest2.status === 200) {
+    //     if (draftRequest2.status === 200) {
 
-            let draftData2 = JSON.parse(this.response);
-            // console.log('draftData2:', draftData2);
+    //         let draftData2 = JSON.parse(this.response);
+    //         // console.log('draftData2:', draftData2);
 
-            let typeHtml = '';
-            draftData2.forEach(element => {
-                globalArray.push(element);
-                let htmlTemp = html4all.replace('%id%', element._id);
-                htmlTemp = htmlTemp.replace('%docName%', element.name);
-                typeHtml = typeHtml + htmlTemp;
-            });
-            document.querySelector('.othersDraft_list').insertAdjacentHTML('beforeend', typeHtml);
+    //         let typeHtml = '';
+    //         draftData2.forEach(element => {
+    //             globalArray.push(element);
+    //             let htmlTemp = html4all.replace('%id%', element._id);
+    //             htmlTemp = htmlTemp.replace('%docName%', element.name);
+    //             typeHtml = typeHtml + htmlTemp;
+    //         });
+    //         document.querySelector('.othersDraft_list').insertAdjacentHTML('beforeend', typeHtml);
 
-        } else if (draftRequest2.status === 204) {
+    //     } else if (draftRequest2.status === 204) {
 
-        } else {
-            console.log('somethings wrong:', draftRequest2.status);
-        }
-    }
+    //     } else {
+    //         console.log('somethings wrong:', draftRequest2.status);
+    //     }
+    // }
 
-    draftRequest2.send();
+    // draftRequest2.send();
 
     // DRAFT CALL FOR OTHERS
 
     // PROPOSAL CALL FOR OTHERS
 
-    let proposalRequest2 = new XMLHttpRequest();
-    proposalRequest2.open('get', `/ckp/otherSave/${fromUnixT}-${toUnixT}`, true);
-    proposalRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    // let proposalRequest2 = new XMLHttpRequest();
+    // proposalRequest2.open('get', `/ckp/otherSave/${fromUnixT}-${toUnixT}`, true);
+    // proposalRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-    proposalRequest2.setRequestHeader('x-auth', token);
+    // proposalRequest2.setRequestHeader('x-auth', token);
 
-    proposalRequest2.onload = function () {
+    // proposalRequest2.onload = function () {
 
-        if (proposalRequest2.status === 200) {
+    //     if (proposalRequest2.status === 200) {
 
-            let proposalData2 = JSON.parse(this.response);
-            // console.log('proposalData2:', proposalData2);
+    //         let proposalData2 = JSON.parse(this.response);
+    //         // console.log('proposalData2:', proposalData2);
 
-            let typeHtml = '';
-            proposalData2.forEach(element => {
-                globalArray.push(element);
-                let htmlTemp = html4all.replace('%id%', element._id);
-                htmlTemp = htmlTemp.replace('%docName%', element.name);
-                typeHtml = typeHtml + htmlTemp;
-            });
-            document.querySelector('.othersProp_list').insertAdjacentHTML('beforeend', typeHtml);
+    //         let typeHtml = '';
+    //         proposalData2.forEach(element => {
+    //             globalArray.push(element);
+    //             let htmlTemp = html4all.replace('%id%', element._id);
+    //             htmlTemp = htmlTemp.replace('%docName%', element.name);
+    //             typeHtml = typeHtml + htmlTemp;
+    //         });
+    //         document.querySelector('.othersProp_list').insertAdjacentHTML('beforeend', typeHtml);
 
-        } else if (proposalRequest2.status === 204) {
+    //     } else if (proposalRequest2.status === 204) {
 
-        } else {
-            console.log('somethings wrong:', proposalRequest2.status);
-        }
-    }
+    //     } else {
+    //         console.log('somethings wrong:', proposalRequest2.status);
+    //     }
+    // }
 
-    proposalRequest2.send();
+    // proposalRequest2.send();
 
     // PROPOSAL CALL FOR OTHERS
     // make 4 calls to server to get the drafts and proposals
@@ -258,7 +263,29 @@ async function populate4() {
 
 populate4();
 
-function finalizeProposal(proposal) {
+function draftDelete(element) {
+    // console.log(element.id);
+    // Make the Server call to delete the draft
+
+    let deleteDraftRequest = new XMLHttpRequest();
+    deleteDraftRequest.open('delete', `/ckp/deleteDraft/${element.id}`, true);
+    let token = localStorage.getItem('x-auth_token');
+    deleteDraftRequest.setRequestHeader('x-auth', token);
+
+    deleteDraftRequest.onload = function () {
+        if (deleteDraftRequest.status === 200) {
+            location.reload();
+        } else {
+            alert('Unable to Process the Request');
+            location.reload();
+        }
+    }
+
+    deleteDraftRequest.send();
+
+}
+
+function updateProposal(proposal) {
     let status = document.getElementById(`status-${proposal.value}`);
     // console.log('status:', status.value);
 
@@ -282,6 +309,25 @@ function finalizeProposal(proposal) {
 
         updateProposalFinalRequest.send();
 
+    } else if (status.value === 'delete') {
+        // console.log('value:', status.value);
+
+        // Make the Server call to delete the proposal
+        let deleteProposalRequest = new XMLHttpRequest();
+        deleteProposalRequest.open('delete', `/ckp/deleteProposal/${proposal.value}`, true);
+        let token = localStorage.getItem('x-auth_token');
+        deleteProposalRequest.setRequestHeader('x-auth', token);
+
+        deleteProposalRequest.onload = function () {
+            if (deleteProposalRequest.status === 200) {
+                location.reload();
+            } else {
+                alert('Unable to Process the Request');
+                location.reload();
+            }
+        }
+
+        deleteProposalRequest.send();
     }
 
 }

@@ -265,18 +265,18 @@ app.post('/users/register', (req, res) => {
                 User.findByIdAndUpdate(valid[0]._id, {
                   $set: update
                 }, {
-                    new: true
-                  }).then((user) => {
-                    if (!user) {
-                      return res.status(404).send();
-                    }
-                    res.send({
-                      user
-                    });
-                  }).catch((e) => {
-                    console.log(e);
-                    res.status(500).send(e);
+                  new: true
+                }).then((user) => {
+                  if (!user) {
+                    return res.status(404).send();
+                  }
+                  res.send({
+                    user
                   });
+                }).catch((e) => {
+                  console.log(e);
+                  res.status(500).send(e);
+                });
               });
             });
           } else {
@@ -317,18 +317,18 @@ app.post('/users/reset', (req, res) => {
                 User.findByIdAndUpdate(valid[0]._id, {
                   $set: update
                 }, {
-                    new: true
-                  }).then((user) => {
-                    if (!user) {
-                      return res.status(404).send();
-                    }
-                    res.status(200).send({
-                      user
-                    });
-                  }).catch((e) => {
-                    console.log(e);
-                    res.status(500).send(e);
+                  new: true
+                }).then((user) => {
+                  if (!user) {
+                    return res.status(404).send();
+                  }
+                  res.status(200).send({
+                    user
                   });
+                }).catch((e) => {
+                  console.log(e);
+                  res.status(500).send(e);
+                });
               });
             });
           } else {
@@ -430,7 +430,7 @@ app.delete('/users/:id', authenticate, (req, res) => {
 
     res.status(200).send();
   }).catch((e) => {
-    res.status(400).send();
+    res.status(500).send();
   });
 });
 // DELETE - Delete user by email, only allowed to super admin to do so
@@ -1204,7 +1204,7 @@ async function ckpFunc(req) {
         }
 
       } else {
-        console.log("Error@priceCalculato8:", parent);
+        console.log("Error@priceCalculator8:", parent);
       }
 
     }
@@ -1239,6 +1239,7 @@ async function ckpFunc(req) {
     baseKit.push({ sub: 'mb', cost: 8 });
     baseKit.push({ sub: 'fs', cost: 4 });
     baseKit.push({ sub: 'pt', cost: 3 });
+    baseKit.push({ sub: 'ob', cost: 3 });
 
     let result = await baseKit.filter(function (e) {
       return e.sub == requestSub;
@@ -2341,6 +2342,249 @@ async function ckpFunc(req) {
     return itemsToAdd;
   }
 
+  // for this subject a new pattern for chemical is being followed. Can be later applied for other subjects.
+  // Add the individual quantity of liquid and find the nearest available bottle bottle.
+  function obAdditions(id, itemsToAdd) {
+
+    // TEST TUBES CONDITION //
+    if (id.includes("ob-21")) {
+      itemsToAdd.push({
+        idName: 'Bag1020',
+        lab: '21',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ob-15")) {
+      itemsToAdd.push({
+        idName: 'Bag1018',
+        lab: '15',
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ob-8") || id.includes("ob-17") || id.includes("ob-19") || id.includes("ob-25")) {
+      itemsToAdd.push({
+        idName: 'Bag1017',
+        lab: '8,17,19,25',
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // Pipette Condition
+    let pipetteCount = 0;
+
+    if (id.includes("ob-4")) {
+      pipetteCount += 2;
+    }
+    if (id.includes("ob-10")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("ob-11")) {
+      pipetteCount += 2;
+    }
+    if (id.includes("ob-12")) {
+      pipetteCount += 6;
+    }
+    if (id.includes("ob-15")) {
+      pipetteCount += 10;
+    }
+    if (id.includes("ob-17")) {
+      pipetteCount += 4;
+    }
+    if (id.includes("ob-19")) {
+      pipetteCount += 8;
+    }
+    if (id.includes("ob-21")) {
+      pipetteCount += 1;
+    }
+    if (id.includes("ob-26")) {
+      pipetteCount += 2;
+    }
+
+    pipetteCount = Math.ceil(pipetteCount / 10) * 10;
+
+    let pipette2 = Math.floor(pipetteCount / 20);
+    let pipette1 = pipetteCount % 20;
+
+    if (pipette1 > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1030',
+        lab: 100,
+        qty: pipette1 / 10,
+        unit: 'each'
+      });
+    }
+    if (pipette2 > 0) {
+      itemsToAdd.push({
+        idName: 'Bag1028',
+        lab: 100,
+        qty: pipette2,
+        unit: 'each'
+      });
+    }
+
+    // CHEMICALS
+
+    // 1. 4.5% Acetic Acid
+    let aceticAcidQty = 0;
+    if (id.includes("ob-4")) {
+      aceticAcidQty += 15;
+    }
+    if (id.includes("ob-12")) {
+      aceticAcidQty += 45;
+    }
+    if (id.includes("ob-15")) {
+      aceticAcidQty += 6;
+    }
+    if (id.includes("ob-19")) {
+      aceticAcidQty += 5;
+    }
+    if (id.includes("ob-25")) {
+      aceticAcidQty += 10;
+    }
+
+    if (aceticAcidQty > 60) {
+      itemsToAdd.push({
+        idName: 'Bttl4012',
+        lab: 160,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (aceticAcidQty <= 60 && aceticAcidQty > 15) {
+      itemsToAdd.push({
+        idName: 'Bttl3022',
+        lab: 60,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (aceticAcidQty > 0 && aceticAcidQty <= 15) {
+      itemsToAdd.push({
+        idName: 'Bttl7105',
+        lab: 15,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // 2. Iodine-Potasssium-Iodide
+    let ikiQty = 0;
+    if (id.includes("ob-4")) {
+      ikiQty += 5;
+    }
+    if (id.includes("ob-15")) {
+      ikiQty += 5;
+    }
+    if (id.includes("ob-20")) {
+      ikiQty += 1;
+    }
+    if (id.includes("ob-22")) {
+      ikiQty += 30;
+    }
+    if (id.includes("ob-26")) {
+      ikiQty += 5;
+    }
+
+    if (ikiQty > 15) {
+      itemsToAdd.push({
+        idName: 'Bttl1464',
+        lab: 60,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (ikiQty <= 15 && ikiQty > 10) {
+      itemsToAdd.push({
+        idName: 'Bttl1173',
+        lab: 15,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (ikiQty > 0 && ikiQty <= 10) {
+      itemsToAdd.push({
+        idName: 'Bttl1018',
+        lab: 10,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // 3. 70% Ethanol
+    let ethanolQty = 0;
+    if (id.includes("ob-14")) {
+      ethanolQty += 15;
+    }
+    if (id.includes("ob-21")) {
+      ethanolQty += 25;
+    }
+    if (id.includes("ob-25")) {
+      ethanolQty += 25;
+    }
+
+    if (ethanolQty > 50) {
+      itemsToAdd.push({
+        idName: 'Bttl7005',
+        lab: 50,
+        qty: 2,
+        unit: 'each'
+      });
+    } else if (ethanolQty > 0 && ethanolQty <= 50) {
+      itemsToAdd.push({
+        idName: 'Bttl7005',
+        lab: 50,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // 3. Liquid Starch
+    let starchQty = 0;
+    if (id.includes("ob-15")) {
+      starchQty += 5;
+    }
+    if (id.includes("ob-22")) {
+      starchQty += 5;
+    }
+    if (id.includes("ob-26")) {
+      starchQty += 30;
+    }
+
+    if (starchQty > 15) {
+      itemsToAdd.push({
+        idName: 'Bttl1054',
+        lab: 50,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (starchQty > 0 && starchQty <= 15) {
+      itemsToAdd.push({
+        idName: 'Bttl5071',
+        lab: 15,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+    // 4. Vegetable Oil
+    if (id.includes("ob-21")) {
+      itemsToAdd.push({
+        idName: 'Bttl1757',
+        lab: 50,
+        qty: 1,
+        unit: 'each'
+      });
+    } else if (id.includes("ob-4")) {
+      itemsToAdd.push({
+        idName: 'Bttl4243',
+        lab: 10,
+        qty: 1,
+        unit: 'each'
+      });
+    }
+
+
+
+    return itemsToAdd;
+  }
+
   async function performComplexAdditions(sub, id) {
 
     // ****************************************************************//
@@ -2402,6 +2646,9 @@ async function ckpFunc(req) {
         break;
       case 'pt':
         itemsToAdd = ptAdditions(id, itemsToAdd);
+        break;
+      case 'ob':
+        itemsToAdd = obAdditions(id, itemsToAdd);
         break;
       default:
         console.log('error @ performComplexAdditions');
@@ -3195,7 +3442,7 @@ async function ckpFunc(req) {
     const id = req;
 
     let ids;
-    let gp, gc, ib, ap, mb, ic, ast, gb, es, fs, ip, hb, hg, sg, bg, rm, pt;
+    let gp, gc, ib, ap, mb, ic, ast, gb, es, fs, ip, hb, hg, sg, bg, rm, pt, ob;
 
     gp = [];
     gc = [];
@@ -3214,6 +3461,7 @@ async function ckpFunc(req) {
     bg = [];
     rm = [];
     pt = [];
+    ob = [];
 
     ids = await id.split(" ");
 
@@ -3354,6 +3602,16 @@ async function ckpFunc(req) {
           }
           break;
 
+        case 'ob':
+          if (!subject[1].startsWith('v') && !subject[1].startsWith('d')) {
+            ob.push(subject[1]);
+          } else if (subject.length == 2 && (subject[1].startsWith('v') || subject[1].startsWith('d'))) {
+            // do nothing for this version or dissection entity
+          } else {
+            console.log('somethings wrong in ckpProcessor:', subject);
+          }
+          break;
+
 
         // Dissection kits
         case 'ib':
@@ -3418,8 +3676,9 @@ async function ckpFunc(req) {
       }
     }
 
-    let serverResponse, serverResponseAP, serverResponseGC, serverResponseGP, serverResponseIB, serverResponseIC, serverResponseMB, serverResponseAS, serverResponseGB;
-    let serverResponseES, serverResponseFS, serverResponseIP, serverResponseHB, serverResponseHG, serverResponseSG, serverResponseBG, serverResponseRM, serverResponsePT;
+    let serverResponse, serverResponseAP, serverResponseGC, serverResponseGP, serverResponseIB, serverResponseIC, serverResponseMB, serverResponseAS;
+    let serverResponseGB, serverResponseES, serverResponseFS, serverResponseIP, serverResponseHB, serverResponseHG, serverResponseSG, serverResponseBG;
+    let serverResponseRM, serverResponsePT, serverResponseOB;
     serverResponse = [];
     serverResponseAP = [];
     serverResponseGC = [];
@@ -3438,6 +3697,7 @@ async function ckpFunc(req) {
     serverResponseBG = [];
     serverResponseRM = [];
     serverResponsePT = [];
+    serverResponseOB = [];
 
     // get items for labs of each subject
     if (gp.length > 0)
@@ -3474,6 +3734,8 @@ async function ckpFunc(req) {
       serverResponseRM = await looper4eachSubject('rm', rm);
     if (pt.length > 0)
       serverResponsePT = await looper4eachSubject('pt', pt);
+    if (ob.length > 0)
+      serverResponseOB = await looper4eachSubject('ob', ob);
 
     // start combining the items of all subjects
     if (serverResponseGP.length > 0 && serverResponseGP !== 'INVALID REQUEST') {
@@ -3676,6 +3938,18 @@ async function ckpFunc(req) {
       } else {
         // console.log('in 17');
         serverResponse = await combineTHEsubjects(serverResponse, serverResponsePT, 'pt');
+
+      }
+    }
+
+    if (serverResponseOB.length > 0 && serverResponseOB !== 'INVALID REQUEST') {
+      if (serverResponse.length === 0) {
+        await serverResponseOB.forEach((item) => {
+          serverResponse.push(item);
+        });
+      } else {
+        // console.log('in 18');
+        serverResponse = await combineTHEsubjects(serverResponse, serverResponseOB, 'ob');
 
       }
     }
@@ -3887,62 +4161,62 @@ app.post('/ckp1/savePartial', authenticate, async (req, res) => {
   Proposal.findByIdAndUpdate(mongoose.Types.ObjectId(JSON.parse(cdata._id)), {
     $set: update
   }, {
-      new: true
-    }).then(async (prop) => {
-      // res.send(prop._id);
+    new: true
+  }).then(async (prop) => {
+    // res.send(prop._id);
 
-      let pdfDocDynamic = printer.createPdfKitDocument(docDefinition.generateDocDef(req, prop));
-      pdfDocDynamic.pipe(fs.createWriteStream(`temp2-${prop.proposalDOC}`));
-      pdfDocDynamic.end();
+    let pdfDocDynamic = printer.createPdfKitDocument(docDefinition.generateDocDef(req, prop));
+    pdfDocDynamic.pipe(fs.createWriteStream(`temp2-${prop.proposalDOC}`));
+    pdfDocDynamic.end();
 
-      let timestamp = new Date();
-      // "":"",
-      let pdfFillable = pdfFillForm.writeSync('proposal_template.pdf',
-        {
-          "proposalBy": "eScience Labs Proposal by:",
-          "proposer": `${req.user.fName} ${req.user.lName}, ${req.user.desig}`,
-          "proposerContact": `888-ESL KITS | ${req.user.email}`,
-          "proposalDate": `${timestamp.getMonth() + 1}/${timestamp.getDate()}/${timestamp.getFullYear()}`,
-          "proposalInstitution": `${prop.institution}`,
-          "proposalInstructor": `${prop.instructor}`,
-          "productNumber": `${prop.pNumber}`,
-          "productDescription": `${prop.pDescription}`,
-          "productEnrollment": `${prop.estimate}`,
-          "unitPrice": `${prop.uPrice}`,
-          "shippingPrice": `${prop.uShip}`,
-        }, { "save": "pdf" });
-      fs.writeFileSync(`temp1-${prop.proposalDOC}`, pdfFillable);
+    let timestamp = new Date();
+    // "":"",
+    let pdfFillable = pdfFillForm.writeSync('proposal_template.pdf',
+      {
+        "proposalBy": "eScience Labs Proposal by:",
+        "proposer": `${req.user.fName} ${req.user.lName}, ${req.user.desig}`,
+        "proposerContact": `888-ESL KITS | ${req.user.email}`,
+        "proposalDate": `${timestamp.getMonth() + 1}/${timestamp.getDate()}/${timestamp.getFullYear()}`,
+        "proposalInstitution": `${prop.institution}`,
+        "proposalInstructor": `${prop.instructor}`,
+        "productNumber": `${prop.pNumber}`,
+        "productDescription": `${prop.pDescription}`,
+        "productEnrollment": `${prop.estimate}`,
+        "unitPrice": `${prop.uPrice}`,
+        "shippingPrice": `${prop.uShip}`,
+      }, { "save": "pdf" });
+    fs.writeFileSync(`temp1-${prop.proposalDOC}`, pdfFillable);
 
-      await sleep(1000);
+    await sleep(1000);
 
-      const pdfDocFinal = new HummusRecipe(`temp1-${prop.proposalDOC}`, `${proposalFileServer}${prop.proposalDOC}`);
-      // let pd = `temp2-${prop.proposalDOC}`;
-      const pdfStatic = `temp2-${prop.proposalDOC}`; //`temp2-${prop.proposalDOC}`
-      pdfDocFinal.appendPage(pdfStatic).endPDF();
+    const pdfDocFinal = new HummusRecipe(`temp1-${prop.proposalDOC}`, `${proposalFileServer}${prop.proposalDOC}`);
+    // let pd = `temp2-${prop.proposalDOC}`;
+    const pdfStatic = `temp2-${prop.proposalDOC}`; //`temp2-${prop.proposalDOC}`
+    pdfDocFinal.appendPage(pdfStatic).endPDF();
 
-      let ProposalDOCStream = fs.readFileSync(`${proposalFileServer}${prop.proposalDOC}`, {
-        encoding: 'base64'
-      });
-      // let download = new Buffer(ProposalDOCStream).toString('base64');
-      // We replaced all the event handlers with a simple call to readStream.pipe()
-      // ProposalDOCStream.pipe(res);      
-
-      const download = Buffer.from(ProposalDOCStream.toString('utf-8'), 'base64');
-
-      res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `${prop.proposalDOC}`
-      });
-
-      res.end(JSON.stringify(download));
-
-      fs.unlinkSync(`temp1-${prop.proposalDOC}`);
-      fs.unlinkSync(`temp2-${prop.proposalDOC}`);
-
-    }).catch((e) => {
-      console.log(e);
-      res.status(500).send(e);
+    let ProposalDOCStream = fs.readFileSync(`${proposalFileServer}${prop.proposalDOC}`, {
+      encoding: 'base64'
     });
+    // let download = new Buffer(ProposalDOCStream).toString('base64');
+    // We replaced all the event handlers with a simple call to readStream.pipe()
+    // ProposalDOCStream.pipe(res);      
+
+    const download = Buffer.from(ProposalDOCStream.toString('utf-8'), 'base64');
+
+    res.writeHead(200, {
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `${prop.proposalDOC}`
+    });
+
+    res.end(JSON.stringify(download));
+
+    fs.unlinkSync(`temp1-${prop.proposalDOC}`);
+    fs.unlinkSync(`temp2-${prop.proposalDOC}`);
+
+  }).catch((e) => {
+    console.log(e);
+    res.status(500).send(e);
+  });
 
 });
 
@@ -4021,11 +4295,11 @@ app.post('/ckp2/save', authenticate, async (req, res) => {
         Proposal.findByIdAndUpdate(prop._id, {
           $set: update
         }, {
-            new: true
-          }).catch((e) => {
-            console.log(e);
-            res.status(500).send(e);
-          });
+          new: true
+        }).catch((e) => {
+          console.log(e);
+          res.status(500).send(e);
+        });
       }).catch((e) => {
         console.log(e);
       });
@@ -4255,7 +4529,7 @@ app.post('/ckp1/draft', authenticate, async (req, res) => {
     uShip: sop[14],
     txt: sop[15],
     notes: sop[16],
-    state: pageArray[17],
+    state: sop[17],
     costContents: cost,
     removedContents: removed
   });
@@ -4689,22 +4963,22 @@ app.get('/switch', authenticate, async (req, res) => {
   User.findByIdAndUpdate(req.user._id, {
     $set: update
   }, {
-      new: true
-    }).then((user) => {
-      if (!user) {
-        return res.status(404).send();
-      }
-      res.status(200).send({
-        user
-      });
-    }).catch((e) => {
-      console.log(e);
-      res.status(500).send(e);
+    new: true
+  }).then((user) => {
+    if (!user) {
+      return res.status(404).send();
+    }
+    res.status(200).send({
+      user
     });
+  }).catch((e) => {
+    console.log(e);
+    res.status(500).send(e);
+  });
 
 });
 
-// 0,1,2 // UPDATE PROPOSAL STATUS - for updating the proposal status to FINAL
+// 0,1,2 // route 18 - UPDATE PROPOSAL STATUS - for updating the proposal status to FINAL
 app.get('/ckp/updateProposalFinal/:id', authenticate, async (req, res) => {
 
   let proposal_id = req.params.id;
@@ -4715,19 +4989,109 @@ app.get('/ckp/updateProposalFinal/:id', authenticate, async (req, res) => {
     isFinal: true
   };
 
-  Proposal.findByIdAndUpdate(proposal_id, {
-    $set: update
-  }, {
-      new: true
-    }).then((prop) => {
-      if (!prop) {
-        return res.status(404).send();
-      }
-      res.status(200).send();
-    }).catch((e) => {
-      console.log(e);
-      res.status(500).send(e);
-    });
+  Proposal.findById(proposal_id).then((prop) => {
+
+    if (!prop) {
+      return res.status(404).send();
+    } else if (prop.userID !== req.user._id.toString()) {
+      return res.status(406).send();
+    } else {
+      Proposal.findByIdAndUpdate(proposal_id, {
+        $set: update
+      }, {
+        new: true
+      }).then((prop) => {
+        if (!prop) {
+          return res.status(404).send();
+        }
+        res.status(200).send();
+      }).catch((e) => {
+        console.log(e);
+        res.status(500).send(e);
+      });
+    }
+  }).catch((e) => {
+    console.log(e);
+    res.status(500).send(e);
+  });
+
+});
+
+// 0,1,2 // route 19 - Delete PROPOSAL - for deleting the Unfinalized proposal 
+app.delete('/ckp/deleteProposal/:id', authenticate, async (req, res) => {
+
+  let proposal_id = req.params.id;
+
+  // console.log("proposal_id:", proposal_id);
+
+  Proposal.findById(proposal_id).then((prop) => {
+    if (!prop) {
+      return res.status(404).send();
+    } else if (prop.linked2Draft !== undefined || prop.isFinal !== undefined || prop.userID !== req.user._id.toString()) {
+      return res.status(406).send();
+    } else {
+      Proposal.findByIdAndDelete(proposal_id).then((delProp) => {
+        if (!delProp) {
+          return res.status(404).send();
+        }
+
+        // Moving BOM and Packing files causes missing files if they were saved by Molly and a sales rep. picked up those.
+        // // moving deleted proposal's bomFile to deleted folder
+        // fs.rename(`${bomFileServer}${delProp.bomCSV}`, `${bomFileServer}deleted/${delProp.bomCSV}`, (err) => {
+        //   if (err) throw err;
+        //   // console.log('Rename complete!');
+        // });
+
+        // // moving deleted proposal's packingListFile to deleted folder
+        // fs.rename(`${packingFileServer}${delProp.packingCSV}`, `${packingFileServer}deleted/${delProp.packingCSV}`, (err) => {
+        //   if (err) throw err;
+        //   // console.log('Rename complete!');
+        // });
+
+        // moving deleted proposal's pdf document to deleted folder
+        fs.rename(`${proposalFileServer}${delProp.proposalDOC}`, `${proposalFileServer}deleted/${delProp.proposalDOC}`, (err) => {
+          if (err) throw err;
+          // console.log('Rename complete!');
+        });
+
+        res.status(200).send();
+      }).catch((e) => {
+        res.status(500).send();
+      });
+    }
+  }).catch((e) => {
+    console.log(e);
+    res.status(500).send(e);
+  });
+
+});
+
+// 0,1,2 // route 20 - Delete DRAFT - for deleting the draft that are not sent to Molly
+app.delete('/ckp/deleteDraft/:id', authenticate, async (req, res) => {
+
+  let draft_id = req.params.id;
+
+  // console.log("draft_id:", draft_id);
+
+  Draft.findById(draft_id).then((draft) => {
+    if (!draft) {
+      return res.status(404).send();
+    } else if (draft.isPending !== undefined || draft.linkageProposal !== undefined || draft.userID !== req.user._id.toString()) {
+      return res.status(406).send();
+    } else {
+      Draft.findByIdAndDelete(draft_id).then((delDraft) => {
+        if (!delDraft) {
+          return res.status(404).send();
+        }
+        res.status(200).send();
+      }).catch((e) => {
+        res.status(500).send();
+      });
+    }
+  }).catch((e) => {
+    console.log(e);
+    res.status(500).send(e);
+  });
 
 });
 

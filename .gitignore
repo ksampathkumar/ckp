@@ -3,4 +3,5 @@ node_modules/
 server/fileServer/bomFiles/
 server/fileServer/packingFiles/
 server/fileServer/proposalFiles/
+server/fileServer/zz_dir_layout/
 server/pdfmake/
