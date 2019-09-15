@@ -1583,7 +1583,7 @@ document.querySelector('.saveDraft').addEventListener('click', () => {
     if (docName === null) {
       alert('Draft Name Cannot be Empty, please enter a Valid Name');
       return;
-    } else if (docName.includes('@') || docName.includes('#')) {
+    } else if (docName.includes('@') || docName.includes('#') || docName.includes('/')) {
       alert('Draft Name cannot include character "@"');
       return;
     }
@@ -1633,7 +1633,7 @@ document.querySelector('.saveDraft').addEventListener('click', () => {
               if (docName === null) {
                 alert('Draft Name Cannot be Empty, please enter a Valid Name');
                 return;
-              } else if (docName.includes('@') || docName.includes('#')) {
+              } else if (docName.includes('@') || docName.includes('#') || docName.includes('/')) {
                 alert('Draft Name cannot include character "@"');
                 return;
               }
@@ -1789,7 +1789,7 @@ function sop() {
       if (docName === null || docName.trim().length === 0) {
         alert('Proposal Name Cannot be Empty, please enter a Valid Name');
         return;
-      } else if (docName.includes('@') || docName.includes('#')) {
+      } else if (docName.includes('@') || docName.includes('#') || docName.includes('/')) {
         alert('Proposal Name cannot include character "@" or "#"');
         return;
       }
@@ -1844,7 +1844,7 @@ function sop() {
                 if (docName === null || docName.trim().length === 0) {
                   alert('Proposal Name Cannot be Empty, please enter a Valid Name');
                   return;
-                } else if (docName.includes('@') || docName.includes('#')) {
+                } else if (docName.includes('@') || docName.includes('#') || docName.includes('/')) {
                   alert('Proposal Name cannot include character "@" or "#"');
                   return;
                 }
