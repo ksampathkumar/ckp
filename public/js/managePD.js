@@ -184,73 +184,74 @@ async function populate4() {
 
     // PROPOSAL CALL FOR SELF
 
-    // DRAFT CALL FOR OTHERS
+    // BELOW @ CALLS ARE DONE TO POPULATE THE GLOBAL ARRAY AND NOTHING IS DISPLAYED.
+    // DRAFT CALL FOR OTHERS 
 
-    // let draftRequest2 = new XMLHttpRequest();
-    // draftRequest2.open('get', `/ckp/otherDraft/${fromUnixT}-${toUnixT}`, true);
-    // draftRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    let draftRequest2 = new XMLHttpRequest();
+    draftRequest2.open('get', `/ckp/otherDraft/${fromUnixT}-${toUnixT}`, true);
+    draftRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-    // draftRequest2.setRequestHeader('x-auth', token);
+    draftRequest2.setRequestHeader('x-auth', token);
 
-    // draftRequest2.onload = function () {
+    draftRequest2.onload = function () {
 
-    //     if (draftRequest2.status === 200) {
+        if (draftRequest2.status === 200) {
 
-    //         let draftData2 = JSON.parse(this.response);
-    //         // console.log('draftData2:', draftData2);
+            let draftData2 = JSON.parse(this.response);
+            // console.log('draftData2:', draftData2);
 
-    //         let typeHtml = '';
-    //         draftData2.forEach(element => {
-    //             globalArray.push(element);
-    //             let htmlTemp = html4all.replace('%id%', element._id);
-    //             htmlTemp = htmlTemp.replace('%docName%', element.name);
-    //             typeHtml = typeHtml + htmlTemp;
-    //         });
-    //         document.querySelector('.othersDraft_list').insertAdjacentHTML('beforeend', typeHtml);
+            let typeHtml = '';
+            draftData2.forEach(element => {
+                globalArray.push(element);
+                // let htmlTemp = html4all.replace('%id%', element._id);
+                // htmlTemp = htmlTemp.replace('%docName%', element.name);
+                // typeHtml = typeHtml + htmlTemp;
+            });
+            // document.querySelector('.othersDraft_list').insertAdjacentHTML('beforeend', typeHtml);
 
-    //     } else if (draftRequest2.status === 204) {
+        } else if (draftRequest2.status === 204) {
+            console.log('somethings wrong@othersdraftrequest:', proposalRequest2.status);
+        } else {
+            console.log('somethings wrong:', draftRequest2.status);
+        }
+    }
 
-    //     } else {
-    //         console.log('somethings wrong:', draftRequest2.status);
-    //     }
-    // }
-
-    // draftRequest2.send();
+    draftRequest2.send();
 
     // DRAFT CALL FOR OTHERS
 
     // PROPOSAL CALL FOR OTHERS
 
-    // let proposalRequest2 = new XMLHttpRequest();
-    // proposalRequest2.open('get', `/ckp/otherSave/${fromUnixT}-${toUnixT}`, true);
-    // proposalRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    let proposalRequest2 = new XMLHttpRequest();
+    proposalRequest2.open('get', `/ckp/otherSave/${fromUnixT}-${toUnixT}`, true);
+    proposalRequest2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-    // proposalRequest2.setRequestHeader('x-auth', token);
+    proposalRequest2.setRequestHeader('x-auth', token);
 
-    // proposalRequest2.onload = function () {
+    proposalRequest2.onload = function () {
 
-    //     if (proposalRequest2.status === 200) {
+        if (proposalRequest2.status === 200) {
 
-    //         let proposalData2 = JSON.parse(this.response);
-    //         // console.log('proposalData2:', proposalData2);
+            let proposalData2 = JSON.parse(this.response);
+            // console.log('proposalData2:', proposalData2);
 
-    //         let typeHtml = '';
-    //         proposalData2.forEach(element => {
-    //             globalArray.push(element);
-    //             let htmlTemp = html4all.replace('%id%', element._id);
-    //             htmlTemp = htmlTemp.replace('%docName%', element.name);
-    //             typeHtml = typeHtml + htmlTemp;
-    //         });
-    //         document.querySelector('.othersProp_list').insertAdjacentHTML('beforeend', typeHtml);
+            let typeHtml = '';
+            proposalData2.forEach(element => {
+                globalArray.push(element);
+                // let htmlTemp = html4all.replace('%id%', element._id);
+                // htmlTemp = htmlTemp.replace('%docName%', element.name);
+                // typeHtml = typeHtml + htmlTemp;
+            });
+            // document.querySelector('.othersProp_list').insertAdjacentHTML('beforeend', typeHtml);
 
-    //     } else if (proposalRequest2.status === 204) {
+        } else if (proposalRequest2.status === 204) {
+            console.log('somethings wrong@othersproposalrequest:', proposalRequest2.status);
+        } else {
+            console.log('somethings wrong:', proposalRequest2.status);
+        }
+    }
 
-    //     } else {
-    //         console.log('somethings wrong:', proposalRequest2.status);
-    //     }
-    // }
-
-    // proposalRequest2.send();
+    proposalRequest2.send();
 
     // PROPOSAL CALL FOR OTHERS
     // make 4 calls to server to get the drafts and proposals
