@@ -1240,7 +1240,7 @@ async function ckpFunc(req) {
     baseKit.push({ sub: 'mb', cost: 8 });
     baseKit.push({ sub: 'fs', cost: 4 });
     baseKit.push({ sub: 'pt', cost: 3 });
-    baseKit.push({ sub: 'ob', cost: 3 });
+    baseKit.push({ sub: 'ob', cost: 11 });
 
     let result = await baseKit.filter(function (e) {
       return e.sub == requestSub;
